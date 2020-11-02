@@ -69,7 +69,7 @@ void UpdatePlayer()
 	{
 		if (on_ground == true)
 		{
-			j_kansei = 100;
+			j_kansei = 500;
 		}
 
 	}
