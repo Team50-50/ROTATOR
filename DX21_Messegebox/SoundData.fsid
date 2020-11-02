@@ -1,0 +1,9 @@
+static const unsigned int BGM_01 = (unsigned)"bgm01";
+static const unsigned int BGM_03 = (unsigned)"bgm03";
+static const unsigned int SE_01  = (unsigned)"se01 (1)";
+static const unsigned int SE_02  = (unsigned)"se01 (2)";
+static const unsigned int SE_03  = (unsigned)"se01 (3)";
+static const unsigned int SE_04  = (unsigned)"se01 (4)";
+static const unsigned int SE_05  = (unsigned)"se05 (1)";
+static const unsigned int SE_06  = (unsigned)"se05 (2)";
+static const unsigned int STRM_CYLINDER		= (unsigned)"cylinder";
