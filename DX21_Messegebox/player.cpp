@@ -21,7 +21,7 @@ void InitPlayer()
 
 	//PlayBGM(BGM_01);
 
-	g_PlayerPosition.x = 640;
+	g_PlayerPosition.x = 800;
 	g_PlayerPosition.y = 400;
 
 	j_kansei = 0;
@@ -69,7 +69,7 @@ void UpdatePlayer()
 	{
 		if (on_ground == true)
 		{
-			j_kansei = 500;
+			j_kansei = 100;
 		}
 
 	}
@@ -92,7 +92,7 @@ void UpdatePlayer()
 	g_PlayerPosition.y -= j_kansei;
 
 	// èdóÕ
-	g_PlayerPosition.y += 5;
+	g_PlayerPosition.y += 10;
 
 
 	if (g_PlayerPosition.x < 0)
