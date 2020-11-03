@@ -21,7 +21,7 @@ void InitPlayer()
 
 	//PlayBGM(BGM_01);
 
-	g_PlayerPosition.x = 800;
+	g_PlayerPosition.x = 1000;
 	g_PlayerPosition.y = 400;
 
 	j_kansei = 0;
