@@ -30,7 +30,7 @@ void InitPlayer()
 	g_PlayerTexture = Texture_SetTextureLoadFile("asset/player_test.png");
 
 
-	g_PlayerPosition.x = 520;
+	g_PlayerPosition.x = 400;
 	g_PlayerPosition.y = 400;
 
 	j_kansei = 0;
