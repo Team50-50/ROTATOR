@@ -3,109 +3,82 @@
 #include "texture.h"
 #include "sprite.h"
 #include "block.h"
+#include "player.h"
+#include "camera.h"
 
+//ブロックのテクスチャの読み込み
+static int	g_BlockTexture;
 
-unsigned int	g_BlockTexture;
+//ブロックの位置座標
+D3DXVECTOR2	g_Block[BLOCK_MAX];
 
-BLOCK			g_Block[BLOCK_MAX];
+//ブロック描画座標
+D3DXVECTOR2	g_Block_DrawPosition[BLOCK_MAX];
 
+//プレイヤーが現在いる座標
+D3DXVECTOR2	Current_PlayerPosition;
+
+//プレイヤーがスタートした時にいた座標
+D3DXVECTOR2	Start_PlayerPosition;
 
 void InitBlock()
 {
 	// TEXの読み込み
-	g_BlockTexture = LoadTexture("rom/block.tga");
-
-	// ブロック構造体の初期化
+	g_BlockTexture = Texture_SetTextureLoadFile("asset/testblock.jpg");
+	
+	//ブロック配置
 	for (int i = 0; i < BLOCK_MAX; i++)
 	{
-		g_Block[i].Use = false;
+		g_Block[i].x = BLOCK_SIZE_X * i;
+		g_Block[i].y = ((SCREEN_HEIGHT - PLAYER_SIZE_Y) * 7 / 10) +PLAYER_SIZE_Y;
 	}
 
-	// ブロックを配置している
-	for (int y = 0; y < 6; y++)
-	{
-		for (int x = 0; x < 8; x++)
-		{	//			X座標,					Y座標,			Type（色）
-			SetBlock(-350.0f + x * 100.0f, -375.0f + y * 50.0f, y / 2);
-		}
-	}
+	//プレイヤーの現在位置を取得
+	Current_PlayerPosition = GetPlayerPosition();
+ 
+	//プレイヤーのスタート位置を保存
+	Start_PlayerPosition.x = Current_PlayerPosition.x;
+	Start_PlayerPosition.y = Current_PlayerPosition.y;
 }
-
 
 
 void UninitBlock()
 {
-
-	UnloadTexture(g_BlockTexture);
+	//テクスチャの開放
+	Texture_Release(&g_BlockTexture, 1);
 
 }
 
-
 void UpdateBlock()
 {
-	int blockCount = 0;
-
-	// 生きてるブロックの数を数えています
+	Current_PlayerPosition = GetPlayerPosition();
+	
+	//ブロック配置
 	for (int i = 0; i < BLOCK_MAX; i++)
 	{
-		if (g_Block[i].Use == true)
-			blockCount++;
+		g_Block_DrawPosition[i].x = g_Block[i].x - (Current_PlayerPosition.x - Start_PlayerPosition.x);
+		g_Block_DrawPosition[i].y = g_Block[i].y - (Current_PlayerPosition.y - Start_PlayerPosition.y);
 	}
-
-	// 数えた数が０だったら全部消したって事になる
-	if (blockCount <= 0)
-	{
-		// 全部消した時の処理をここに書く
-
-	}
-
+	
 }
 
 
 
 void DrawBlock()
 {
-	// TEXをセット
-	SetTexture(g_BlockTexture);
 
 	// ブロックを描画
 	for (int i = 0; i < BLOCK_MAX; i++)
-	{	// 生きてるブロックを描画
-		if (g_Block[i].Use == true)
-		{
-			DrawSprite(g_Block[i].Position.x, g_Block[i].Position.y, 128.0f, 64.0f,
-				0.0f, g_Block[i].Type * 0.25f, 1.0f, 0.25f,
-				MakeFloat4(1.0f, 1.0f, 1.0f, 1.0f));
-		}
-	}
-}
-
-// ブロックを配置する関数
-void SetBlock(float x, float y, int type)
-{
-	// 未使用のブロックを探す
-	for (int i = 0; i < BLOCK_MAX; i++)
 	{
-		// 未使用のブロックを見つけたら初期化して使用中に変える
-		if (g_Block[i].Use == false)
-		{
-			g_Block[i].Position.x = x;
-			g_Block[i].Position.y = y;
-			g_Block[i].Type = type;
-			g_Block[i].Use = true;
-			break;
-		}
+		Sprite_Draw(g_BlockTexture, g_Block_DrawPosition[i].x, g_Block_DrawPosition[i].y, BLOCK_SIZE_X, BLOCK_SIZE_Y,
+			0, 0, 64, 64);
 	}
-
 }
 
-
-// ブロック構造体の先頭アドレスを返す関数
-BLOCK *GetBlock()
+D3DXVECTOR2  GetBlockPosition(int n)
 {
-	return g_Block;
-
-	//return &g_Block[0];
+	//指定されたブロックの位置座標を返す
+	return g_Block[n];
 }
 
 

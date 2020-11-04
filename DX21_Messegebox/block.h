@@ -1,14 +1,13 @@
 #pragma once
 
+// ブロックのMax数（配列の数）
+#define BLOCK_MAX (100)
 
-#define BLOCK_MAX 100	// ブロックのMax数（配列の数）
+//ブロックの大きさX
+#define BLOCK_SIZE_X (64.0f)
 
-struct BLOCK			// ブロック構造体
-{
-	Float2	Position;
-	int		Type;
-	bool	Use;
-};
+//ブロックの大きさY
+#define BLOCK_SIZE_Y (64.0f)
 
 
 void InitBlock();
@@ -16,10 +15,12 @@ void UninitBlock();
 void UpdateBlock();
 void DrawBlock();
 
-// ブロックを配置する関数
-void SetBlock(float x, float y, int type);
 
-// ブロック構造体の先頭アドレスを返す関数
-BLOCK *GetBlock();
+//ブロックの位置座標を渡す関数
+//
+//int nはブロックの配列数
+D3DXVECTOR2  GetBlockPosition(int n);
+
+
 
 

@@ -13,6 +13,8 @@
 #include "system_timer.h"
 #include "Sprite.h"
 #include "Main.h"
+#include "block.h"
+#include "revesion_player.h"
 
 #include "bg.h"
 #include "player.h"
@@ -209,6 +211,8 @@ bool Initialize(void)
 
 	InitBG();
 	InitPlayer();
+	InitBlock();
+	ReversionPlayer_Initialize();
 
 	Sprite_Initialize();
 	DebugFont_Initialize();
@@ -220,8 +224,11 @@ bool Initialize(void)
 void Update(void)
 {
 	//Game_Update();
-	
 	UpdatePlayer();
+	UpdateBlock();
+	ReversionPlayer_Update();
+	
+	
 	
 
 
@@ -257,6 +264,8 @@ void Draw(void)
 	
 	DrawBG();
 	DrawPlayer();
+	DrawBlock();
+	ReversionPlayer_Draw();
 
 	// FPS•\Ž¦
 	char buf[64];
@@ -278,6 +287,8 @@ void Finalize(void)
 
 	UninitBG();
 	UninitPlayer();
+	UninitBlock();
+	ReversionPlayer_Finalize();
 
 
 	Sprite_Finalize();

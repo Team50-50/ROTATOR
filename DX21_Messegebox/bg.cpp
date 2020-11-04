@@ -9,7 +9,7 @@ static int g_TextureBG;
 void InitBG(void)
 {
 
-	//g_TextureBG = Texture_SetTextureLoadFile("rom/haike.png");	//”wŒi‰æ‘œ
+ g_TextureBG = Texture_SetTextureLoadFile("asset/BG.png");	//”wŒi‰æ‘œ
 
 }
 
@@ -25,8 +25,8 @@ void UninitBG(void)
 void DrawBG(void)
 {
 
-	//// ƒXƒvƒ‰ƒCƒg‚ð•`‰æ
-	//Sprite_Draw(g_TextureBG, 0.0f, 0.0f, SCREEN_WIDTH, SCREEN_HEIGHT,
-	//	0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+	// ƒXƒvƒ‰ƒCƒg‚ð•`‰æ
+	Sprite_Draw(g_TextureBG, 0.0f, 0.0f, SCREEN_WIDTH, SCREEN_HEIGHT,
+	0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
 }
