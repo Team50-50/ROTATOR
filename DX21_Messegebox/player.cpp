@@ -31,7 +31,7 @@ void InitPlayer()
 
 
 	g_PlayerPosition.x = 400;
-	g_PlayerPosition.y = 400;
+	g_PlayerPosition.y = 600;
 
 	j_kansei = 0;
 
