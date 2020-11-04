@@ -3,30 +3,38 @@
 #include "texture.h"
 #include "Sprite.h"
 
+//プレイヤー大きさX
+#define PLAYER_SIZE_X (100.0f)
 
+//プレイヤー大きさY
+#define PLAYER_SIZE_Y (100.0f)
+
+
+//プレイヤーテクスチャー読み込み
 static int	  g_PlayerTexture;
 
+//プレイヤー位置情報
 D3DXVECTOR2	  g_PlayerPosition;
 
-static int	  j_kansei;
+//ジャンプ時の数値
+float	j_kansei;
 
+//地面にプレイヤーがいるかどうか？
 bool on_ground;
 
-int player_A_t;
+
 
 void InitPlayer()
 {
 
 	g_PlayerTexture = Texture_SetTextureLoadFile("asset/player_test.png");
 
-	//PlayBGM(BGM_01);
 
 	g_PlayerPosition.x = 1000;
 	g_PlayerPosition.y = 400;
 
 	j_kansei = 0;
 
-	player_A_t = 0;
 }
 
 
@@ -35,7 +43,6 @@ void UninitPlayer()
 
 	Texture_Release(&g_PlayerTexture,1);
 
-	//StopBGM();
 }
 
 
@@ -45,38 +52,37 @@ void UpdatePlayer()
 	float stick_y = 0.0f;
 
 
-	// 左右移動
-	if (GetKeyState(VK_LEFT) & 0x80)
+	//Aを押して左に移動
+	if (GetKeyState('A') & 0x80)
 	{
 		stick_x = -0.5f;
 
-		player_A_t = 1;
-
 	}
 	
-
-	if (GetKeyState(VK_RIGHT) & 0x80)
+	//Dを押して左に移動
+	if (GetKeyState('D') & 0x80)
 	{
 		stick_x = 0.5f;
 
 	}
 	
-
+	//プレイヤー左右移動計算
 	g_PlayerPosition.x += stick_x * 20.0f;
 
-	// ジャンプ
+
+	//ジャンプ
 	if (GetKeyState(VK_SPACE) & 0x80)
 	{
 		if (on_ground == true)
 		{
-			j_kansei = 100;
+			j_kansei = 30.0f;
 		}
 
 	}
 
 	if (!(j_kansei == 0))
 	{
-		j_kansei -= 1;
+		j_kansei -= 1.0f;
 
 		if (j_kansei <= 0)
 		{
@@ -84,30 +90,34 @@ void UpdatePlayer()
 		}
 	}
 
-	if (!(g_PlayerPosition.y = 500 - 100))
+	// 重力
+	g_PlayerPosition.y += 10;
+
+	g_PlayerPosition.y -= j_kansei;
+
+	if (!(g_PlayerPosition.y == 500 - PLAYER_SIZE_Y))
 	{
 		on_ground = false;
 	}
 
-	g_PlayerPosition.y -= j_kansei;
+	
 
-	// 重力
-	g_PlayerPosition.y += 10;
+	
 
 
 	if (g_PlayerPosition.x < 0)
 		g_PlayerPosition.x = 0;
 
-	if (g_PlayerPosition.x > 1280 - 100)
-		g_PlayerPosition.x = 1280 - 100;
+	if (g_PlayerPosition.x > 1280 - PLAYER_SIZE_X)
+		g_PlayerPosition.x = 1280 - PLAYER_SIZE_X;
 
-	if (g_PlayerPosition.y < 0 - 100 )
-		g_PlayerPosition.y = 0 - 100 ;
+	if (g_PlayerPosition.y < 0 - PLAYER_SIZE_Y )
+		g_PlayerPosition.y = 0 - PLAYER_SIZE_Y ;
 
-	if (g_PlayerPosition.y > 500 - 100)
+	if (g_PlayerPosition.y > 500 - PLAYER_SIZE_Y)
 	{
 		on_ground = true;
-		g_PlayerPosition.y = 500 - 100;
+		g_PlayerPosition.y = 500 - PLAYER_SIZE_Y;
 	}
 		
 }
@@ -116,7 +126,7 @@ void UpdatePlayer()
 void DrawPlayer()
 {
 
-	Sprite_Draw(g_PlayerTexture,g_PlayerPosition.x, g_PlayerPosition.y, 100.0f, 100.0f,
+	Sprite_Draw(g_PlayerTexture,g_PlayerPosition.x, g_PlayerPosition.y, PLAYER_SIZE_X, PLAYER_SIZE_Y,
 	 0, 0, 250, 160);
 }
 
