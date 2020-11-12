@@ -11,6 +11,7 @@
 #include "debug_font.h"
 #include "Mydirect3d.h"
 #include "system_timer.h"
+#include "directinput.h"
 #include "Sprite.h"
 #include "Main.h"
 #include "block.h"
@@ -18,14 +19,6 @@
 
 #include "bg.h"
 #include "player.h"
-
-/*------------------------------------------------------------------------------
-	定数定義
-------------------------------------------------------------------------------*/
-#define CLASS_NAME		"GameWindow"			// ウインドウクラスの名前
-#define WINDOW_CAPTION	"ゲーム実装準備"        // ウインドウの名前
-
-
 
 /*------------------------------------------------------------------------------
 	プロトタイプ宣言
@@ -209,6 +202,13 @@ bool Initialize(void)
 		return false;
 	}
 
+	if (!InitInput())
+	{
+		//入力デバイスの取得に失敗
+		MessageBox(NULL, "入力デバイスの初期化が失敗しました", "エラー", MB_OK);
+
+	}
+
 	InitBG();
 	InitPlayer();
 	InitBlock();
@@ -224,6 +224,7 @@ bool Initialize(void)
 void Update(void)
 {
 	//Game_Update();
+	UpdateInput();
 	UpdatePlayer();
 	UpdateBlock();
 	ReversionPlayer_Update();
@@ -293,4 +294,5 @@ void Finalize(void)
 
 	Sprite_Finalize();
 	MyDirect3D_Finalize();
+	ReleaseInput();
 }

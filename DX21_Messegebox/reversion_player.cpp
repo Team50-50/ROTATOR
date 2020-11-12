@@ -3,6 +3,7 @@
 #include "Sprite.h"
 #include "player.h"
 #include "revesion_player.h"
+#include "directinput.h"
 
 static int g_TextureVPlayer = TEXTURE_INVALID_ID;
 //VPlayer g_VPlayer[VPLAYER_MAX];
@@ -48,6 +49,14 @@ void ReversionPlayer_Update(void)
 		{
 			//Bキーを押し続けたら、プレイヤー前のフレームのpositionデータを1フレームずつ、仮想プレイヤーに代入する
 			//Bキーを離したら、仮想プレイヤーがその場で止まる
+			g_ReversionPlayer.position = prev_stack.position_Data[i];
+		}
+
+		//===========================================
+		//コントローラー
+		//↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+		if (IsButtonPush(ButtonLT))
+		{
 			g_ReversionPlayer.position = prev_stack.position_Data[i];
 		}
 

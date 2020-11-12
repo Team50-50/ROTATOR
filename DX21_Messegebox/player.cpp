@@ -4,6 +4,7 @@
 #include "Sprite.h"
 #include "player.h"
 #include "block.h"
+#include "directinput.h"
 
 //プレイヤーテクスチャー読み込み
 static int	g_PlayerTexture;
@@ -78,6 +79,24 @@ void UpdatePlayer()
 		}
 
 	}
+	//===========================================
+	//コントローラー
+	//↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+	if (IsButtonPush(LeftButton))
+	{
+		g_PlayerPosition.x -= 10.0f;//移動量
+	}
+	if (IsButtonPush(RightButton))
+	{
+		g_PlayerPosition.x += 10.0f;//移動量
+	}
+	if (IsButtonDown(ButtonB) || IsButtonPush(ButtonX) || IsButtonUp(ButtonY))
+	{
+		if (on_ground == true)
+		{
+			jump_amount = 16.0f;//ジャンプ量
+		}
+	}
 	
 	//重力を常に発生させる
 	jump_amount -= 1.0f;
@@ -121,6 +140,18 @@ void UpdatePlayer()
 	{
 		//Bキーを押し続けたら、そのフレームのデータ配列の末尾のプレイヤーpositionを取り出す
 		//前のフレームのプレイヤーpositionデータとして記録する
+		push(&g_sPrev, pop(&g_sCurrent));
+	}
+
+	//===========================================
+	//コントローラー
+	//↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+	if (IsButtonPush(ButtonRT))
+	{
+		push(&g_sCurrent, g_PlayerPosition);
+	}
+	if (IsButtonPush(ButtonLT))
+	{
 		push(&g_sPrev, pop(&g_sCurrent));
 	}
 	
