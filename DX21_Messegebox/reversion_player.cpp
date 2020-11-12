@@ -53,8 +53,10 @@ void ReversionPlayer_Update(void)
 
 	}
 
+	//プレイヤーの現在位置を読み込み
 	Current_PlayerPositionR = GetPlayerPosition();
 
+	//再生キャラクターの描画位置を更新
 	g_ReversionPlayer_DrawPositition.x = g_ReversionPlayer.position.x - (Current_PlayerPositionR.x - Start_PlayerPositionR.x);
 	g_ReversionPlayer_DrawPositition.y = g_ReversionPlayer.position.y - (Current_PlayerPositionR.y - Start_PlayerPositionR.y);;
 
@@ -63,6 +65,7 @@ void ReversionPlayer_Update(void)
 
 void ReversionPlayer_Draw(void)
 {
+	//Bを押すと逆行キャラクターを描画
 	if (GetKeyState('B') & 0x80)
 	{
 		Sprite_Draw(g_TextureVPlayer, g_ReversionPlayer_DrawPositition.x, g_ReversionPlayer_DrawPositition.y,
@@ -71,7 +74,7 @@ void ReversionPlayer_Draw(void)
 
 }
 
-
+//逆行キャラクターの位置情報を取得
 ReversionPlayer GetVPlayer(void)
 {
 	return g_ReversionPlayer;

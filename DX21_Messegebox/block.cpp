@@ -51,9 +51,10 @@ void UninitBlock()
 
 void UpdateBlock()
 {
+	//プレイヤー位置座標を保存
 	Current_PlayerPosition = GetPlayerPosition();
 	
-	//ブロック配置
+	//主人公に合わせてブロック描画配置を更新
 	for (int i = 0; i < BLOCK_MAX; i++)
 	{
 		g_Block_DrawPosition[i].x = g_Block[i].x - (Current_PlayerPosition.x - Start_PlayerPosition.x);

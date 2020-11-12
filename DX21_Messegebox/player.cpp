@@ -14,7 +14,9 @@ D3DXVECTOR2	BlockPosition[BLOCK_MAX];
 //プレイヤー位置情報
 D3DXVECTOR2	g_PlayerPosition;
 
+//プレイヤーを画面に描画する位置
 D3DXVECTOR2	Draw_PlayerPosition;
+
 
 static Queue g_qCurrent;
 static Queue g_qPrev;
@@ -128,12 +130,10 @@ void UpdatePlayer()
 void DrawPlayer()
 {
 	
+	//プレイヤーを画面中央に描画
 	Sprite_Draw(g_PlayerTexture, ((SCREEN_WIDTH - PLAYER_SIZE_X) / 2), ((SCREEN_HEIGHT - PLAYER_SIZE_Y) * 7 / 10), PLAYER_SIZE_X, PLAYER_SIZE_Y,
 	 0, 0, PLAYER_SIZE_X, PLAYER_SIZE_Y);
-	 
-
-	//Sprite_Draw(g_PlayerTexture, g_PlayerPosition.x,g_PlayerPosition.y, PLAYER_SIZE_X, PLAYER_SIZE_Y,
-		//0, 0, PLAYER_SIZE_X, PLAYER_SIZE_Y);
+	
 
 }
 
