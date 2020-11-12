@@ -13,6 +13,9 @@
 #include "system_timer.h"
 #include "Sprite.h"
 #include "Main.h"
+#include "fade.h"
+#include "title.h"
+#include "select_stage.h"
 #include "block.h"
 #include "revesion_player.h"
 
@@ -24,7 +27,6 @@
 ------------------------------------------------------------------------------*/
 #define CLASS_NAME		"GameWindow"			// ウインドウクラスの名前
 #define WINDOW_CAPTION	"ゲーム実装準備"        // ウインドウの名前
-
 
 
 /*------------------------------------------------------------------------------
@@ -53,6 +55,7 @@ static double g_BaseTime = 0;
 static double g_FPS = 0.0;
 static double g_ReserveTime = 0.0;
 
+int scene = SCENE_NONE;
 
 /*------------------------------------------------------------------------------
 	メイン
@@ -217,6 +220,8 @@ bool Initialize(void)
 	Sprite_Initialize();
 	DebugFont_Initialize();
 
+	scene = SCENE_TITLE;
+
 	return true;
 }
 
@@ -224,13 +229,27 @@ bool Initialize(void)
 void Update(void)
 {
 	//Game_Update();
-	UpdatePlayer();
-	UpdateBlock();
-	ReversionPlayer_Update();
 	
-	
-	
+	switch (scene)
+	{
+	case SCENE_TITLE:
+		UpdateTitle();
+		break;
 
+	case SCENE_SELECT_STAGE:
+		UpdateSelectStage();
+		break;
+
+	case SCENE_GAME:
+		UpdatePlayer();
+		UpdateBlock();
+		ReversionPlayer_Update();
+		break;
+
+	}
+
+	//UpdateSound();
+	UpdateFade();
 
 	// 計測
 	double time = SystemTimer_GetTime();
@@ -261,11 +280,33 @@ void Draw(void)
 	// ゲームの描画 *
 	//int* Gamemord = GetGamemord();
 
-	
-	DrawBG();
+	/*DrawBG();
 	DrawPlayer();
 	DrawBlock();
-	ReversionPlayer_Draw();
+	ReversionPlayer_Draw();*/
+
+	switch (scene)
+	{
+	case SCENE_TITLE:
+		DrawTitle();
+		break;
+
+	case SCENE_SELECT_STAGE:
+		DrawSelectStage;
+		break;
+
+	case SCENE_GAME:
+
+		DrawBG();
+		DrawPlayer();
+		DrawBlock();
+		ReversionPlayer_Draw();
+		break;
+
+	}
+
+	DrawFade();
+
 
 	// FPS表示
 	char buf[64];
@@ -284,13 +325,62 @@ void Finalize(void)
 {
 	//Game_Finalize();
 
-
-	UninitBG();
+	/*UninitBG();
 	UninitPlayer();
 	UninitBlock();
 	ReversionPlayer_Finalize();
-
+*/
 
 	Sprite_Finalize();
 	MyDirect3D_Finalize();
+}
+
+//	シーン(ステージ)の切り替え処理
+void SetScene(int scene_no)
+{
+	// まず現在のステージの終了処理を実行
+	switch (scene)
+	{
+	case SCENE_TITLE:
+		//UninitTitle();
+		break;
+
+	case SCENE_SELECT_STAGE:
+
+		break;
+
+	case SCENE_GAME:
+		//UninitBlock();			// Blockの終了処理
+		//UninitBall();			// Ballの終了処理
+		//Uninit_EnemyTama();     // 敵の弾の終了処理
+		//UninitTama();           // 弾の終了処理
+		//UninitEnemy();          // 敵キャラの終了処理
+		//UninitPlayer();			// プレイヤーの終了処理
+		//UninitScore();			// スコアの終了処理
+		//UninitBG();				// 背景の終了処理
+		break;
+
+	case SCENE_NONE:
+		break;
+	}
+
+	scene = scene_no;
+
+	switch (scene)
+	{
+	case SCENE_TITLE:
+		InitTitle();
+		break;
+
+	case SCENE_SELECT_STAGE:
+
+		break;
+
+	case SCENE_GAME:
+
+		break;
+
+	case SCENE_NONE:
+		break;
+	}
 }
