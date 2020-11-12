@@ -20,20 +20,23 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="bg.cpp" />
+    <ClCompile Include="block.cpp" />
+    <ClCompile Include="camera.cpp" />
     <ClCompile Include="debug_font.cpp" />
     <ClCompile Include="keyboard.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="mouse.cpp" />
     <ClCompile Include="Mydirect3d.cpp" />
     <ClCompile Include="player.cpp" />
-    <ClCompile Include="playerSAISEI.cpp" />
+    <ClCompile Include="reversion_player.cpp" />
     <ClCompile Include="Sprite.cpp" />
     <ClCompile Include="system_timer.cpp" />
     <ClCompile Include="Texture.cpp" />
-    <ClCompile Include="tuinin.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="bg.h" />
+    <ClInclude Include="block.h" />
+    <ClInclude Include="camera.h" />
     <ClInclude Include="Config.h" />
     <ClInclude Include="debugPrintf.h" />
     <ClInclude Include="debug_font.h" />
@@ -42,11 +45,10 @@
     <ClInclude Include="mouse.h" />
     <ClInclude Include="Mydirect3d.h" />
     <ClInclude Include="player.h" />
-    <ClInclude Include="playerSAISEI.h" />
+    <ClInclude Include="revesion_player.h" />
     <ClInclude Include="Sprite.h" />
     <ClInclude Include="system_timer.h" />
     <ClInclude Include="Texture.h" />
-    <ClInclude Include="tuinin.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
