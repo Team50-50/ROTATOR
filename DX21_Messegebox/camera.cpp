@@ -1,43 +1,75 @@
+/*=======================================================================================
 
-#include "main.h"
-#include "texture.h"
-#include "sprite.h"
-#include "block.h"
-#include "player.h"
-#include "camera.h"
+	 ゲームのカメラ制御（2D）[camera.cpp]
+												author:mgc
+												date:2020/11/12
+ -----------------------------------------------------------------------------------------
 
-void InitCamera()
+ =========================================================================================*/
+#include<d3dx9.h>
+#include"camera.h"
+#include"config.h"
+#include"bg.h"
+#include"player.h"
+
+ /*-----------------------------------------------------------------------------------------
+   グローバル変数
+ -------------------------------------------------------------------------------------------*/
+static D3DXVECTOR2 g_cameraPosition;
+
+/*-----------------------------------------------------------------------------------------
+  関数定義
+-------------------------------------------------------------------------------------------*/
+void GameCamera_Update(void)
 {
-	static D3DXVECTOR2 PlayerPosition;
+	D3DXVECTOR2 playerPosition = GetPlayerPosition();
 
-	PlayerPosition = GetPlayerPosition();
+	SetCamera(playerPosition.x, playerPosition.y);
 
-	g_CameraPosition = { SCREEN_WIDTH / 2.0f,SCREEN_HEIGHT / 2.0f };
+	/*if (g_cameraPosition.x <= SCREEN_WIDTH * 0.5f)
+	{
+		g_cameraPosition.x = SCREEN_WIDTH * 0.5f;
+	}
 
-	g_Screen_Position =	{g_CameraPosition.x - SCREEN_WIDTH / 2.0f,
-						 g_CameraPosition.y - SCREEN_HEIGHT / 2.0f };
+	if (g_cameraPosition.x >= STAGE_WIDTH - SCREEN_WIDTH * 0.5f)
+	{
+		g_cameraPosition.x = STAGE_WIDTH - SCREEN_WIDTH * 0.5f;
+	}
+
+	if (g_cameraPosition.y <= SCREEN_HEIGHT * 0.5f)
+	{
+		g_cameraPosition.y = SCREEN_HEIGHT * 0.5f;
+	}
+
+	if (g_cameraPosition.y >= STAGE_HEIGHT - SCREEN_HEIGHT * 0.5f)
+	{
+		g_cameraPosition.y = STAGE_HEIGHT - SCREEN_HEIGHT * 0.5f;
+	}*/
+
+
 }
 
-void UninitCamera()
+D3DXVECTOR2 CALLBACK WorldToScreen(D3DXVECTOR2 objPosition)
 {
-	
+	// スクリーン座標を算出
+	D3DXVECTOR2 screenPosition =
+	{
+		g_cameraPosition.x - SCREEN_WIDTH * 0.5f,
+		g_cameraPosition.y - SCREEN_HEIGHT * 0.5f
+	};
+
+	// ワールド座標からスクリーン座標に変換する
+	D3DXVECTOR2 screenCoordinate = objPosition - screenPosition;
+
+	return screenCoordinate;
 }
 
-void UpdateCamera()
+void SetCamera(float x, float y)
 {
-	static D3DXVECTOR2 PlayerPosition;
-
-	PlayerPosition = GetPlayerPosition();
-
-	g_CameraPosition.x = PlayerPosition.x;
-
-	g_CameraPosition.y = PlayerPosition.y;
-
-	g_Screen_Position = { g_CameraPosition.x - SCREEN_WIDTH / 2.0f,
-						 g_CameraPosition.y - SCREEN_HEIGHT / 2.0f };
+	g_cameraPosition = D3DXVECTOR2(x, y);
 }
 
-void DrawCamera()
+D3DXVECTOR2 GetCameraPosition(void)
 {
-
+	return g_cameraPosition;
 }

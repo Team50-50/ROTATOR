@@ -19,6 +19,7 @@
 
 #include "bg.h"
 #include "player.h"
+#include "camera.h"
 
 /*------------------------------------------------------------------------------
 	プロトタイプ宣言
@@ -224,6 +225,7 @@ bool Initialize(void)
 void Update(void)
 {
 	//Game_Update();
+	GameCamera_Update();
 	UpdateInput();
 	UpdatePlayer();
 	UpdateBlock();

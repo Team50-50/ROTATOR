@@ -1,15 +1,23 @@
-#ifndef CAMERA_H
-#define CAMERA_H
+/*=======================================================================================
 
-#include "main.h"
+	 ゲームのカメラ制御（2D）[game_camera.h]
+												author:mgc
+												date:2020/11/12
+ -----------------------------------------------------------------------------------------
 
-static D3DXVECTOR2 g_CameraPosition;
+ =========================================================================================*/
+#ifndef GAME_CAMERA_H_
+#define GAME_CAMERA_H_
 
-static D3DXVECTOR2 g_Screen_Position;
+#include<d3dx9.h>
 
-void InitCamera();
-void UninitCamera();
-void UpdateCamera();
-void DrawCamera();
+void GameCamera_Update(void);
 
-#endif CAMERA_H
+D3DXVECTOR2 CALLBACK WorldToScreen(D3DXVECTOR2 objPosition);
+
+void SetCamera(float x, float y);
+
+D3DXVECTOR2 GetCameraPosition(void);
+
+#endif // !GAME_CAMERA_H_
+

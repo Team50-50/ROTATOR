@@ -8,7 +8,7 @@
  =========================================================================================*/
 #include"data_control.h"
 
-void DataRecord(DataWarehouse* data, D3DXVECTOR2 playerPosition)
+void DataRecord(DataStorage* data, D3DXVECTOR2 playerPosition)
 {
 	if (data->data_tail > RECORDFRAME_MAX)
 	{
@@ -19,7 +19,7 @@ void DataRecord(DataWarehouse* data, D3DXVECTOR2 playerPosition)
 
 }
 
-D3DXVECTOR2 dequeue(DataWarehouse* data)
+D3DXVECTOR2 dequeue(DataStorage* data)
 {
 	D3DXVECTOR2 tmp;
 	if (data->data_tail == 0)
@@ -38,7 +38,7 @@ D3DXVECTOR2 dequeue(DataWarehouse* data)
 	return tmp;
 }
 
-D3DXVECTOR2 pop(DataWarehouse* data)
+D3DXVECTOR2 pop(DataStorage* data)
 {
 	D3DXVECTOR2 ret;
 

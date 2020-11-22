@@ -19,15 +19,15 @@ typedef struct
 	int data_head;
 	int data_tail;
 
-}DataWarehouse;
+}DataStorage;
 
-void DataRecord(DataWarehouse* data, D3DXVECTOR2 positionData);
+void DataRecord(DataStorage* data, D3DXVECTOR2 positionData);
 
+//FIFO...First In First Out
+D3DXVECTOR2 dequeue(DataStorage* data);
 
-D3DXVECTOR2 dequeue(DataWarehouse* data);
-
-
-D3DXVECTOR2 pop(DataWarehouse* data);
+//LIFO...Last In First Out
+D3DXVECTOR2 pop(DataStorage* data);
 
 
 #endif // !DATA_H_

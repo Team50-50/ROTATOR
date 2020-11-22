@@ -9,7 +9,7 @@ typedef struct Virtual_player_tag
 {
 	D3DXVECTOR2 position;
 	int frame;
-
+	bool enable = false;
 }ReversionPlayer;
 
 void ReversionPlayer_Initialize(void);
