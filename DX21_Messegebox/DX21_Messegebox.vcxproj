@@ -22,6 +22,7 @@
     <ClCompile Include="bg.cpp" />
     <ClCompile Include="block.cpp" />
     <ClCompile Include="camera.cpp" />
+    <ClCompile Include="data_control.cpp" />
     <ClCompile Include="debug_font.cpp" />
     <ClCompile Include="directinput.cpp" />
     <ClCompile Include="keyboard.cpp" />
@@ -39,6 +40,7 @@
     <ClInclude Include="block.h" />
     <ClInclude Include="camera.h" />
     <ClInclude Include="Config.h" />
+    <ClInclude Include="data_control.h" />
     <ClInclude Include="debugPrintf.h" />
     <ClInclude Include="debug_font.h" />
     <ClInclude Include="directinput.h" />
