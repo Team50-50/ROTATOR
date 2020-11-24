@@ -17,10 +17,4 @@ void DrawBlock();
 
 
 //ブロックの位置座標を渡す関数
-//
-//int nはブロックの配列数
-D3DXVECTOR2  GetBlockPosition(int n);
-
-
-
-
+D3DXVECTOR2*  GetBlockPosition();

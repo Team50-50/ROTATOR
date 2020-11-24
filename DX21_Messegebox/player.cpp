@@ -25,7 +25,8 @@ static DataStorage g_Debug;
 
 
 //ブロック位置
-D3DXVECTOR2	BlockPosition[BLOCK_MAX];
+//D3DXVECTOR2	BlockPosition[BLOCK_MAX];
+D3DXVECTOR2*	BlockPosition;
 
 //プレイヤー位置情報
 D3DXVECTOR2	g_PlayerPosition;
@@ -129,11 +130,16 @@ void UpdatePlayer()
 	//プレイヤー落下処理
 	g_PlayerPosition.y -= jump_amount;
 	
+	
+	////ブロックの位置座標を取得
+	//for (int i = 0; i < BLOCK_MAX; i++)
+	//{
+	//	BlockPosition[i] = GetBlockPosition(i);
+	//}
+	
 	//ブロックの位置座標を取得
-	for (int i = 0; i < BLOCK_MAX; i++)
-	{
-		BlockPosition[i] = GetBlockPosition(i);
-	}
+	BlockPosition = GetBlockPosition();
+
 
 	for (int i = 0; i < BLOCK_MAX; i++)
 	{

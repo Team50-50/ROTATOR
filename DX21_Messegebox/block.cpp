@@ -40,8 +40,6 @@ void UpdateBlock()
 	
 }
 
-
-
 void DrawBlock()
 {
 
@@ -55,11 +53,13 @@ void DrawBlock()
 	}
 }
 
-D3DXVECTOR2  GetBlockPosition(int n)
+//D3DXVECTOR2  GetBlockPosition(int n)
+//{
+//	//指定されたブロックの位置座標を返す
+//	return g_Block[n];
+//}
+
+D3DXVECTOR2* GetBlockPosition()
 {
-	//指定されたブロックの位置座標を返す
-	return g_Block[n];
+	return g_Block;
 }
-
-
-
