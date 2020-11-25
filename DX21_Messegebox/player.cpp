@@ -4,6 +4,8 @@
 #include "Sprite.h"
 #include "player.h"
 #include "block.h"
+#include "key.h"
+#include "dore.h"
 #include "directinput.h"
 #include "camera.h"
 #include "data_control.h"
@@ -28,6 +30,13 @@ static DataStorage g_Debug;
 //D3DXVECTOR2	BlockPosition[BLOCK_MAX];
 D3DXVECTOR2*	BlockPosition;
 
+// 扉位置
+Dore* DoresPosition;
+// 鍵の所持数
+static int g_PlayerKey;
+// 鍵の使った数
+static int g_PlayerUsedKey;
+
 //プレイヤー位置情報
 D3DXVECTOR2	g_PlayerPosition;
 
@@ -35,7 +44,7 @@ D3DXVECTOR2	g_PlayerPosition;
 //ジャンプ時の移動量
 float	jump_amount;
 
-//地面にプレイヤーがいるかどうか？
+// 地面にプレイヤーがいるかどうか？
 bool on_ground;
 
 static bool flag1 = false;
@@ -43,7 +52,9 @@ static bool flag2 = false;
 static float a = 0.f;
 static float g_value = 0.0f;
 
-
+// 移動方向のon/off
+bool CangoR;
+bool CangoL;
 
 void InitPlayer()
 {
@@ -59,6 +70,13 @@ void InitPlayer()
 
 	//ジャンプ時の移動量を初期化
 	jump_amount = 0;
+
+	//移動on/offの初期化
+	CangoR = true;
+	CangoL = true;
+
+	// 鍵の使った数の初期化
+	g_PlayerUsedKey = 0;
 
 	g_Current.data_head = 0;
 	g_Current.data_tail = 0;
@@ -85,15 +103,19 @@ void UpdatePlayer()
 	//Aを押して左に移動
 	if (GetKeyState('A') & 0x80)
 	{
-		g_PlayerPosition.x -= 10.0f;//移動量
-
+		if (CangoL == true)
+		{
+			g_PlayerPosition.x -= 10.0f;//移動量
+		}
 	}
 	
 	//Dを押して左に移動
 	if (GetKeyState('D') & 0x80)
 	{
-		g_PlayerPosition.x += 10.0f;//移動量
-
+		if (CangoR == true)
+		{
+			g_PlayerPosition.x += 10.0f;//移動量
+		}
 	}
 	
 	//ジャンプ
@@ -140,7 +162,6 @@ void UpdatePlayer()
 	//ブロックの位置座標を取得
 	BlockPosition = GetBlockPosition();
 
-
 	for (int i = 0; i < BLOCK_MAX; i++)
 	{
 		if (g_PlayerPosition.x + PLAYER_SIZE_X > BlockPosition[i].x && g_PlayerPosition.x < BlockPosition[i].x + BLOCK_SIZE_X)
@@ -156,8 +177,65 @@ void UpdatePlayer()
 				on_ground = false;
 			}
 		}
-		
+
 	}
+
+	// 扉の位置座標を取得
+	DoresPosition = GetDores();
+	g_PlayerKey = GetPlayerKeyPossession();
+
+	for (int i = 0; i < DORE_MAX; i++)
+	{
+		if (DoresPosition[i].use == true)
+		{
+			if (g_PlayerPosition.x < DoresPosition[i].xy.x + (DORE_SIZE_X * 0.5))
+			{
+				if (g_PlayerPosition.x + PLAYER_SIZE_X > DoresPosition[i].xy.x)
+				{
+					if (g_PlayerKey > 0)
+					{
+						
+						DelDore(i);
+						g_PlayerUsedKey++;
+
+					}
+					else
+					{
+						CangoR = false;
+						CangoL = true;
+					}
+				}
+				else
+				{
+					CangoR = true;
+				}
+			}
+			if (g_PlayerPosition.x + PLAYER_SIZE_X > DoresPosition[i].xy.x + (DORE_SIZE_X * 0.5))
+			{
+				if (g_PlayerPosition.x < DoresPosition[i].xy.x + DORE_SIZE_X)
+				{
+					if (g_PlayerKey > 0)
+					{
+
+						DelDore(i);
+						g_PlayerUsedKey++;
+
+					}
+					else
+					{
+						CangoR = false;
+						CangoL = true;
+					}
+				}
+				else
+				{
+					CangoL = true;
+				}
+			}
+		}
+	}
+	
+
 
 	if (g_Current.data_tail == 0)
 	{
@@ -238,6 +316,18 @@ void DrawPlayer()
 	DebugFont_Draw(900.0f, 50.0f, Buf);
 }
 
+CollisionCircle GamePlayer_GetCollision(void)
+{
+	CollisionCircle c = {
+		D3DXVECTOR2(
+			g_PlayerPosition.x + PLAYER_SIZE_X * 0.5f,
+			g_PlayerPosition.y + PLAYER_SIZE_Y * 0.5f
+		),
+		PLAYER_SIZE_X * 0.5f
+	};
+
+	return c;
+}
 
 D3DXVECTOR2 GetPlayerPosition()
 {
@@ -253,4 +343,9 @@ DataStorage GetPrev(void)
 DataStorage GetDebug(void)
 {
 	return g_Debug;
+}
+
+int GetPlayerUseKey(void)
+{
+	return g_PlayerUsedKey;
 }

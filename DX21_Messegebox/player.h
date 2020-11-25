@@ -2,6 +2,7 @@
 #define PLAYER_H
 
 #include "data_control.h"
+#include"collision.h"
 
 //ÉvÉåÉCÉÑÅ[ÇÃëÂÇ´Ç≥X
 #define PLAYER_SIZE_X (64.0f)
@@ -15,9 +16,12 @@ void UninitPlayer();
 void UpdatePlayer();
 void DrawPlayer();
 
+CollisionCircle GamePlayer_GetCollision(void);
 D3DXVECTOR2 GetPlayerPosition();
 
 DataStorage GetPrev(void);
 DataStorage GetDebug(void);
+
+int GetPlayerUseKey(void);
 
 #endif //PLAYER_H

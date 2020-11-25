@@ -14,7 +14,10 @@
 #include "directinput.h"
 #include "Sprite.h"
 #include "Main.h"
+#include "stage.h"
 #include "block.h"
+#include "key.h"
+#include "dore.h"
 #include "revesion_player.h"
 
 #include "bg.h"
@@ -213,6 +216,9 @@ bool Initialize(void)
 	InitBG();
 	InitPlayer();
 	InitBlock();
+	InitKey();
+	InitDore();
+	InitStage();
 	ReversionPlayer_Initialize();
 
 	Sprite_Initialize();
@@ -229,6 +235,8 @@ void Update(void)
 	UpdateInput();
 	UpdatePlayer();
 	UpdateBlock();
+	UpdateKey();
+	UpdateDore();
 	ReversionPlayer_Update();
 	
 	
@@ -268,6 +276,8 @@ void Draw(void)
 	DrawBG();
 	DrawPlayer();
 	DrawBlock();
+	DrawKey();
+	DrawDore();
 	ReversionPlayer_Draw();
 
 	// FPS•\Ž¦
@@ -291,6 +301,8 @@ void Finalize(void)
 	UninitBG();
 	UninitPlayer();
 	UninitBlock();
+	UninitDore();
+	UninitKey();
 	ReversionPlayer_Finalize();
 
 
