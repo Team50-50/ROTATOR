@@ -23,6 +23,7 @@
     <ClCompile Include="block.cpp" />
     <ClCompile Include="camera.cpp" />
     <ClCompile Include="collision.cpp" />
+    <ClCompile Include="controller.cpp" />
     <ClCompile Include="data_control.cpp" />
     <ClCompile Include="debug_font.cpp" />
     <ClCompile Include="directinput.cpp" />
@@ -47,6 +48,7 @@
     <ClInclude Include="camera.h" />
     <ClInclude Include="collision.h" />
     <ClInclude Include="Config.h" />
+    <ClInclude Include="controller.h" />
     <ClInclude Include="data_control.h" />
     <ClInclude Include="debugPrintf.h" />
     <ClInclude Include="debug_font.h" />

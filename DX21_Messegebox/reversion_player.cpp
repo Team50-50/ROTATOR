@@ -4,6 +4,7 @@
 #include "player.h"
 #include "revesion_player.h"
 #include "directinput.h"
+#include "controller.h"
 #include "camera.h"
 #include "data_control.h"
 
@@ -40,7 +41,7 @@ void ReversionPlayer_Update(void)
 	//プレイヤー前のフレームのpositionデータをスタック領域から取得する
 	for (int i = 0; i < prevData.data_tail; i++)
 	{
-		if (GetKeyState('B') & 0x80)
+		if (GetKeyState('B') & 0x80 || JoystickPress(ButtonRT))
 		{
 			//Bキーを押し続けたら、プレイヤー前のフレームのpositionデータを1フレームずつ、仮想プレイヤーに代入する
 			//Bキーを離したら、仮想プレイヤーがその場で止まる
@@ -56,7 +57,8 @@ void ReversionPlayer_Update(void)
 	{
 		g_ReversionPlayer[1].enable = true;
 	}
-	if (frame >= 360 && GetKeyState('B') & 0x80)
+	if ((frame >= 360 && GetKeyState('B') & 0x80) || 
+		(frame >= 360 && JoystickPress(ButtonRT)))
 	{
 		g_ReversionPlayer[0].enable = true;
 	}

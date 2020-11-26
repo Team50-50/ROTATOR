@@ -7,6 +7,7 @@
 #include "key.h"
 #include "dore.h"
 #include "directinput.h"
+#include "controller.h"
 #include "keylogger.h"
 #include "camera.h"
 #include "data_control.h"
@@ -103,7 +104,7 @@ void UpdatePlayer()
 {
 
 	//Aを押して左に移動
-	if (GetKeyState('A') & 0x80)
+	if (GetKeyState('A') & 0x80 || JoystickPress(LStickLeft))
 	{
 		if (CangoL == true)
 		{
@@ -112,7 +113,7 @@ void UpdatePlayer()
 	}
 	
 	//Dを押して左に移動
-	if (GetKeyState('D') & 0x80)
+	if (GetKeyState('D') & 0x80 || JoystickPress(LStickRight))
 	{
 		if (CangoR == true)
 		{
@@ -121,7 +122,7 @@ void UpdatePlayer()
 	}
 	
 	//ジャンプ
-	if (GetKeyState(VK_SPACE) & 0x80)
+	if (GetKeyState(VK_SPACE) & 0x80 || JoystickPress(ButtonY))
 	{
 		if (on_ground == true)
 		{
@@ -130,49 +131,19 @@ void UpdatePlayer()
 
 	}
 
-	if (Keylogger_Release(KL_J))
+	if (Keylogger_Release(KL_J) || JoystickRelease(ButtonLT))
 	{
 		Rocket_Spawn(g_PlayerPosition.x + 32.0f, g_PlayerPosition.y + 64.0f);
 
 	}
 
-	/*if (Keylogger_Press(KL_J))
-	{
-		Rocket_Spawn(g_PlayerPosition.x + 32.0f, g_PlayerPosition.y + 64.0f);
-
-	}*/
-
-	//===========================================
-	//コントローラー
-	//↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
-	if (IsButtonPush(LeftButton))
-	{
-		g_PlayerPosition.x -= 10.0f;//移動量
-	}
-	if (IsButtonPush(RightButton))
-	{
-		g_PlayerPosition.x += 10.0f;//移動量
-	}
-	if (IsButtonDown(ButtonB) || IsButtonPush(ButtonX) || IsButtonUp(ButtonY))
-	{
-		if (on_ground == true)
-		{
-			jump_amount = 16.0f;//ジャンプ量
-		}
-	}
+	
 	
 	//重力を常に発生させる
 	jump_amount -= 1.0f;
 
 	//プレイヤー落下処理
 	g_PlayerPosition.y -= jump_amount;
-	
-	
-	////ブロックの位置座標を取得
-	//for (int i = 0; i < BLOCK_MAX; i++)
-	//{
-	//	BlockPosition[i] = GetBlockPosition(i);
-	//}
 	
 	//ブロックの位置座標を取得
 	BlockPosition = GetBlockPosition();
@@ -278,7 +249,7 @@ void UpdatePlayer()
 	}
 	if (flag1)
 	{
-		if (GetKeyState('B') & 0x80)
+		if (GetKeyState('B') & 0x80 || JoystickPress(ButtonRT))
 		{
 			flag2 = false;
 			DataRecord(&g_Prev, pop(&g_Current));

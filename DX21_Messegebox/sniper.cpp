@@ -16,6 +16,7 @@
 #include "player.h"
 #include "camera.h"
 #include "directinput.h"
+#include "controller.h"
 #include "keylogger.h"
 
  /*-----------------------------------------------------------------------------------------
@@ -68,6 +69,24 @@ void UpdateSniper(void)
 		
 	}
 
+	//コントローラー
+	if (JoystickPress(ButtonLT))
+	{
+
+		if (JoystickPress(RStickDown))
+		{
+			angle += 0.05f;
+
+		}
+
+		if (JoystickPress(RStickUP))
+		{
+			angle -= 0.05f;
+
+		}
+
+	}
+
 
 	playerPosition = GetPlayerPosition();
 
@@ -108,7 +127,7 @@ void DrawSniper(void)
 	float CX = playerPosition.x + PLAYER_SIZE_X * 0.5f;
 	float CY = playerPosition.y + PLAYER_SIZE_Y * 0.5f;
 
-	if (Keylogger_Press(KL_J))
+	if (Keylogger_Press(KL_J) || JoystickPress(ButtonLT))
 	{
 		Sprite_Draw(-1,WorldToScreen({ CX,CY }).x, WorldToScreen({ CX,CY }).y,
 			1000.0f, 5.0f, 0, 0, 1000, 5,

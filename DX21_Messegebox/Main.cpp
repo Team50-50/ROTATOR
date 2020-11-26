@@ -12,6 +12,7 @@
 #include "Mydirect3d.h"
 #include "system_timer.h"
 #include "directinput.h"
+#include "controller.h"
 #include "keyboard.h"
 #include "keylogger.h"
 #include "Sprite.h"
@@ -227,6 +228,8 @@ bool Initialize(void)
 
 	}
 
+	InitController();
+
 	InitBG();
 	InitPlayer();
 	InitBlock();
@@ -250,7 +253,7 @@ void Update(void)
 
 	//Game_Update();
 	GameCamera_Update();
-	UpdateInput();
+	UpdateController();
 	UpdatePlayer();
 	UpdateBlock();
 	UpdateKey();
