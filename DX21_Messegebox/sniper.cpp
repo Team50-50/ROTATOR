@@ -82,8 +82,8 @@ void UpdateSniper(void)
 
 		if (g_rocket[i].enable)
 		{
-			g_rocket[i].position.x += cosf(g_rocket[i].r_angle) * 10;
-			g_rocket[i].position.y += sinf(g_rocket[i].r_angle) * 10;
+			g_rocket[i].position.x += cosf(g_rocket[i].r_angle) * ROCKET_SPEED;
+			g_rocket[i].position.y += sinf(g_rocket[i].r_angle) * ROCKET_SPEED;
 		
 		}
 		else
