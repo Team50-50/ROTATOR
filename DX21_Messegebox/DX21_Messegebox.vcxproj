@@ -29,11 +29,13 @@
     <ClCompile Include="dore.cpp" />
     <ClCompile Include="key.cpp" />
     <ClCompile Include="keyboard.cpp" />
+    <ClCompile Include="keylogger.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="mouse.cpp" />
     <ClCompile Include="Mydirect3d.cpp" />
     <ClCompile Include="player.cpp" />
     <ClCompile Include="reversion_player.cpp" />
+    <ClCompile Include="sniper.cpp" />
     <ClCompile Include="Sprite.cpp" />
     <ClCompile Include="stage.cpp" />
     <ClCompile Include="system_timer.cpp" />
@@ -52,11 +54,13 @@
     <ClInclude Include="dore.h" />
     <ClInclude Include="key.h" />
     <ClInclude Include="keyboard.h" />
+    <ClInclude Include="keylogger.h" />
     <ClInclude Include="Main.h" />
     <ClInclude Include="mouse.h" />
     <ClInclude Include="Mydirect3d.h" />
     <ClInclude Include="player.h" />
     <ClInclude Include="revesion_player.h" />
+    <ClInclude Include="sniper.h" />
     <ClInclude Include="Sprite.h" />
     <ClInclude Include="stage.h" />
     <ClInclude Include="system_timer.h" />

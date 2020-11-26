@@ -7,9 +7,11 @@
 #include "key.h"
 #include "dore.h"
 #include "directinput.h"
+#include "keylogger.h"
 #include "camera.h"
 #include "data_control.h"
 #include "debug_font.h"
+#include "sniper.h"
 #include <stdio.h>
 
 /*-----------------------------------------------------------------------------------------
@@ -127,6 +129,19 @@ void UpdatePlayer()
 		}
 
 	}
+
+	if (Keylogger_Release(KL_J))
+	{
+		Rocket_Spawn(g_PlayerPosition.x + 32.0f, g_PlayerPosition.y + 64.0f);
+
+	}
+
+	/*if (Keylogger_Press(KL_J))
+	{
+		Rocket_Spawn(g_PlayerPosition.x + 32.0f, g_PlayerPosition.y + 64.0f);
+
+	}*/
+
 	//===========================================
 	//コントローラー
 	//↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓

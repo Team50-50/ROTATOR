@@ -12,6 +12,8 @@
 #include "Mydirect3d.h"
 #include "system_timer.h"
 #include "directinput.h"
+#include "keyboard.h"
+#include "keylogger.h"
 #include "Sprite.h"
 #include "Main.h"
 #include "stage.h"
@@ -23,6 +25,7 @@
 #include "bg.h"
 #include "player.h"
 #include "camera.h"
+#include "sniper.h"
 
 /*------------------------------------------------------------------------------
 	プロトタイプ宣言
@@ -181,6 +184,11 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		if (wParam == VK_ESCAPE) {
 			SendMessage(hWnd, WM_CLOSE, 0, 0);
 		}
+	case WM_ACTIVATEAPP:
+	case WM_SYSKEYDOWN:
+	case WM_KEYUP:
+	case WM_SYSKEYUP:
+		Keyboard_ProcessMessage(uMsg, wParam, lParam);
 		break;
 
 	case WM_CLOSE:
@@ -201,6 +209,12 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 // 戻り値:初期化に失敗したときfalse
 bool Initialize(void)
 {
+	//キーボードの初期化
+	Keyboard_Initialize();
+
+	//キーロガーの初期化
+	Keylogger_Initialize();
+
 	if (!MyDirect3D_Initialize(g_hWnd)) {
 		MessageBox(NULL, "Direct3Dの初期化に失敗しました。", "エラー", MB_OK);
 		return false;
@@ -220,6 +234,7 @@ bool Initialize(void)
 	InitDore();
 	InitStage();
 	ReversionPlayer_Initialize();
+	InitSniper();
 
 	Sprite_Initialize();
 	DebugFont_Initialize();
@@ -230,6 +245,9 @@ bool Initialize(void)
 // ゲームの更新関数
 void Update(void)
 {
+	//キーロガーの更新処理
+	Keylogger_Update();
+
 	//Game_Update();
 	GameCamera_Update();
 	UpdateInput();
@@ -238,7 +256,7 @@ void Update(void)
 	UpdateKey();
 	UpdateDore();
 	ReversionPlayer_Update();
-	
+	UpdateSniper();
 	
 	
 
@@ -279,6 +297,7 @@ void Draw(void)
 	DrawKey();
 	DrawDore();
 	ReversionPlayer_Draw();
+	DrawSniper();
 
 	// FPS表示
 	char buf[64];
@@ -304,9 +323,11 @@ void Finalize(void)
 	UninitDore();
 	UninitKey();
 	ReversionPlayer_Finalize();
-
+	UninitSniper();
 
 	Sprite_Finalize();
 	MyDirect3D_Finalize();
+	//キーロガーの終了処理
+	Keylogger_Finalize();
 	ReleaseInput();
 }
