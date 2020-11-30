@@ -148,19 +148,56 @@ void UpdatePlayer()
 	//ブロックの位置座標を取得
 	BlockPosition = GetBlockPosition();
 
+
+	//ブロックの当たり判定を作成
 	for (int i = 0; i < BLOCK_MAX; i++)
 	{
 		if (g_PlayerPosition.x + PLAYER_SIZE_X > BlockPosition[i].x && g_PlayerPosition.x < BlockPosition[i].x + BLOCK_SIZE_X)
 		{
-			if (g_PlayerPosition.y >= BlockPosition[i].y - PLAYER_SIZE_Y)
+
+			if (g_PlayerPosition.y + PLAYER_SIZE_Y >= BlockPosition[i].y)
 			{
-				on_ground = true;
-				g_PlayerPosition.y = BlockPosition[i].y - PLAYER_SIZE_Y;
-				jump_amount = 0;
+				if (g_PlayerPosition.y + PLAYER_SIZE_Y <= BlockPosition[i].y + BLOCK_SIZE_Y / 2)
+				{
+					on_ground = true;
+					g_PlayerPosition.y = BlockPosition[i].y - PLAYER_SIZE_Y;
+					jump_amount = 0;
+				}
 			}
 			else
 			{
 				on_ground = false;
+			}
+
+			if (g_PlayerPosition.y <= BlockPosition[i].y+BLOCK_SIZE_Y)
+			{
+				if (g_PlayerPosition.y >= BlockPosition[i].y + BLOCK_SIZE_Y / 2)
+				{
+					on_ground = false;
+					g_PlayerPosition.y = BlockPosition[i].y + BLOCK_SIZE_Y;
+					
+				}
+			}
+
+		}
+
+		if ((g_PlayerPosition.y >= BlockPosition[i].y && g_PlayerPosition.y <= BlockPosition[i].y + BLOCK_SIZE_Y))
+		{
+
+			if (g_PlayerPosition.x + PLAYER_SIZE_X > BlockPosition[i].x)
+			{
+				if (g_PlayerPosition.x + PLAYER_SIZE_X < BlockPosition[i].x + BLOCK_SIZE_X)
+				{
+					g_PlayerPosition.x = BlockPosition[i].x - BLOCK_SIZE_X;
+				}
+			}
+
+			if (g_PlayerPosition.x < BlockPosition[i].x+BLOCK_SIZE_X)
+			{
+				if (g_PlayerPosition.x > BlockPosition[i].x - BLOCK_SIZE_X / 2)
+				{
+					g_PlayerPosition.x = BlockPosition[i].x + BLOCK_SIZE_X;
+				}
 			}
 		}
 

@@ -1,7 +1,7 @@
 #pragma once
 
 // ブロックのMax数（配列の数）
-#define BLOCK_MAX (100)
+#define BLOCK_MAX (1024)
 
 //ブロックの大きさX
 #define BLOCK_SIZE_X (64.0f)

@@ -31,7 +31,7 @@ static float angle;
 void InitSniper(void)
 {
 	//g_Texturelaser = Texture_SetTextureLoadFile("asset/");
-	g_TextureRocket = Texture_SetTextureLoadFile("asset/player.png");
+	g_TextureRocket = Texture_SetTextureLoadFile("asset/bullet.png");
 
 	angle = 0.0f;
 
@@ -143,7 +143,7 @@ void DrawSniper(void)
 		Sprite_Draw(g_TextureRocket,
 			WorldToScreen(g_rocket[i].position).x,
 			WorldToScreen(g_rocket[i].position).y,
-			16.0f, 32.0f, 0, 0, 64, 128);
+			32.0f, 32.0f, 0, 0, 32.0f, 32.0f);
 
 	}
 }

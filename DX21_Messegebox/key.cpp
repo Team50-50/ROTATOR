@@ -116,7 +116,7 @@ void DrawKey()
 			else
 			{
 				Sprite_Draw(g_KeyTexture, WorldToScreen(Keys[i].xy).x, WorldToScreen(Keys[i].xy).y, KEY_SIZE_X, KEY_SIZE_Y,
-					0, 0, 10, 10);
+					0, 0, 64, 64);
 			}
 		}
 	}

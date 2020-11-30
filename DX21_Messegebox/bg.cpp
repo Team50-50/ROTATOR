@@ -27,6 +27,6 @@ void DrawBG(void)
 
 	// スプライトを描画
 	Sprite_Draw(g_TextureBG, 0.0f, 0.0f, SCREEN_WIDTH, SCREEN_HEIGHT,
-	0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+	0, 0, 1440, 960);
 
 }
