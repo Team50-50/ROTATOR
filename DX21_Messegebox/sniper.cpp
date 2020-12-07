@@ -18,6 +18,7 @@
 #include "directinput.h"
 #include "controller.h"
 #include "keylogger.h"
+#include "bg.h"
 
  /*-----------------------------------------------------------------------------------------
   ÉOÉçÅ[ÉoÉãïœêî
@@ -111,8 +112,8 @@ void UpdateSniper(void)
 		}
 	
 
-		if (g_rocket[i].position.y<0.0f || g_rocket[i].position.y>800.0f ||
-			g_rocket[i].position.x<0.0f || g_rocket[i].position.x>2000.0f)
+		if (g_rocket[i].position.y < 0.0f || g_rocket[i].position.y > STAGE_HEIGHT ||
+			g_rocket[i].position.x < 0.0f || g_rocket[i].position.x > STAGE_WIDTH)
 		{
 			g_rocket[i].enable = false;
 		}
@@ -143,7 +144,7 @@ void DrawSniper(void)
 		Sprite_Draw(g_TextureRocket,
 			g_rocket[i].position.x,
 			g_rocket[i].position.y,
-			32.0f, 32.0f, 0, 0, 32.0f, 32.0f);
+			32.0f, 32.0f, 0, 0, 32.0f, 32.0f, 0.0f, 16.0f, g_rocket[i].r_angle);
 
 	}
 }
