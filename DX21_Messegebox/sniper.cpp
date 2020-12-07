@@ -129,7 +129,7 @@ void DrawSniper(void)
 
 	if (Keylogger_Press(KL_J) || JoystickPress(ButtonLT))
 	{
-		Sprite_Draw(-1,WorldToScreen({ CX,CY }).x, WorldToScreen({ CX,CY }).y,
+		Sprite_Draw(-1,CX, CY ,
 			1000.0f, 5.0f, 0, 0, 1000, 5,
 			0.0f, 2.5f, angle);
 	}
@@ -141,8 +141,8 @@ void DrawSniper(void)
 		if (!g_rocket[i].enable) continue;
 
 		Sprite_Draw(g_TextureRocket,
-			WorldToScreen(g_rocket[i].position).x,
-			WorldToScreen(g_rocket[i].position).y,
+			g_rocket[i].position.x,
+			g_rocket[i].position.y,
 			32.0f, 32.0f, 0, 0, 32.0f, 32.0f);
 
 	}

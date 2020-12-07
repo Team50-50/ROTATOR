@@ -19,10 +19,12 @@
  グローバル変数
 -------------------------------------------------------------------------------------------*/
 //プレイヤーテクスチャー読み込み
-static int	g_PlayerTexture = TEXTURE_INVALID_ID;
+static int g_PlayerTexture[TYPE_MAX];
 static int g_TextureGreen = TEXTURE_INVALID_ID;
 static int g_TextureRed = TEXTURE_INVALID_ID;
 static int g_TextureBlue = TEXTURE_INVALID_ID;
+
+static Player g_Player;
 
 static DataStorage g_Current;
 static DataStorage g_Prev;
@@ -30,7 +32,6 @@ static DataStorage g_Debug;
 
 
 //ブロック位置
-//D3DXVECTOR2	BlockPosition[BLOCK_MAX];
 D3DXVECTOR2*	BlockPosition;
 
 // 扉位置
@@ -39,16 +40,6 @@ Dore* DoresPosition;
 static int g_PlayerKey;
 // 鍵の使った数
 static int g_PlayerUsedKey;
-
-//プレイヤー位置情報
-D3DXVECTOR2	g_PlayerPosition;
-
-
-//ジャンプ時の移動量
-float	jump_amount;
-
-// 地面にプレイヤーがいるかどうか？
-bool on_ground;
 
 static bool flag1 = false;
 static bool flag2 = false;
@@ -59,24 +50,26 @@ static float g_value = 0.0f;
 bool CangoR;
 bool CangoL;
 
+
+
 void InitPlayer()
 {
 	//プレイヤーのテクスチャ読み込み
-	g_PlayerTexture = Texture_SetTextureLoadFile("asset/player.png");
+	g_PlayerTexture[IDLE] = Texture_SetTextureLoadFile("asset/player.png");
+	g_PlayerTexture[WALKING] = Texture_SetTextureLoadFile("asset/HEW_CHARA_Aniamtion_run_renban.png");
 	g_TextureGreen = Texture_SetTextureLoadFile("asset/green.tga");
 	g_TextureRed = Texture_SetTextureLoadFile("asset/red.tga");
 	g_TextureBlue = Texture_SetTextureLoadFile("asset/blue.tga");
 
 	//プレイヤーの初期位置の定義
-	g_PlayerPosition.x = ((SCREEN_WIDTH - PLAYER_SIZE_X) / 2);
-	g_PlayerPosition.y = ((SCREEN_HEIGHT - PLAYER_SIZE_Y) * 7 / 10);
-
-	//ジャンプ時の移動量を初期化
-	jump_amount = 0;
+	g_Player.position = { 50.0f,200.0f };
 
 	//移動on/offの初期化
 	CangoR = true;
 	CangoL = true;
+
+	g_Player.isJump = true;
+	g_Player.RL = false;
 
 	// 鍵の使った数の初期化
 	g_PlayerUsedKey = 0;
@@ -87,13 +80,16 @@ void InitPlayer()
 	g_Prev.data_tail = 0;
 	g_Debug.data_head = 0;
 	g_Debug.data_tail = 0;
+
+	InitAnimations(g_Player.animation, WALKING, 192, 256, 3, 2, 6);
 }
 
 
 void UninitPlayer()
 {
 	//テクスチャの解放
-	Texture_Release(&g_PlayerTexture,1);
+	Texture_Release(&g_PlayerTexture[IDLE], 1);
+	Texture_Release(&g_PlayerTexture[WALKING], 1);
 	Texture_Release(&g_TextureGreen, 1);
 	Texture_Release(&g_TextureRed, 1);
 	Texture_Release(&g_TextureBlue, 1);
@@ -102,106 +98,75 @@ void UninitPlayer()
 
 void UpdatePlayer()
 {
+	//進行方向を長さ1にする
+	D3DXVec2Normalize(&g_Player.direction, &g_Player.direction);
+
+	for (int i = 0; i < TYPE_MAX; i++)
+	{
+		g_Player.animation[i].isUse = false;
+	}
+
+	g_Player.animation[IDLE].isUse = true;
 
 	//Aを押して左に移動
 	if (GetKeyState('A') & 0x80 || JoystickPress(LStickLeft))
 	{
-		if (CangoL == true)
+		g_Player.RL = true;
+		g_Player.animation[IDLE].isUse = false;
+		g_Player.animation[WALKING].isUse = true;
+		//if (CangoL == true)
 		{
-			g_PlayerPosition.x -= 10.0f;//移動量
+			GamePlayer_MoveLeft();
 		}
 	}
-	
+
 	//Dを押して左に移動
 	if (GetKeyState('D') & 0x80 || JoystickPress(LStickRight))
 	{
-		if (CangoR == true)
+		g_Player.RL = false;
+		g_Player.animation[IDLE].isUse = false;
+		g_Player.animation[WALKING].isUse = true;
+		//if (CangoR == true)
 		{
-			g_PlayerPosition.x += 10.0f;//移動量
+			GamePlayer_MoveRight();
 		}
 	}
-	
+
 	//ジャンプ
 	if (GetKeyState(VK_SPACE) & 0x80 || JoystickPress(ButtonY))
 	{
-		if (on_ground == true)
-		{
-			jump_amount = 16.0f;//ジャンプ量
-		}
+		GamePlayer_Jump();
 
 	}
 
 	if (Keylogger_Release(KL_J) || JoystickRelease(ButtonLT))
 	{
-		Rocket_Spawn(g_PlayerPosition.x + 32.0f, g_PlayerPosition.y + 64.0f);
+		Rocket_Spawn(g_Player.position.x + 32.0f, g_Player.position.y + 64.0f);
 
 	}
 
-	
-	
-	//重力を常に発生させる
-	jump_amount -= 1.0f;
+	//プレイヤー座標の更新 (移動方向×速度)
+	g_Player.position.x += g_Player.direction.x * g_Player.speed.x;
 
-	//プレイヤー落下処理
-	g_PlayerPosition.y -= jump_amount;
-	
+	g_Player.position.y += g_Player.speed.y;
+
+	//次のフレームのために進行方向をクリアしておく
+	g_Player.direction = D3DXVECTOR2(0.0f, 0.0f);
+
+
+	//重力を常に発生させる
+	g_Player.speed.y += GRAVITY;
+
+	if (g_Player.position.y >= 747.0f)
+	{
+		//プレイヤー落下処理
+		g_Player.position.y = 747.0f;
+
+		g_Player.isJump = false;
+
+	}
 	//ブロックの位置座標を取得
 	BlockPosition = GetBlockPosition();
-
-
-	//ブロックの当たり判定を作成
-	for (int i = 0; i < BLOCK_MAX; i++)
-	{
-		if (g_PlayerPosition.x + PLAYER_SIZE_X > BlockPosition[i].x && g_PlayerPosition.x < BlockPosition[i].x + BLOCK_SIZE_X)
-		{
-
-			if (g_PlayerPosition.y + PLAYER_SIZE_Y >= BlockPosition[i].y)
-			{
-				if (g_PlayerPosition.y + PLAYER_SIZE_Y <= BlockPosition[i].y + BLOCK_SIZE_Y / 2)
-				{
-					on_ground = true;
-					g_PlayerPosition.y = BlockPosition[i].y - PLAYER_SIZE_Y;
-					jump_amount = 0;
-				}
-			}
-			else
-			{
-				on_ground = false;
-			}
-
-			if (g_PlayerPosition.y <= BlockPosition[i].y+BLOCK_SIZE_Y)
-			{
-				if (g_PlayerPosition.y >= BlockPosition[i].y + BLOCK_SIZE_Y / 2)
-				{
-					on_ground = false;
-					g_PlayerPosition.y = BlockPosition[i].y + BLOCK_SIZE_Y;
-					
-				}
-			}
-
-		}
-
-		if ((g_PlayerPosition.y >= BlockPosition[i].y && g_PlayerPosition.y <= BlockPosition[i].y + BLOCK_SIZE_Y))
-		{
-
-			if (g_PlayerPosition.x + PLAYER_SIZE_X > BlockPosition[i].x)
-			{
-				if (g_PlayerPosition.x + PLAYER_SIZE_X < BlockPosition[i].x + BLOCK_SIZE_X)
-				{
-					g_PlayerPosition.x = BlockPosition[i].x - BLOCK_SIZE_X;
-				}
-			}
-
-			if (g_PlayerPosition.x < BlockPosition[i].x+BLOCK_SIZE_X)
-			{
-				if (g_PlayerPosition.x > BlockPosition[i].x - BLOCK_SIZE_X / 2)
-				{
-					g_PlayerPosition.x = BlockPosition[i].x + BLOCK_SIZE_X;
-				}
-			}
-		}
-
-	}
 
 	// 扉の位置座標を取得
 	DoresPosition = GetDores();
@@ -211,13 +176,13 @@ void UpdatePlayer()
 	{
 		if (DoresPosition[i].use == true)
 		{
-			if (g_PlayerPosition.x < DoresPosition[i].xy.x + (DORE_SIZE_X * 0.5))
+			if (g_Player.position.x < DoresPosition[i].xy.x + (DORE_SIZE_X * 0.5))
 			{
-				if (g_PlayerPosition.x + PLAYER_SIZE_X > DoresPosition[i].xy.x)
+				if (g_Player.position.x + PLAYER_SIZE_X > DoresPosition[i].xy.x)
 				{
 					if (g_PlayerKey > 0)
 					{
-						
+
 						DelDore(i);
 						g_PlayerUsedKey++;
 
@@ -233,9 +198,9 @@ void UpdatePlayer()
 					CangoR = true;
 				}
 			}
-			if (g_PlayerPosition.x + PLAYER_SIZE_X > DoresPosition[i].xy.x + (DORE_SIZE_X * 0.5))
+			if (g_Player.position.x + PLAYER_SIZE_X > DoresPosition[i].xy.x + (DORE_SIZE_X * 0.5))
 			{
-				if (g_PlayerPosition.x < DoresPosition[i].xy.x + DORE_SIZE_X)
+				if (g_Player.position.x < DoresPosition[i].xy.x + DORE_SIZE_X)
 				{
 					if (g_PlayerKey > 0)
 					{
@@ -257,7 +222,7 @@ void UpdatePlayer()
 			}
 		}
 	}
-	
+
 
 
 	if (g_Current.data_tail == 0)
@@ -273,7 +238,7 @@ void UpdatePlayer()
 
 	if (flag2)
 	{
-		DataRecord(&g_Current, g_PlayerPosition);
+		DataRecord(&g_Current, g_Player.position);
 		dequeue(&g_Prev);
 	}
 	if (g_Current.data_tail > 360)
@@ -303,35 +268,66 @@ void UpdatePlayer()
 		}
 	}
 
-	
+
 }
 
 
 void DrawPlayer()
 {
-	
-	//プレイヤーを画面中央に描画
-	Sprite_Draw(g_PlayerTexture, WorldToScreen(g_PlayerPosition).x,
-		WorldToScreen(g_PlayerPosition).y, PLAYER_SIZE_X, PLAYER_SIZE_Y,
-	 0, 0, PLAYER_SIZE_X, PLAYER_SIZE_Y);
-	Sprite_Draw(g_TextureRed, 850.0f,5.0f, 360.0f, 50.0f, 0, 0, 1000, 200);
-	
+	if (g_Player.animation[IDLE].isUse)
+	{
+		if (!g_Player.RL)
+		{
+			Sprite_Draw(g_PlayerTexture[IDLE], g_Player.position.x,
+				g_Player.position.y, PLAYER_SIZE_X, PLAYER_SIZE_Y,
+				0, 0, PLAYER_SIZE_X, PLAYER_SIZE_Y);
+		}
+		else
+		{
+			Sprite_DrawLeft(g_PlayerTexture[IDLE], g_Player.position.x,
+				g_Player.position.y, PLAYER_SIZE_X, PLAYER_SIZE_Y,
+				0, 0, PLAYER_SIZE_X, PLAYER_SIZE_Y);
+		}
+	}
+
+	if (g_Player.animation[WALKING].isUse)
+	{
+		UpdateAnimations(g_Player.animation, WALKING, 15);
+
+		if (!g_Player.RL)
+		{
+			Sprite_Draw(g_PlayerTexture[WALKING], g_Player.position.x,
+				g_Player.position.y, PLAYER_SIZE_X, PLAYER_SIZE_Y,
+				g_Player.animation[WALKING].tcx, g_Player.animation[WALKING].tcy,
+				g_Player.animation[WALKING].tcw, g_Player.animation[WALKING].tch);
+		}
+		else
+		{
+			Sprite_DrawLeft(g_PlayerTexture[WALKING], g_Player.position.x,
+				g_Player.position.y, PLAYER_SIZE_X, PLAYER_SIZE_Y,
+				g_Player.animation[WALKING].tcx, g_Player.animation[WALKING].tcy,
+				g_Player.animation[WALKING].tcw, g_Player.animation[WALKING].tch);
+		}
+	}
+
+	Screen_Draw(g_TextureRed, 850.0f, 5.0f, 360.0f, 50.0f, 0, 0, 1000, 200);
+
 	if (!flag1)
 	{
 		D3DXCOLOR color(1.0f, 1.0f, 1.0f, a);
 
-		Sprite_Draw(g_TextureGreen, 850.0f, 5.0f, g_Current.data_tail, 50.0f, 0, 0, 1000, 200,color);
+		Screen_Draw(g_TextureGreen, 850.0f, 5.0f, g_Current.data_tail, 50.0f, 0, 0, 1000, 200, color);
 
 		//Sprite_SetColor(D3DCOLOR_RGBA(255, 255, 255, 255));
 	}
 	else
 	{
-		Sprite_Draw(g_TextureGreen, 850.0f, 5.0f, g_Current.data_tail, 50.0f, 0, 0, 1000, 200);
+		Screen_Draw(g_TextureGreen, 850.0f, 5.0f, g_Current.data_tail, 50.0f, 0, 0, 1000, 200);
 	}
 
 	if (flag1 && flag2)
 	{
-		Sprite_Draw(g_TextureBlue, 850.0f, 5.0f, 360.0f, 50.0f, 0, 0, 1000, 200);
+		Screen_Draw(g_TextureBlue, 850.0f, 5.0f, 360.0f, 50.0f, 0, 0, 1000, 200);
 	}
 
 	char Buf[64];
@@ -339,12 +335,32 @@ void DrawPlayer()
 	DebugFont_Draw(900.0f, 50.0f, Buf);
 }
 
+//ゲームプレイヤーの移動処理
+void GamePlayer_MoveLeft(void)
+{
+	g_Player.direction.x = -1.0f;
+	g_Player.speed.x = 5.0f;
+}
+void GamePlayer_MoveRight(void)
+{
+	g_Player.direction.x = 1.0f;
+	g_Player.speed.x = 5.0f;
+}
+void GamePlayer_Jump(void)
+{
+	if (!g_Player.isJump)
+	{
+		g_Player.speed.y = JUMP_FORCE;
+		g_Player.isJump = true;
+	}
+}
+
 CollisionCircle GamePlayer_GetCollision(void)
 {
 	CollisionCircle c = {
 		D3DXVECTOR2(
-			g_PlayerPosition.x + PLAYER_SIZE_X * 0.5f,
-			g_PlayerPosition.y + PLAYER_SIZE_Y * 0.5f
+			g_Player.position.x + PLAYER_SIZE_X * 0.5f,
+			g_Player.position.y + PLAYER_SIZE_Y * 0.5f
 		),
 		PLAYER_SIZE_X * 0.5f
 	};
@@ -354,7 +370,7 @@ CollisionCircle GamePlayer_GetCollision(void)
 
 D3DXVECTOR2 GetPlayerPosition()
 {
-	return g_PlayerPosition;
+	return g_Player.position;
 }
 
 

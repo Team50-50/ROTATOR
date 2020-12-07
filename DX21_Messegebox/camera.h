@@ -13,7 +13,7 @@
 
 void GameCamera_Update(void);
 
-D3DXVECTOR2 CALLBACK WorldToScreen(D3DXVECTOR2 objPosition);
+D3DXVECTOR2 WorldToScreen(D3DXVECTOR2 objPosition);
 
 void SetCamera(float x, float y);
 

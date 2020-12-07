@@ -26,7 +26,7 @@ void GameCamera_Update(void)
 
 	SetCamera(playerPosition.x, playerPosition.y);
 
-	/*if (g_cameraPosition.x <= SCREEN_WIDTH * 0.5f)
+	if (g_cameraPosition.x <= SCREEN_WIDTH * 0.5f)
 	{
 		g_cameraPosition.x = SCREEN_WIDTH * 0.5f;
 	}
@@ -44,12 +44,12 @@ void GameCamera_Update(void)
 	if (g_cameraPosition.y >= STAGE_HEIGHT - SCREEN_HEIGHT * 0.5f)
 	{
 		g_cameraPosition.y = STAGE_HEIGHT - SCREEN_HEIGHT * 0.5f;
-	}*/
+	}
 
 
 }
 
-D3DXVECTOR2 CALLBACK WorldToScreen(D3DXVECTOR2 objPosition)
+D3DXVECTOR2 WorldToScreen(D3DXVECTOR2 objPosition)
 {
 	// スクリーン座標を算出
 	D3DXVECTOR2 screenPosition =

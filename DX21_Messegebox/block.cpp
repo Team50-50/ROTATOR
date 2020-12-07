@@ -117,7 +117,7 @@ void DrawBlock()
 	for (int i = 0; i < BLOCK_MAX; i++)
 	{
 		Sprite_Draw(g_BlockTexture, 
-			WorldToScreen(g_Block[i]).x, WorldToScreen(g_Block[i]).y,
+			g_Block[i].x, g_Block[i].y,
 			BLOCK_SIZE_X, BLOCK_SIZE_Y,
 			0, 0, 64, 64);
 	}

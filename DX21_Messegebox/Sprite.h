@@ -72,7 +72,7 @@ void Sprite_Draw(int textureId, float dx, float dy, float dw, float dh, int tcx,
 //		tch      ...テクスチャ切り取り高さ
 //		D3DCOLOR color　...テクスチャの色をRGBで設定
 //
-void Sprite_Draw(int textureId, float dx, float dy, float dw, float dh, int tcx, int tcy, int tcw, int tch ,D3DCOLOR color);
+void Sprite_Draw(int textureId, float dx, float dy, float dw, float dh, int tcx, int tcy, int tcw, int tch, D3DCOLOR color);
 
 
 //スプライトの描画
@@ -94,5 +94,13 @@ void Sprite_Draw(int textureId, float dx, float dy, float dw, float dh, int tcx,
 //
 void Sprite_Draw(int textureId, float dx, float dy, float dw, float dh, int tcx, int tcy, int tcw, int tch,
 	float cx, float cy, float angle);
+
+void Screen_Draw(int textureId, float dx, float dy, float dw, float dh, int tcx, int tcy, int tcw, int tch);
+
+void Screen_Draw(int textureId, float dx, float dy, float dw, float dh, int tcx, int tcy, int tcw, int tch, D3DCOLOR color);
+
+void Sprite_DrawLeft(int textureId, float dx, float dy, float dw, float dh, int tcx, int tcy, int tcw, int tch);
+
+void Sprite_DrawLeft(int textureId, float dx, float dy, float dw, float dh, int tcx, int tcy, int tcw, int tch, D3DCOLOR color);
 
 #endif // SPRITE_H_

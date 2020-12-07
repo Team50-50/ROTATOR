@@ -10,6 +10,7 @@
 #include "Mydirect3d.h"
 #include "Texture.h"
 #include "Sprite.h"
+#include "camera.h"
 
 /*------------------------------------------------------------------------------
 	構造体宣言
@@ -168,8 +169,8 @@ void Sprite_Draw(int textureId, float dx, float dy, int tcx, int tcy, int tcw, i
 
 	// 頂点データの作成
 	Vertex2D v[] = {
-		{D3DXVECTOR4(dx - 0.5f,       dy +  - 0.5f,    1.0f, 1.0f), D3DCOLOR_RGBA(255, 255, 255, 255),D3DXVECTOR2(u0,v0)},
-		{D3DXVECTOR4(dx + tcw - 0.5f, dy +  - 0.5f,    1.0f, 1.0f), D3DCOLOR_RGBA(255, 255, 255, 255),D3DXVECTOR2(u1,v0)},
+		{D3DXVECTOR4(dx - 0.5f,       dy + -0.5f,    1.0f, 1.0f), D3DCOLOR_RGBA(255, 255, 255, 255),D3DXVECTOR2(u0,v0)},
+		{D3DXVECTOR4(dx + tcw - 0.5f, dy + -0.5f,    1.0f, 1.0f), D3DCOLOR_RGBA(255, 255, 255, 255),D3DXVECTOR2(u1,v0)},
 		{D3DXVECTOR4(dx - 0.5f,       dy + tch - 0.5f, 1.0f, 1.0f), D3DCOLOR_RGBA(255, 255, 255, 255),D3DXVECTOR2(u0,v1)},
 		{D3DXVECTOR4(dx + tcw - 0.5f, dy + tch - 0.5f, 1.0f, 1.0f), D3DCOLOR_RGBA(255, 255, 255, 255),D3DXVECTOR2(u1,v1)},
 	};
@@ -183,9 +184,9 @@ void Sprite_Draw(int textureId, float dx, float dy, int tcx, int tcy, int tcw, i
 	memcpy(pV, v, sizeof(v));
 
 	g_pVertexBuffer->Unlock();
-	
+
 	// 頂点バッファの指定
-	pDevice->SetStreamSource(0,g_pVertexBuffer,0,sizeof(Vertex2D));
+	pDevice->SetStreamSource(0, g_pVertexBuffer, 0, sizeof(Vertex2D));
 
 	// ポリゴンの描画
 	pDevice->DrawPrimitive(D3DPT_TRIANGLESTRIP, 0, 2);
@@ -223,6 +224,9 @@ void Sprite_Draw(int textureId, float dx, float dy, float dw, float dh, int tcx,
 	float u1 = (float)(tcx + tcw) / w;
 	float v1 = (float)(tcy + tch) / h;
 
+	dx = WorldToScreen({ dx,dy }).x;
+	dy = WorldToScreen({ dx,dy }).y;
+
 	// 頂点データの作成
 	Vertex2D v[] = {
 		{D3DXVECTOR4(dx - 0.5f,       dy + -0.5f,    1.0f, 1.0f), D3DCOLOR_RGBA(255, 255, 255, 255),D3DXVECTOR2(u0,v0)},
@@ -258,6 +262,9 @@ void Sprite_Draw(int textureId, float dx, float dy, float dw, float dh, int tcx,
 	float v0 = (float)tcy / h;
 	float u1 = (float)(tcx + tcw) / w;
 	float v1 = (float)(tcy + tch) / h;
+
+	dx = WorldToScreen({ dx,dy }).x;
+	dy = WorldToScreen({ dx,dy }).y;
 
 	// 頂点データの作成
 	Vertex2D v[] = {
@@ -309,11 +316,14 @@ void Sprite_Draw(int textureId, float dx, float dy, float dw, float dh, int tcx,
 	float u1 = (float)(tcx + tcw) / w;
 	float v1 = (float)(tcy + tch) / h;
 
+	dx = WorldToScreen({ dx,dy }).x;
+	dy = WorldToScreen({ dx,dy }).y;
+
 	// 頂点データの作成
 	Vertex2D v[] = {
-		{D3DXVECTOR4(     0.5f,     -0.5f, 1.0f, 1.0f), D3DCOLOR_RGBA(255, 255, 255, 255),D3DXVECTOR2(u0,v0)},
+		{D3DXVECTOR4(0.5f,     -0.5f, 1.0f, 1.0f), D3DCOLOR_RGBA(255, 255, 255, 255),D3DXVECTOR2(u0,v0)},
 		{D3DXVECTOR4(dw - 0.5f,     -0.5f, 1.0f, 1.0f), D3DCOLOR_RGBA(255, 255, 255, 255),D3DXVECTOR2(u1,v0)},
-		{D3DXVECTOR4(     0.5f, dh - 0.5f, 1.0f, 1.0f), D3DCOLOR_RGBA(255, 255, 255, 255),D3DXVECTOR2(u0,v1)},
+		{D3DXVECTOR4(0.5f, dh - 0.5f, 1.0f, 1.0f), D3DCOLOR_RGBA(255, 255, 255, 255),D3DXVECTOR2(u0,v1)},
 		{D3DXVECTOR4(dw - 0.5f, dh - 0.5f, 1.0f, 1.0f), D3DCOLOR_RGBA(255, 255, 255, 255),D3DXVECTOR2(u1,v1)},
 	};
 
@@ -341,6 +351,159 @@ void Sprite_Draw(int textureId, float dx, float dy, float dw, float dh, int tcx,
 	for (int i = 0; i < 4; i++) {
 		D3DXVec4Transform(&v[i].Position, &v[i].Position, &mtxWorld);
 	}
+
+	// ポリゴンの描画（簡易版）
+	pDevice->DrawPrimitiveUP(D3DPT_TRIANGLESTRIP, 2, v, sizeof(Vertex2D));
+
+}
+
+void Screen_Draw(int textureId, float dx, float dy, float dw, float dh, int tcx, int tcy, int tcw, int tch)
+{
+	// 1次変数に格納
+	LPDIRECT3DDEVICE9 pDevice = MyDirect3D_GetDevice();
+	// 念のためpDeviceがNULLでないことを確認
+	if (!pDevice) {
+		return;
+	}
+
+	// デバイスのFVF設定
+	pDevice->SetFVF(FVF_VERTEX2D);
+
+	// デバイスにテクスチャの設定をする
+	pDevice->SetTexture(0, Texture_GetTexture(textureId));
+
+	// テクスチャのサイズ取得
+	int w = Texture_GetTextureWidth(textureId);
+	int h = Texture_GetTextureHeight(textureId);
+
+	float u0 = (float)tcx / w;
+	float v0 = (float)tcy / h;
+	float u1 = (float)(tcx + tcw) / w;
+	float v1 = (float)(tcy + tch) / h;
+
+	// 頂点データの作成
+	Vertex2D v[] = {
+		{D3DXVECTOR4(dx - 0.5f,       dy + -0.5f,    1.0f, 1.0f), D3DCOLOR_RGBA(255, 255, 255, 255),D3DXVECTOR2(u0,v0)},
+		{D3DXVECTOR4(dx + dw - 0.5f, dy + -0.5f,    1.0f, 1.0f), D3DCOLOR_RGBA(255, 255, 255, 255),D3DXVECTOR2(u1,v0)},
+		{D3DXVECTOR4(dx - 0.5f,       dy + dh - 0.5f, 1.0f, 1.0f), D3DCOLOR_RGBA(255, 255, 255, 255),D3DXVECTOR2(u0,v1)},
+		{D3DXVECTOR4(dx + dw - 0.5f, dy + dh - 0.5f, 1.0f, 1.0f), D3DCOLOR_RGBA(255, 255, 255, 255),D3DXVECTOR2(u1,v1)},
+	};
+
+	// ポリゴンの描画（簡易版）
+	pDevice->DrawPrimitiveUP(D3DPT_TRIANGLESTRIP, 2, v, sizeof(Vertex2D));
+}
+
+void Screen_Draw(int textureId, float dx, float dy, float dw, float dh, int tcx, int tcy, int tcw, int tch, D3DCOLOR color)
+{
+	// 1次変数に格納
+	LPDIRECT3DDEVICE9 pDevice = MyDirect3D_GetDevice();
+	// 念のためpDeviceがNULLでないことを確認
+	if (!pDevice) {
+		return;
+	}
+
+	// デバイスのFVF設定
+	pDevice->SetFVF(FVF_VERTEX2D);
+
+	// デバイスにテクスチャの設定をする
+	pDevice->SetTexture(0, Texture_GetTexture(textureId));
+
+	// テクスチャのサイズ取得
+	int w = Texture_GetTextureWidth(textureId);
+	int h = Texture_GetTextureHeight(textureId);
+
+	float u0 = (float)tcx / w;
+	float v0 = (float)tcy / h;
+	float u1 = (float)(tcx + tcw) / w;
+	float v1 = (float)(tcy + tch) / h;
+
+	// 頂点データの作成
+	Vertex2D v[] = {
+		{D3DXVECTOR4(dx - 0.5f,       dy + -0.5f,    1.0f, 1.0f), color,D3DXVECTOR2(u0,v0)},
+		{D3DXVECTOR4(dx + dw - 0.5f, dy + -0.5f,    1.0f, 1.0f), color,D3DXVECTOR2(u1,v0)},
+		{D3DXVECTOR4(dx - 0.5f,       dy + dh - 0.5f, 1.0f, 1.0f), color,D3DXVECTOR2(u0,v1)},
+		{D3DXVECTOR4(dx + dw - 0.5f, dy + dh - 0.5f, 1.0f, 1.0f), color,D3DXVECTOR2(u1,v1)},
+	};
+
+	// ポリゴンの描画（簡易版）
+	pDevice->DrawPrimitiveUP(D3DPT_TRIANGLESTRIP, 2, v, sizeof(Vertex2D));
+}
+
+//左向き描画
+void Sprite_DrawLeft(int textureId, float dx, float dy, float dw, float dh, int tcx, int tcy, int tcw, int tch)
+{
+	// 1次変数に格納
+	LPDIRECT3DDEVICE9 pDevice = MyDirect3D_GetDevice();
+	// 念のためpDeviceがNULLでないことを確認
+	if (!pDevice) {
+		return;
+	}
+
+	// デバイスのFVF設定
+	pDevice->SetFVF(FVF_VERTEX2D);
+
+	// デバイスにテクスチャの設定をする
+	pDevice->SetTexture(0, Texture_GetTexture(textureId));
+
+	// テクスチャのサイズ取得
+	int w = Texture_GetTextureWidth(textureId);
+	int h = Texture_GetTextureHeight(textureId);
+
+	float u0 = (float)tcx / w;
+	float v0 = (float)tcy / h;
+	float u1 = (float)(tcx + tcw) / w;
+	float v1 = (float)(tcy + tch) / h;
+
+	dx = WorldToScreen({ dx,dy }).x;
+	dy = WorldToScreen({ dx,dy }).y;
+
+	// 頂点データの作成
+	Vertex2D v[] = {
+		{D3DXVECTOR4(dx - 0.5f,       dy + -0.5f,    1.0f, 1.0f), D3DCOLOR_RGBA(255, 255, 255, 255),D3DXVECTOR2(u1,v0)},
+		{D3DXVECTOR4(dx + dw - 0.5f, dy + -0.5f,    1.0f, 1.0f), D3DCOLOR_RGBA(255, 255, 255, 255),D3DXVECTOR2(u0,v0)},
+		{D3DXVECTOR4(dx - 0.5f,       dy + dh - 0.5f, 1.0f, 1.0f), D3DCOLOR_RGBA(255, 255, 255, 255),D3DXVECTOR2(u1,v1)},
+		{D3DXVECTOR4(dx + dw - 0.5f, dy + dh - 0.5f, 1.0f, 1.0f), D3DCOLOR_RGBA(255, 255, 255, 255),D3DXVECTOR2(u0,v1)},
+	};
+
+	// ポリゴンの描画（簡易版）
+	pDevice->DrawPrimitiveUP(D3DPT_TRIANGLESTRIP, 2, v, sizeof(Vertex2D));
+}
+
+//左向き描画
+void Sprite_DrawLeft(int textureId, float dx, float dy, float dw, float dh, int tcx, int tcy, int tcw, int tch, D3DCOLOR color)
+{
+	// 1次変数に格納
+	LPDIRECT3DDEVICE9 pDevice = MyDirect3D_GetDevice();
+	// 念のためpDeviceがNULLでないことを確認
+	if (!pDevice) {
+		return;
+	}
+
+	// デバイスのFVF設定
+	pDevice->SetFVF(FVF_VERTEX2D);
+
+	// デバイスにテクスチャの設定をする
+	pDevice->SetTexture(0, Texture_GetTexture(textureId));
+
+	// テクスチャのサイズ取得
+	int w = Texture_GetTextureWidth(textureId);
+	int h = Texture_GetTextureHeight(textureId);
+
+	float u0 = (float)tcx / w;
+	float v0 = (float)tcy / h;
+	float u1 = (float)(tcx + tcw) / w;
+	float v1 = (float)(tcy + tch) / h;
+
+	dx = WorldToScreen({ dx,dy }).x;
+	dy = WorldToScreen({ dx,dy }).y;
+
+	// 頂点データの作成
+	Vertex2D v[] = {
+		{D3DXVECTOR4(dx - 0.5f,       dy + -0.5f,    1.0f, 1.0f), color,D3DXVECTOR2(u1,v0)},
+		{D3DXVECTOR4(dx + dw - 0.5f, dy + -0.5f,    1.0f, 1.0f), color,D3DXVECTOR2(u0,v0)},
+		{D3DXVECTOR4(dx - 0.5f,       dy + dh - 0.5f, 1.0f, 1.0f), color,D3DXVECTOR2(u1,v1)},
+		{D3DXVECTOR4(dx + dw - 0.5f, dy + dh - 0.5f, 1.0f, 1.0f), color,D3DXVECTOR2(u0,v1)},
+	};
 
 	// ポリゴンの描画（簡易版）
 	pDevice->DrawPrimitiveUP(D3DPT_TRIANGLESTRIP, 2, v, sizeof(Vertex2D));

@@ -70,14 +70,14 @@ void ReversionPlayer_Draw(void)
 	//Bを押すと逆行キャラクターを描画
 	if (g_ReversionPlayer[0].enable)
 	{
-		Sprite_Draw(g_TextureVPlayer, WorldToScreen(g_ReversionPlayer[0].position).x,
-			WorldToScreen(g_ReversionPlayer[0].position).y,
+		Sprite_Draw(g_TextureVPlayer, g_ReversionPlayer[0].position.x,
+			g_ReversionPlayer[0].position.y,
 			PLAYER_SIZE_X, PLAYER_SIZE_Y, 0, 0, 64, 128);
 	}
 	if (g_ReversionPlayer[1].enable)
 	{
-		Sprite_Draw(g_TextureVPlayer, WorldToScreen(g_ReversionPlayer[1].position).x,
-			WorldToScreen(g_ReversionPlayer[1].position).y,
+		Sprite_Draw(g_TextureVPlayer, g_ReversionPlayer[1].position.x,
+			g_ReversionPlayer[1].position.y,
 			PLAYER_SIZE_X, PLAYER_SIZE_Y, 0, 0, 64, 128, D3DCOLOR_RGBA(255, 0, 255, 110));
 	}
 }
