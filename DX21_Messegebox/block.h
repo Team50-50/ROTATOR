@@ -1,5 +1,8 @@
 #pragma once
 
+#include <d3dx9.h>
+#include "collision.h"
+
 // ブロックのMax数（配列の数）
 #define BLOCK_MAX (1024)
 
@@ -10,11 +13,23 @@
 #define BLOCK_SIZE_Y (64.0f)
 
 
+typedef struct {
+
+	bool  use;
+	D3DXVECTOR2 xy;
+
+} Block;
+
+
 void InitBlock();
 void UninitBlock();
 void UpdateBlock();
 void DrawBlock();
 
+void SetBlock(float x, float y);
 
 //ブロックの位置座標を渡す関数
-D3DXVECTOR2*  GetBlockPosition();
+Block*  GetBlockPosition();
+
+// 
+CollisionCircle GameBlock_GetCollision(int index);

@@ -14,6 +14,7 @@
 #include "Texture.h"
 #include "Sprite.h"
 #include "player.h"
+#include "block.h"
 #include "camera.h"
 #include "directinput.h"
 #include "controller.h"
@@ -28,6 +29,8 @@ static D3DXVECTOR2 playerPosition;
 static Rocket g_rocket[ROCKET_MAX];
 static float angle;
 
+//ブロック位置
+Block*	BlocksPosition;
 
 void InitSniper(void)
 {
@@ -52,6 +55,7 @@ void UninitSniper(void)
 
 void UpdateSniper(void)
 {
+	BlocksPosition = GetBlockPosition();
 
 	if (Keylogger_Press(KL_J))
 	{
@@ -120,6 +124,21 @@ void UpdateSniper(void)
 
 	}
 
+	// 弾とブロックの当たり判定
+	for (int i = 0; i < ROCKET_MAX; i++)
+	{
+		for (int j = 0; j < BLOCK_MAX; j++)
+		{
+			if (Collision_CircleAndCircleHit(&GameRocket_GetCollision(i), &GameBlock_GetCollision(j)))
+			{
+
+				g_rocket[i].enable = false;
+				g_rocket[i].position.x = 0;
+				g_rocket[i].position.y = 0;
+
+			}
+		}
+	}
 }
 
 void DrawSniper(void)
@@ -161,4 +180,17 @@ void Rocket_Spawn(float x, float y)
 
 		break;
 	}
+}
+
+CollisionCircle GameRocket_GetCollision(int index)
+{
+	CollisionCircle c = {
+		D3DXVECTOR2(
+			g_rocket[index].position.x + ROCKET_SIZE_X * 0.5f,
+			g_rocket[index].position.x + ROCKET_SIZE_Y * 0.5f
+		),
+		ROCKET_SIZE_X * 0.5f
+	};
+
+	return c;
 }

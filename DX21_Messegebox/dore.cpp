@@ -58,8 +58,6 @@ void UpdateDore()
 	// ƒvƒŒƒCƒ„[‚ÌŒ®Š”‚ğ•Û‘¶
 	g_PlayerKeyPossession2 = GetPlayerKeyPossession();
 
-	
-
 }
 
 void DrawDore()

@@ -10,7 +10,7 @@
 static int	g_BlockTexture;
 
 //ブロックの位置座標
-D3DXVECTOR2	g_Block[BLOCK_MAX];
+Block	Blocks[BLOCK_MAX];
 
 int Block_Count = 0;
 
@@ -20,83 +20,15 @@ void InitBlock()
 	g_BlockTexture = Texture_SetTextureLoadFile("asset/steel_block.png");
 	
 
-	//ブロック配置
-	for (int i = 0; i < 50; i++)
-	{
-		g_Block[Block_Count].x = BLOCK_SIZE_X * i;
-		g_Block[Block_Count].y = ((SCREEN_HEIGHT - PLAYER_SIZE_Y) * 7 / 10) +PLAYER_SIZE_Y;
-		Block_Count++;
-	}
+	////ブロック配置
+	//for (int i = 0; i < 50; i++)
+	//{
+	//	Blocks[Block_Count].xy.x = BLOCK_SIZE_X * i;
+	//	Blocks[Block_Count].xy.y = ((SCREEN_HEIGHT - PLAYER_SIZE_Y) * 7 / 10) +PLAYER_SIZE_Y;
+	//	Block_Count++;
+	//}
 
-	for (int i = 0; i < 10; i++)
-	{
-		g_Block[Block_Count].x = BLOCK_SIZE_X * 50;
-		g_Block[Block_Count].y = ((SCREEN_HEIGHT - PLAYER_SIZE_Y) * 7 / 10) + PLAYER_SIZE_Y - BLOCK_SIZE_Y * i;
-		Block_Count++;
-	}
-
-	for (int i = 0; i < 5; i++)
-	{
-		g_Block[Block_Count].x = BLOCK_SIZE_X * 3 *i;
-		g_Block[Block_Count].y = ((SCREEN_HEIGHT - PLAYER_SIZE_Y) * 7 / 10) + PLAYER_SIZE_Y - BLOCK_SIZE_Y * 5;
-		Block_Count++;
-	}
-
-	for (int i = 0; i < 15; i++)
-	{
-		g_Block[Block_Count].x = BLOCK_SIZE_X * 3 * 5 + BLOCK_SIZE_X * 2 * i;
-		g_Block[Block_Count].y = ((SCREEN_HEIGHT - PLAYER_SIZE_Y) * 7 / 10) + PLAYER_SIZE_Y - BLOCK_SIZE_Y * 5;
-		Block_Count++;
-	}
-
-	for (int i = 0; i < 10; i++)
-	{
-		g_Block[Block_Count].x = BLOCK_SIZE_X * 0;
-		g_Block[Block_Count].y = ((SCREEN_HEIGHT - PLAYER_SIZE_Y) * 7 / 10) + PLAYER_SIZE_Y - BLOCK_SIZE_Y * i;
-		Block_Count++;
-	}
-
-	for (int i = 1; i <= 1; i++)
-	{
-		g_Block[Block_Count].x = BLOCK_SIZE_X * 45;
-		g_Block[Block_Count].y = ((SCREEN_HEIGHT - PLAYER_SIZE_Y) * 7 / 10) + PLAYER_SIZE_Y - BLOCK_SIZE_Y * i;
-		Block_Count++;
-	}
-
-	for (int i = 1; i <= 2; i++)
-	{
-		g_Block[Block_Count].x = BLOCK_SIZE_X * 46;
-		g_Block[Block_Count].y = ((SCREEN_HEIGHT - PLAYER_SIZE_Y) * 7 / 10) + PLAYER_SIZE_Y - BLOCK_SIZE_Y * i;
-		Block_Count++;
-	}
-	for (int i = 1; i <= 3; i++)
-	{
-		g_Block[Block_Count].x = BLOCK_SIZE_X * 47;
-		g_Block[Block_Count].y = ((SCREEN_HEIGHT - PLAYER_SIZE_Y) * 7 / 10) + PLAYER_SIZE_Y - BLOCK_SIZE_Y * i;
-		Block_Count++;
-	}
-	for (int i = 1; i <= 4; i++)
-	{
-		g_Block[Block_Count].x = BLOCK_SIZE_X * 48;
-		g_Block[Block_Count].y = ((SCREEN_HEIGHT - PLAYER_SIZE_Y) * 7 / 10) + PLAYER_SIZE_Y - BLOCK_SIZE_Y * i;
-		Block_Count++;
-	}
-	for (int i = 1; i <= 5; i++)
-	{
-		g_Block[Block_Count].x = BLOCK_SIZE_X * 49;
-		g_Block[Block_Count].y = ((SCREEN_HEIGHT - PLAYER_SIZE_Y) * 7 / 10) + PLAYER_SIZE_Y - BLOCK_SIZE_Y * i;
-		Block_Count++;
-	}
-	
-	//ブロック配置
-	for (int i = 0; i < 50; i++)
-	{
-		g_Block[Block_Count].x = BLOCK_SIZE_X * i;
-		g_Block[Block_Count].y = ((SCREEN_HEIGHT - PLAYER_SIZE_Y) * 7 / 10) + PLAYER_SIZE_Y - BLOCK_SIZE_Y*10;
-		Block_Count++;
-	}
 }
-
 
 void UninitBlock()
 {
@@ -112,24 +44,50 @@ void UpdateBlock()
 
 void DrawBlock()
 {
-
 	// ブロックを描画
 	for (int i = 0; i < BLOCK_MAX; i++)
 	{
-		Sprite_Draw(g_BlockTexture, 
-			g_Block[i].x, g_Block[i].y,
-			BLOCK_SIZE_X, BLOCK_SIZE_Y,
-			0, 0, 64, 64);
+		
+		if (Blocks[i].use) {
+			Sprite_Draw(g_BlockTexture,
+				Blocks[i].xy.x, Blocks[i].xy.y,
+				BLOCK_SIZE_X, BLOCK_SIZE_Y,
+				0, 0, 64, 64);
+		}
 	}
+
 }
 
-//D3DXVECTOR2  GetBlockPosition(int n)
-//{
-//	//指定されたブロックの位置座標を返す
-//	return g_Block[n];
-//}
-
-D3DXVECTOR2* GetBlockPosition()
+void SetBlock(float x, float y)
 {
-	return g_Block;
+
+	for (int i = 0; i < BLOCK_MAX; i++)
+	{
+		if (Blocks[i].use == false)
+		{
+			Blocks[i].use = true;
+			Blocks[i].xy.x = x;
+			Blocks[i].xy.y = y;
+			break;
+		}
+	}
+
+}
+
+Block* GetBlockPosition()
+{
+	return Blocks;
+}
+
+CollisionCircle GameBlock_GetCollision(int index)
+{
+	CollisionCircle c = {
+		D3DXVECTOR2(
+			Blocks[index].xy.x + BLOCK_SIZE_X * 0.5f,
+			Blocks[index].xy.x + BLOCK_SIZE_Y * 0.5f
+		),
+		BLOCK_SIZE_X * 0.5f
+	};
+
+	return c;
 }

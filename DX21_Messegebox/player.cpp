@@ -32,7 +32,7 @@ static DataStorage g_Debug;
 
 
 //ブロック位置
-D3DXVECTOR2*	BlockPosition;
+Block*	BlockPosition;
 
 // 扉位置
 Dore* DoresPosition;
@@ -50,6 +50,8 @@ static float g_value = 0.0f;
 bool CangoR;
 bool CangoL;
 
+// 地面にプレイヤーがいるかどうか？
+bool on_ground;
 
 
 void InitPlayer()
@@ -67,7 +69,7 @@ void InitPlayer()
 	//移動on/offの初期化
 	CangoR = true;
 	CangoL = true;
-
+	
 	g_Player.isJump = true;
 	g_Player.RL = false;
 
@@ -112,9 +114,10 @@ void UpdatePlayer()
 		g_Player.RL = true;
 		g_Player.animation[IDLE].isUse = false;
 		g_Player.animation[WALKING].isUse = true;
-		//if (CangoL == true)
+		if (CangoL == true)
 		{
 			GamePlayer_MoveLeft();
+			CangoR = true;
 		}
 	}
 
@@ -124,9 +127,10 @@ void UpdatePlayer()
 		g_Player.RL = false;
 		g_Player.animation[IDLE].isUse = false;
 		g_Player.animation[WALKING].isUse = true;
-		//if (CangoR == true)
+		if (CangoR == true)
 		{
 			GamePlayer_MoveRight();
+			CangoL = true;
 		}
 	}
 
@@ -149,7 +153,10 @@ void UpdatePlayer()
 	g_Player.position.y += g_Player.speed.y;
 
 	//重力を常に発生させる
-	g_Player.speed.y += GRAVITY;
+	if (on_ground == false)
+	{
+		g_Player.speed.y += GRAVITY;
+	}
 
 	if (g_Player.position.y >= 747.0f)
 	{
@@ -159,59 +166,182 @@ void UpdatePlayer()
 		g_Player.isJump = false;
 
 	}
+
 	//ブロックの位置座標を取得
 	BlockPosition = GetBlockPosition();
+	// ブロックの当たり判定を作成
+	for (int i = 0; i < BLOCK_MAX; i++)
+	{
+		// 上方判定
+		if (g_Player.position.x + PLAYER_SIZE_X > BlockPosition[i].xy.x && g_Player.position.x < BlockPosition[i].xy.x + BLOCK_SIZE_X)
+		{
+
+			if (g_Player.position.y + PLAYER_SIZE_Y >= BlockPosition[i].xy.y)
+			{
+				if (g_Player.position.y + PLAYER_SIZE_Y <= BlockPosition[i].xy.y + BLOCK_SIZE_Y / 2)
+				{
+					on_ground = true;
+					g_Player.isJump = false;
+					g_Player.position.y = BlockPosition[i].xy.y - PLAYER_SIZE_Y;
+					//jump_amount = 0;
+				}
+			}
+			else
+			{
+				on_ground = false;
+			}
+
+			if (g_Player.position.y <= BlockPosition[i].xy.y + BLOCK_SIZE_Y)
+			{
+				if (g_Player.position.y >= BlockPosition[i].xy.y + BLOCK_SIZE_Y / 2)
+				{
+					on_ground = false;
+					g_Player.position.y = BlockPosition[i].xy.y + BLOCK_SIZE_Y;
+
+				}
+			}
+		}
+		if ((g_Player.position.y >= BlockPosition[i].xy.y && g_Player.position.y <= BlockPosition[i].xy.y + BLOCK_SIZE_Y))
+		{
+
+			if (g_Player.position.x + PLAYER_SIZE_X > BlockPosition[i].xy.x)
+			{
+				if (g_Player.position.x + PLAYER_SIZE_X < BlockPosition[i].xy.x + BLOCK_SIZE_X)
+				{
+					g_Player.position.x = BlockPosition[i].xy.x - BLOCK_SIZE_X;
+				}
+			}
+
+			if (g_Player.position.x < BlockPosition[i].xy.x + BLOCK_SIZE_X)
+			{
+				if (g_Player.position.x > BlockPosition[i].xy.x - BLOCK_SIZE_X / 2)
+				{
+					g_Player.position.x = BlockPosition[i].xy.x + BLOCK_SIZE_X;
+				}
+			}
+		}
+		// ブロック左右判定
+		if (BlockPosition[i].use == true)
+		{
+			if (g_Player.position.y < BlockPosition[i].xy.y + BLOCK_SIZE_Y && g_Player.position.y + PLAYER_SIZE_Y > BlockPosition[i].xy.y)
+			{
+
+				if (g_Player.position.x < BlockPosition[i].xy.x + (BLOCK_SIZE_X * 0.5))
+				{
+					if (g_Player.position.x + PLAYER_SIZE_X > BlockPosition[i].xy.x)
+					{
+
+						CangoR = false;
+						/*CangoL = true;*/
+
+					}
+
+				}
+				if (g_Player.position.x + PLAYER_SIZE_X > BlockPosition[i].xy.x + (BLOCK_SIZE_X * 0.5))
+				{
+					if (g_Player.position.x < BlockPosition[i].xy.x + DORE_SIZE_X)
+					{
+
+						/*CangoR = true;*/
+						CangoL = false;
+
+					}
+
+				}
+			}
+		}
+	}
 
 	// 扉の位置座標を取得
 	DoresPosition = GetDores();
+	// プレイヤーの鍵所持数を取得
 	g_PlayerKey = GetPlayerKeyPossession();
 
+	// 扉の当たり判定
 	for (int i = 0; i < DORE_MAX; i++)
 	{
+		// 上方判定
+		//if (g_Player.position.x + PLAYER_SIZE_X > DoresPosition[i].xy.x && g_Player.position.x < DoresPosition[i].xy.x + DORE_SIZE_X)
+		//{
+
+		//	if (g_Player.position.y + PLAYER_SIZE_Y >= DoresPosition[i].xy.y)
+		//	{
+		//		if (g_Player.position.y + PLAYER_SIZE_Y <= DoresPosition[i].xy.y + DORE_SIZE_Y / 2)
+		//		{
+		//			on_ground = true;
+		//			g_Player.isJump = false;
+		//			g_Player.position.y = DoresPosition[i].xy.y - PLAYER_SIZE_Y;
+		//			//jump_amount = 0;
+		//		}
+		//	}
+		//	else
+		//	{
+		//		on_ground = false;
+		//	}
+
+		//	if (g_Player.position.y <= DoresPosition[i].xy.y + DORE_SIZE_Y)
+		//	{
+		//		if (g_Player.position.y >= DoresPosition[i].xy.y + DORE_SIZE_Y / 2)
+		//		{
+		//			on_ground = false;
+		//			g_Player.position.y = DoresPosition[i].xy.y + DORE_SIZE_Y;
+
+		//		}
+		//	}
+		//}
+		//if ((g_Player.position.y >= DoresPosition[i].xy.y && g_Player.position.y <= DoresPosition[i].xy.y + DORE_SIZE_Y))
+		//{
+
+		//	if (g_Player.position.x + PLAYER_SIZE_X > DoresPosition[i].xy.x)
+		//	{
+		//		if (g_Player.position.x + PLAYER_SIZE_X < DoresPosition[i].xy.x + DORE_SIZE_X)
+		//		{
+		//			g_Player.position.x = DoresPosition[i].xy.x - DORE_SIZE_X;
+		//		}
+		//	}
+		//	if (g_Player.position.x < DoresPosition[i].xy.x + DORE_SIZE_X)
+		//	{
+		//		if (g_Player.position.x > DoresPosition[i].xy.x - DORE_SIZE_X / 2)
+		//		{
+		//			g_Player.position.x = DoresPosition[i].xy.x + DORE_SIZE_X;
+		//		}
+		//	}
+		//}
+
+		// 左右判定
 		if (DoresPosition[i].use == true)
 		{
-			if (g_Player.position.x < DoresPosition[i].xy.x + (DORE_SIZE_X * 0.5))
+			if (g_Player.position.y <= DoresPosition[i].xy.y + DORE_SIZE_Y && g_Player.position.y + PLAYER_SIZE_Y >= DoresPosition[i].xy.y)
 			{
-				if (g_Player.position.x + PLAYER_SIZE_X > DoresPosition[i].xy.x)
+				if (g_Player.position.x < DoresPosition[i].xy.x + (DORE_SIZE_X * 0.5))
 				{
-					if (g_PlayerKey > 0)
+					if (g_Player.position.x + PLAYER_SIZE_X > DoresPosition[i].xy.x)
 					{
-
-						DelDore(i);
-						g_PlayerUsedKey++;
-
-					}
-					else
-					{
-						CangoR = false;
-						CangoL = true;
-					}
-				}
-				else
-				{
-					CangoR = true;
-				}
-			}
-			if (g_Player.position.x + PLAYER_SIZE_X > DoresPosition[i].xy.x + (DORE_SIZE_X * 0.5))
-			{
-				if (g_Player.position.x < DoresPosition[i].xy.x + DORE_SIZE_X)
-				{
-					if (g_PlayerKey > 0)
-					{
-
-						DelDore(i);
-						g_PlayerUsedKey++;
-
-					}
-					else
-					{
-						CangoR = false;
-						CangoL = true;
+						if (g_PlayerKey > 0)
+						{
+							DelDore(i);
+							g_PlayerUsedKey++;
+						}
+						else
+						{
+							CangoR = false;
+						}
 					}
 				}
-				else
+				if (g_Player.position.x + PLAYER_SIZE_X > DoresPosition[i].xy.x + (DORE_SIZE_X * 0.5))
 				{
-					CangoL = true;
+					if (g_Player.position.x < DoresPosition[i].xy.x + DORE_SIZE_X)
+					{
+						if (g_PlayerKey > 0)
+						{
+							DelDore(i);
+							g_PlayerUsedKey++;
+						}
+						else
+						{
+							CangoL = false;
+						}
+					}
 				}
 			}
 		}
