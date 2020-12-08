@@ -84,7 +84,7 @@ CollisionCircle GameBlock_GetCollision(int index)
 	CollisionCircle c = {
 		D3DXVECTOR2(
 			Blocks[index].xy.x + BLOCK_SIZE_X * 0.5f,
-			Blocks[index].xy.x + BLOCK_SIZE_Y * 0.5f
+			Blocks[index].xy.y + BLOCK_SIZE_Y * 0.5f
 		),
 		BLOCK_SIZE_X * 0.5f
 	};

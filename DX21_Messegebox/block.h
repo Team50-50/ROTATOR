@@ -18,7 +18,7 @@ typedef struct {
 	bool  use;
 	D3DXVECTOR2 xy;
 
-} Block;
+}Block;
 
 
 void InitBlock();

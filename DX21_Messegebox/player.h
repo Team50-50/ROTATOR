@@ -4,6 +4,7 @@
 #include "data_control.h"
 #include"collision.h"
 #include"animation.h"
+#include"block.h"
 
 typedef struct
 {
@@ -16,6 +17,8 @@ typedef struct
 	bool RL; //Œü‚«‚ğ”»’è‚·‚é—p@‰EŒü‚«=false  ¶Œü‚«=true
 
 	Animation animation[TYPE_MAX];
+
+	Block *pBlock;
 
 }Player;
 

@@ -108,6 +108,15 @@ void UpdateSniper(void)
 		{
 			g_rocket[i].position.x += cosf(g_rocket[i].r_angle) * ROCKET_SPEED;
 			g_rocket[i].position.y += sinf(g_rocket[i].r_angle) * ROCKET_SPEED;
+
+			for (int j = 0; j < BLOCK_MAX; j++)
+			{
+				if (Collision_CircleAndCircleHit(&GameRocket_GetCollision(i), &GameBlock_GetCollision(j)))
+				{
+					g_rocket[i].enable = false;
+
+				}
+			}
 		
 		}
 		else
@@ -121,24 +130,10 @@ void UpdateSniper(void)
 		{
 			g_rocket[i].enable = false;
 		}
+		
 
 	}
 
-	// ’e‚ÆƒuƒƒbƒN‚Ì“–‚½‚è”»’è
-	for (int i = 0; i < ROCKET_MAX; i++)
-	{
-		for (int j = 0; j < BLOCK_MAX; j++)
-		{
-			if (Collision_CircleAndCircleHit(&GameRocket_GetCollision(i), &GameBlock_GetCollision(j)))
-			{
-
-				g_rocket[i].enable = false;
-				g_rocket[i].position.x = 0;
-				g_rocket[i].position.y = 0;
-
-			}
-		}
-	}
 }
 
 void DrawSniper(void)
@@ -187,7 +182,7 @@ CollisionCircle GameRocket_GetCollision(int index)
 	CollisionCircle c = {
 		D3DXVECTOR2(
 			g_rocket[index].position.x + ROCKET_SIZE_X * 0.5f,
-			g_rocket[index].position.x + ROCKET_SIZE_Y * 0.5f
+			g_rocket[index].position.y + ROCKET_SIZE_Y * 0.5f
 		),
 		ROCKET_SIZE_X * 0.5f
 	};

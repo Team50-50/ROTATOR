@@ -30,10 +30,6 @@ static DataStorage g_Current;
 static DataStorage g_Prev;
 static DataStorage g_Debug;
 
-
-//ブロック位置
-Block*	BlockPosition;
-
 // 扉位置
 Dore* DoresPosition;
 // 鍵の所持数
@@ -50,9 +46,7 @@ static float g_value = 0.0f;
 bool CangoR;
 bool CangoL;
 
-// 地面にプレイヤーがいるかどうか？
-bool on_ground;
-
+bool on_ground = false;
 
 void InitPlayer()
 {
@@ -108,6 +102,7 @@ void UpdatePlayer()
 
 	g_Player.animation[IDLE].isUse = true;
 
+	
 	//Aを押して左に移動
 	if (GetKeyState('A') & 0x80 || JoystickPress(LStickLeft))
 	{
@@ -147,12 +142,10 @@ void UpdatePlayer()
 
 	}
 
-	//プレイヤー座標の更新 (移動方向×速度)
-	g_Player.position.x += g_Player.direction.x * g_Player.speed.x;
+	
 
 	g_Player.position.y += g_Player.speed.y;
 
-	//重力を常に発生させる
 	if (on_ground == false)
 	{
 		g_Player.speed.y += GRAVITY;
@@ -168,7 +161,9 @@ void UpdatePlayer()
 	}
 
 	//ブロックの位置座標を取得
-	BlockPosition = GetBlockPosition();
+	Block* BlockPosition = GetBlockPosition();
+
+
 	// ブロックの当たり判定を作成
 	for (int i = 0; i < BLOCK_MAX; i++)
 	{
@@ -221,8 +216,7 @@ void UpdatePlayer()
 			}
 		}
 		// ブロック左右判定
-		if (BlockPosition[i].use == true)
-		{
+		
 			if (g_Player.position.y < BlockPosition[i].xy.y + BLOCK_SIZE_Y && g_Player.position.y + PLAYER_SIZE_Y > BlockPosition[i].xy.y)
 			{
 
@@ -230,9 +224,9 @@ void UpdatePlayer()
 				{
 					if (g_Player.position.x + PLAYER_SIZE_X > BlockPosition[i].xy.x)
 					{
-
-						CangoR = false;
-						/*CangoL = true;*/
+						g_Player.direction.x = 0.0f;
+						//CangoR = false;
+					
 
 					}
 
@@ -241,16 +235,19 @@ void UpdatePlayer()
 				{
 					if (g_Player.position.x < BlockPosition[i].xy.x + DORE_SIZE_X)
 					{
-
-						/*CangoR = true;*/
-						CangoL = false;
+						g_Player.direction.x = 0.0f;
+						
+						//CangoL = false;
 
 					}
 
 				}
 			}
-		}
+		
 	}
+
+	//プレイヤー座標の更新 (移動方向×速度)
+	g_Player.position.x += g_Player.direction.x * g_Player.speed.x;
 
 	// 扉の位置座標を取得
 	DoresPosition = GetDores();
