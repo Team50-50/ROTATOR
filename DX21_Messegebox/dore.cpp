@@ -71,7 +71,7 @@ void DrawDore()
 		if (Dores[i].use == true)
 		{
 			
-		    Sprite_Draw(g_DoreTexture, WorldToScreen(Dores[i].xy).x, WorldToScreen(Dores[i].xy).y, DORE_SIZE_X, DORE_SIZE_Y,
+		    Sprite_Draw(g_DoreTexture, Dores[i].xy.x, Dores[i].xy.y, DORE_SIZE_X, DORE_SIZE_Y,
 				0, 0, 64, 64);
 			
 		}

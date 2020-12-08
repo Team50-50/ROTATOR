@@ -74,12 +74,7 @@ void InitPlayer()
 	// 鍵の使った数の初期化
 	g_PlayerUsedKey = 0;
 
-	g_Current.data_head = 0;
-	g_Current.data_tail = 0;
-	g_Prev.data_head = 0;
-	g_Prev.data_tail = 0;
-	g_Debug.data_head = 0;
-	g_Debug.data_tail = 0;
+
 
 	InitAnimations(g_Player.animation, WALKING, 192, 256, 3, 2, 6);
 }
@@ -100,6 +95,9 @@ void UpdatePlayer()
 {
 	//進行方向を長さ1にする
 	D3DXVec2Normalize(&g_Player.direction, &g_Player.direction);
+
+	//次のフレームのために進行方向をクリアしておく
+	g_Player.direction = D3DXVECTOR2(0.0f, 0.0f);
 
 	for (int i = 0; i < TYPE_MAX; i++)
 	{
@@ -149,10 +147,6 @@ void UpdatePlayer()
 	g_Player.position.x += g_Player.direction.x * g_Player.speed.x;
 
 	g_Player.position.y += g_Player.speed.y;
-
-	//次のフレームのために進行方向をクリアしておく
-	g_Player.direction = D3DXVECTOR2(0.0f, 0.0f);
-
 
 	//重力を常に発生させる
 	g_Player.speed.y += GRAVITY;
@@ -225,36 +219,43 @@ void UpdatePlayer()
 
 
 
-	if (g_Current.data_tail == 0)
+	if (g_Current.Pdata_tail == 0)
 	{
 		flag1 = false;
 		flag2 = true;
 
 	}
-	if (g_Current.data_tail == 360)
+	if (g_Current.Pdata_tail == 360)
 	{
 		flag1 = true;
 	}
 
 	if (flag2)
 	{
-		DataRecord(&g_Current, g_Player.position);
-		dequeue(&g_Prev);
+		DataRecord(&g_Current, g_Player.position, g_Player.RL, g_Player.animation[WALKING].animNo, g_Player.direction.x);
+
+		deq_Positiondata(&g_Prev);
+		deq_RLdata(&g_Prev);
+		deq_Animdata(&g_Prev);
+		deq_Directiondata(&g_Prev);
 	}
-	if (g_Current.data_tail > 360)
+	if (g_Current.Pdata_tail > 360)
 	{
-		DataRecord(&g_Debug, dequeue(&g_Current));
+		DataRecord(&g_Debug, deq_Positiondata(&g_Current), deq_RLdata(&g_Current), deq_Animdata(&g_Current), deq_Directiondata(&g_Current));
 	}
-	if (g_Debug.data_tail > 360)
+	if (g_Debug.Pdata_tail > 360)
 	{
-		dequeue(&g_Debug);
+		deq_Positiondata(&g_Debug);
+		deq_RLdata(&g_Debug);
+		deq_Animdata(&g_Debug);
+		deq_Directiondata(&g_Debug);
 	}
 	if (flag1)
 	{
 		if (GetKeyState('B') & 0x80 || JoystickPress(ButtonRT))
 		{
 			flag2 = false;
-			DataRecord(&g_Prev, pop(&g_Current));
+			DataRecord(&g_Prev, pop_Positiondata(&g_Current), pop_RLdata(&g_Current), pop_Animdata(&g_Current), pop_Directiondata(&g_Current));
 
 		}
 	}
@@ -316,13 +317,13 @@ void DrawPlayer()
 	{
 		D3DXCOLOR color(1.0f, 1.0f, 1.0f, a);
 
-		Screen_Draw(g_TextureGreen, 850.0f, 5.0f, g_Current.data_tail, 50.0f, 0, 0, 1000, 200, color);
+		Screen_Draw(g_TextureGreen, 850.0f, 5.0f, g_Current.Pdata_tail, 50.0f, 0, 0, 1000, 200, color);
 
 		//Sprite_SetColor(D3DCOLOR_RGBA(255, 255, 255, 255));
 	}
 	else
 	{
-		Screen_Draw(g_TextureGreen, 850.0f, 5.0f, g_Current.data_tail, 50.0f, 0, 0, 1000, 200);
+		Screen_Draw(g_TextureGreen, 850.0f, 5.0f, g_Current.Pdata_tail, 50.0f, 0, 0, 1000, 200);
 	}
 
 	if (flag1 && flag2)
@@ -331,7 +332,7 @@ void DrawPlayer()
 	}
 
 	char Buf[64];
-	sprintf(Buf, "frame=%d", g_Current.data_tail);
+	sprintf(Buf, "frame=%d", g_Current.Pdata_tail);
 	DebugFont_Draw(900.0f, 50.0f, Buf);
 }
 

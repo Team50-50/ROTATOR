@@ -60,6 +60,9 @@ void InitAnimations(Animation* animation, int type, int tWidth, int tHeight, int
 void UpdateAnimations(Animation* animation, int type, int frame);
 
 
+void UpdateAnimations(Animation* animation, int type);
+
+
 #endif // !ANIMATION_H_
 
 

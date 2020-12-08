@@ -60,3 +60,10 @@ void UpdateAnimations(Animation* animation, int type, int frame)
 	animation[type].tcy = (animation[type].animNo / animation[type].animWSize) * animation[type].tch;
 
 }
+
+void UpdateAnimations(Animation* animation, int type)
+{
+	animation[type].tcx = (animation[type].animNo % animation[type].animWSize) * animation[type].tcw;
+	animation[type].tcy = (animation[type].animNo / animation[type].animWSize) * animation[type].tch;
+
+}

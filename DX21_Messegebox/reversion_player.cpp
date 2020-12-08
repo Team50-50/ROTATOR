@@ -7,28 +7,33 @@
 #include "controller.h"
 #include "camera.h"
 #include "data_control.h"
+#include "animation.h"
 
 /*-----------------------------------------------------------------------------------------
  グローバル変数
 -------------------------------------------------------------------------------------------*/
-static int g_TextureVPlayer = TEXTURE_INVALID_ID;
-static int g_TextureVPlayer2 = TEXTURE_INVALID_ID;
-//VPlayer g_VPlayer[VPLAYER_MAX];
-ReversionPlayer g_ReversionPlayer[2];
+static int g_TextureVPlayer[TYPE_MAX];
+
+Player g_ReversionPlayer[2];
 static int frame = 0;
 
 void ReversionPlayer_Initialize(void)
 {
-	g_TextureVPlayer = Texture_SetTextureLoadFile("asset/player.png");
-	g_TextureVPlayer2 = Texture_SetTextureLoadFile("asset/player.png");
-	
+	g_TextureVPlayer[IDLE] = Texture_SetTextureLoadFile("asset/player.png");
+	g_TextureVPlayer[WALKING] = Texture_SetTextureLoadFile("asset/HEW_CHARA_Aniamtion_run_renban.png");
+
+	for (int i = 0; i < 2; i++)
+	{
+		InitAnimations(g_ReversionPlayer[i].animation, WALKING, 192, 256, 3, 2, 6);
+	}
 }
 
 
 void ReversionPlayer_Finalize(void)
 {
-	Texture_Release(&g_TextureVPlayer, 1);
-	Texture_Release(&g_TextureVPlayer2, 1);
+	Texture_Release(&g_TextureVPlayer[IDLE], 1);
+	Texture_Release(&g_TextureVPlayer[WALKING], 1);
+
 }
 
 
@@ -38,54 +43,140 @@ void ReversionPlayer_Update(void)
 	DataStorage prevData = GetPrev();
 	DataStorage debugData = GetDebug();
 
-	//プレイヤー前のフレームのpositionデータをスタック領域から取得する
-	for (int i = 0; i < prevData.data_tail; i++)
+	
+	for (int i = 0; i < prevData.Pdata_tail; i++)
 	{
 		if (GetKeyState('B') & 0x80 || JoystickPress(ButtonRT))
 		{
-			//Bキーを押し続けたら、プレイヤー前のフレームのpositionデータを1フレームずつ、仮想プレイヤーに代入する
-			//Bキーを離したら、仮想プレイヤーがその場で止まる
 			g_ReversionPlayer[0].position = prevData.positionData[i];
+			g_ReversionPlayer[0].RL = prevData.rlData[i];
+			g_ReversionPlayer[0].animation[WALKING].animNo = prevData.animData[i];
+			g_ReversionPlayer[0].direction.x = prevData.directionData[i];
 		}
 
 	}
-	for (int i = 0; i < debugData.data_tail; i++)
+	for (int i = 0; i < debugData.Pdata_tail; i++)
 	{
 		g_ReversionPlayer[1].position = debugData.positionData[i];
+		g_ReversionPlayer[1].RL = debugData.rlData[i];
+		g_ReversionPlayer[1].animation[WALKING].animNo = debugData.animData[i];
+		g_ReversionPlayer[1].direction.x = debugData.directionData[i];
 	}
 	if (frame >= 360)
 	{
 		g_ReversionPlayer[1].enable = true;
+
+		if (g_ReversionPlayer[1].direction.x != 0.0f)
+		{
+			g_ReversionPlayer[1].animation[IDLE].isUse = false;
+			g_ReversionPlayer[1].animation[WALKING].isUse = true;
+		}
+		else
+		{
+			g_ReversionPlayer[1].animation[IDLE].isUse = true;
+			g_ReversionPlayer[1].animation[WALKING].isUse = false;
+		}
 	}
 	if ((frame >= 360 && GetKeyState('B') & 0x80) || 
 		(frame >= 360 && JoystickPress(ButtonRT)))
 	{
 		g_ReversionPlayer[0].enable = true;
+
+		if (g_ReversionPlayer[0].direction.x != 0.0f)
+		{
+			g_ReversionPlayer[0].animation[IDLE].isUse = false;
+			g_ReversionPlayer[0].animation[WALKING].isUse = true;
+		}
+		else
+		{
+			g_ReversionPlayer[0].animation[IDLE].isUse = true;
+			g_ReversionPlayer[0].animation[WALKING].isUse = false;
+		}
 	}
 }
 
 
 void ReversionPlayer_Draw(void)
 {
-	//Bを押すと逆行キャラクターを描画
 	if (g_ReversionPlayer[0].enable)
 	{
-		Sprite_Draw(g_TextureVPlayer, g_ReversionPlayer[0].position.x,
-			g_ReversionPlayer[0].position.y,
-			PLAYER_SIZE_X, PLAYER_SIZE_Y, 0, 0, 64, 128);
+		if (g_ReversionPlayer[0].animation[IDLE].isUse)
+		{
+			if (!g_ReversionPlayer[0].RL)
+			{
+				Sprite_Draw(g_TextureVPlayer[IDLE], g_ReversionPlayer[0].position.x,
+					g_ReversionPlayer[0].position.y,
+					PLAYER_SIZE_X, PLAYER_SIZE_Y, 0, 0, 64, 128);
+			}
+			else
+			{
+				Sprite_DrawLeft(g_TextureVPlayer[IDLE], g_ReversionPlayer[0].position.x,
+					g_ReversionPlayer[0].position.y,
+					PLAYER_SIZE_X, PLAYER_SIZE_Y, 0, 0, 64, 128);
+			}
+		}
+
+		if (g_ReversionPlayer[0].animation[WALKING].isUse)
+		{
+			UpdateAnimations(g_ReversionPlayer[0].animation, WALKING);
+
+			if (!g_ReversionPlayer[0].RL)
+			{
+				Sprite_Draw(g_TextureVPlayer[WALKING], g_ReversionPlayer[0].position.x,
+					g_ReversionPlayer[0].position.y, PLAYER_SIZE_X, PLAYER_SIZE_Y,
+					g_ReversionPlayer[0].animation[WALKING].tcx, g_ReversionPlayer[0].animation[WALKING].tcy,
+					g_ReversionPlayer[0].animation[WALKING].tcw, g_ReversionPlayer[0].animation[WALKING].tch);
+			}
+			else
+			{
+				Sprite_DrawLeft(g_TextureVPlayer[WALKING], g_ReversionPlayer[0].position.x,
+					g_ReversionPlayer[0].position.y, PLAYER_SIZE_X, PLAYER_SIZE_Y,
+					g_ReversionPlayer[0].animation[WALKING].tcx, g_ReversionPlayer[0].animation[WALKING].tcy,
+					g_ReversionPlayer[0].animation[WALKING].tcw, g_ReversionPlayer[0].animation[WALKING].tch);
+			}
+
+		}
 	}
+
 	if (g_ReversionPlayer[1].enable)
 	{
-		Sprite_Draw(g_TextureVPlayer, g_ReversionPlayer[1].position.x,
-			g_ReversionPlayer[1].position.y,
-			PLAYER_SIZE_X, PLAYER_SIZE_Y, 0, 0, 64, 128, D3DCOLOR_RGBA(255, 0, 255, 110));
+		if (g_ReversionPlayer[1].animation[IDLE].isUse)
+		{
+			if (!g_ReversionPlayer[1].RL)
+			{
+				Sprite_Draw(g_TextureVPlayer[IDLE], g_ReversionPlayer[1].position.x,
+					g_ReversionPlayer[1].position.y,
+					PLAYER_SIZE_X, PLAYER_SIZE_Y, 0, 0, 64, 128, D3DCOLOR_RGBA(255, 0, 255, 110));
+			}
+			else
+			{
+				Sprite_DrawLeft(g_TextureVPlayer[IDLE], g_ReversionPlayer[1].position.x,
+					g_ReversionPlayer[1].position.y,
+					PLAYER_SIZE_X, PLAYER_SIZE_Y, 0, 0, 64, 128, D3DCOLOR_RGBA(255, 0, 255, 110));
+			}
+		}
+
+		if (g_ReversionPlayer[1].animation[WALKING].isUse)
+		{
+			UpdateAnimations(g_ReversionPlayer[1].animation, WALKING);
+
+			if (!g_ReversionPlayer[1].RL)
+			{
+				Sprite_Draw(g_TextureVPlayer[WALKING], g_ReversionPlayer[1].position.x,
+					g_ReversionPlayer[1].position.y, PLAYER_SIZE_X, PLAYER_SIZE_Y,
+					g_ReversionPlayer[1].animation[WALKING].tcx, g_ReversionPlayer[1].animation[WALKING].tcy,
+					g_ReversionPlayer[1].animation[WALKING].tcw, g_ReversionPlayer[1].animation[WALKING].tch,
+					D3DCOLOR_RGBA(255, 0, 255, 110));
+			}
+			else
+			{
+				Sprite_DrawLeft(g_TextureVPlayer[WALKING], g_ReversionPlayer[1].position.x,
+					g_ReversionPlayer[1].position.y, PLAYER_SIZE_X, PLAYER_SIZE_Y,
+					g_ReversionPlayer[1].animation[WALKING].tcx, g_ReversionPlayer[1].animation[WALKING].tcy,
+					g_ReversionPlayer[1].animation[WALKING].tcw, g_ReversionPlayer[1].animation[WALKING].tch,
+					D3DCOLOR_RGBA(255, 0, 255, 110));
+			}
+
+		}
 	}
 }
-
-////逆行キャラクターの位置情報を取得
-//ReversionPlayer GetVPlayer(void)
-//{
-//	return g_ReversionPlayer;
-//}
-
-
