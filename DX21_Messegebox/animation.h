@@ -30,7 +30,7 @@ typedef struct Animation_tag
 
 //アニメーションの種類
 enum {
-	IDLE,
+	DEFAULT,
 	WALKING,
 	TYPE_MAX
 };
@@ -53,7 +53,7 @@ void InitAnimations(Animation* animation, int type, int tWidth, int tHeight, int
 //
 //引数：animation	...Animation構造体のポインタ
 //
-//		motion		...アニメーションの種類
+//		type		...アニメーションの種類
 //		frame		...アニメーション更新の速さ
 //				frame数が大きければ、更新速度が遅くなる
 //

@@ -27,6 +27,7 @@
 #include "player.h"
 #include "camera.h"
 #include "sniper.h"
+#include "explosion.h"
 
 /*------------------------------------------------------------------------------
 	プロトタイプ宣言
@@ -238,6 +239,7 @@ bool Initialize(void)
 	InitStage();
 	ReversionPlayer_Initialize();
 	InitSniper();
+	InitExplosion();
 
 	Sprite_Initialize();
 	DebugFont_Initialize();
@@ -260,7 +262,7 @@ void Update(void)
 	UpdateDore();
 	ReversionPlayer_Update();
 	UpdateSniper();
-	
+	UpdateExplosion();
 	
 
 
@@ -301,6 +303,7 @@ void Draw(void)
 	DrawDore();
 	ReversionPlayer_Draw();
 	DrawSniper();
+	DrawExplosion();
 
 	// FPS表示
 	char buf[64];
@@ -327,6 +330,7 @@ void Finalize(void)
 	UninitKey();
 	ReversionPlayer_Finalize();
 	UninitSniper();
+	UninitExplosion();
 
 	Sprite_Finalize();
 	MyDirect3D_Finalize();

@@ -29,6 +29,7 @@
     <ClCompile Include="debug_font.cpp" />
     <ClCompile Include="directinput.cpp" />
     <ClCompile Include="dore.cpp" />
+    <ClCompile Include="explosion.cpp" />
     <ClCompile Include="key.cpp" />
     <ClCompile Include="keyboard.cpp" />
     <ClCompile Include="keylogger.cpp" />
@@ -56,6 +57,7 @@
     <ClInclude Include="debug_font.h" />
     <ClInclude Include="directinput.h" />
     <ClInclude Include="dore.h" />
+    <ClInclude Include="explosion.h" />
     <ClInclude Include="key.h" />
     <ClInclude Include="keyboard.h" />
     <ClInclude Include="keylogger.h" />

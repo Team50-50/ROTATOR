@@ -51,7 +51,7 @@ bool on_ground = false;
 void InitPlayer()
 {
 	//プレイヤーのテクスチャ読み込み
-	g_PlayerTexture[IDLE] = Texture_SetTextureLoadFile("asset/player.png");
+	g_PlayerTexture[DEFAULT] = Texture_SetTextureLoadFile("asset/player.png");
 	g_PlayerTexture[WALKING] = Texture_SetTextureLoadFile("asset/HEW_CHARA_Aniamtion_run_renban.png");
 	g_TextureGreen = Texture_SetTextureLoadFile("asset/green.tga");
 	g_TextureRed = Texture_SetTextureLoadFile("asset/red.tga");
@@ -79,7 +79,7 @@ void InitPlayer()
 void UninitPlayer()
 {
 	//テクスチャの解放
-	Texture_Release(&g_PlayerTexture[IDLE], 1);
+	Texture_Release(&g_PlayerTexture[DEFAULT], 1);
 	Texture_Release(&g_PlayerTexture[WALKING], 1);
 	Texture_Release(&g_TextureGreen, 1);
 	Texture_Release(&g_TextureRed, 1);
@@ -100,14 +100,14 @@ void UpdatePlayer()
 		g_Player.animation[i].isUse = false;
 	}
 
-	g_Player.animation[IDLE].isUse = true;
+	g_Player.animation[DEFAULT].isUse = true;
 
 	
 	//Aを押して左に移動
 	if (GetKeyState('A') & 0x80 || JoystickPress(LStickLeft))
 	{
 		g_Player.RL = true;
-		g_Player.animation[IDLE].isUse = false;
+		g_Player.animation[DEFAULT].isUse = false;
 		g_Player.animation[WALKING].isUse = true;
 		if (CangoL == true)
 		{
@@ -120,7 +120,7 @@ void UpdatePlayer()
 	if (GetKeyState('D') & 0x80 || JoystickPress(LStickRight))
 	{
 		g_Player.RL = false;
-		g_Player.animation[IDLE].isUse = false;
+		g_Player.animation[DEFAULT].isUse = false;
 		g_Player.animation[WALKING].isUse = true;
 		if (CangoR == true)
 		{
@@ -402,17 +402,17 @@ void UpdatePlayer()
 
 void DrawPlayer()
 {
-	if (g_Player.animation[IDLE].isUse)
+	if (g_Player.animation[DEFAULT].isUse)
 	{
 		if (!g_Player.RL)
 		{
-			Sprite_Draw(g_PlayerTexture[IDLE], g_Player.position.x,
+			Sprite_Draw(g_PlayerTexture[DEFAULT], g_Player.position.x,
 				g_Player.position.y, PLAYER_SIZE_X, PLAYER_SIZE_Y,
 				0, 0, PLAYER_SIZE_X, PLAYER_SIZE_Y);
 		}
 		else
 		{
-			Sprite_DrawLeft(g_PlayerTexture[IDLE], g_Player.position.x,
+			Sprite_DrawLeft(g_PlayerTexture[DEFAULT], g_Player.position.x,
 				g_Player.position.y, PLAYER_SIZE_X, PLAYER_SIZE_Y,
 				0, 0, PLAYER_SIZE_X, PLAYER_SIZE_Y);
 		}

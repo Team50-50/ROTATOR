@@ -20,6 +20,7 @@
 #include "controller.h"
 #include "keylogger.h"
 #include "bg.h"
+#include "explosion.h"
 
  /*-----------------------------------------------------------------------------------------
   ÉOÉçÅ[ÉoÉãïœêî
@@ -114,7 +115,7 @@ void UpdateSniper(void)
 				if (Collision_CircleAndCircleHit(&GameRocket_GetCollision(i), &GameBlock_GetCollision(j)))
 				{
 					g_rocket[i].enable = false;
-
+					Explosion_Spawn(g_rocket[i].position.x - 50.0f, g_rocket[i].position.y - 50.0f);
 				}
 			}
 		
