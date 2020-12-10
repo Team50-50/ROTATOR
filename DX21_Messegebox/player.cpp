@@ -116,7 +116,7 @@ void UpdatePlayer()
 		}
 	}
 
-	//Dを押して左に移動
+	//Dを押して右に移動
 	if (GetKeyState('D') & 0x80 || JoystickPress(LStickRight))
 	{
 		g_Player.RL = false;
@@ -128,6 +128,16 @@ void UpdatePlayer()
 			CangoL = true;
 		}
 	}
+	/*if (GetKeyState('A') & 0x80 || JoystickPress(LStickLeft) && GetKeyState('D') & 0x80 || JoystickPress(LStickRight))
+	{
+		CangoR = false;
+		CangoL = false;
+	}
+	else
+	{
+		CangoR = true;
+		CangoL = true;
+	}*/
 
 	//ジャンプ
 	if (GetKeyState(VK_SPACE) & 0x80 || JoystickPress(ButtonY))
@@ -218,23 +228,27 @@ void UpdatePlayer()
 		}
 		// ブロック左右判定
 
-		if (g_Player.position.y < BlockPosition[i].xy.y + (BLOCK_SIZE_Y * BlockPosition[i].High_Quantity) &&
+		if (g_Player.position.y < BlockPosition[i].xy.y + (BLOCK_SIZE_Y * BlockPosition[i].High_Quantity) ||
 			g_Player.position.y + PLAYER_SIZE_Y > BlockPosition[i].xy.y)
 		{
-
+			// 左側
 			if (g_Player.position.x < BlockPosition[i].xy.x + ((BLOCK_SIZE_X * BlockPosition[i].Width_Quantity) * 0.5))
 			{
 				if (g_Player.position.x + PLAYER_SIZE_X > BlockPosition[i].xy.x)
 				{
-					g_Player.direction.x = 0.0f;
+					//g_Player.direction.x = 0.0f;
+					CangoR = false;
 				}
 
 			}
+
+			// 右側
 			if (g_Player.position.x + PLAYER_SIZE_X > BlockPosition[i].xy.x + ((BLOCK_SIZE_X * BlockPosition[i].Width_Quantity) * 0.5))
 			{
 				if (g_Player.position.x < BlockPosition[i].xy.x + BLOCK_SIZE_X * BlockPosition[i].Width_Quantity)
 				{
-					g_Player.direction.x = 0.0f;
+					//g_Player.direction.x = 0.0f;
+					CangoL = false;
 				}
 
 			}
