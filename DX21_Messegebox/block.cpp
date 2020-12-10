@@ -18,15 +18,6 @@ void InitBlock()
 {
 	// TEXの読み込み
 	g_BlockTexture = Texture_SetTextureLoadFile("asset/steel_block.png");
-	
-
-	////ブロック配置
-	//for (int i = 0; i < 50; i++)
-	//{
-	//	Blocks[Block_Count].xy.x = BLOCK_SIZE_X * i;
-	//	Blocks[Block_Count].xy.y = ((SCREEN_HEIGHT - PLAYER_SIZE_Y) * 7 / 10) +PLAYER_SIZE_Y;
-	//	Block_Count++;
-	//}
 
 }
 
@@ -44,21 +35,22 @@ void UpdateBlock()
 
 void DrawBlock()
 {
+	
 	// ブロックを描画
 	for (int i = 0; i < BLOCK_MAX; i++)
 	{
-		
+
 		if (Blocks[i].use) {
 			Sprite_Draw(g_BlockTexture,
 				Blocks[i].xy.x, Blocks[i].xy.y,
-				BLOCK_SIZE_X, BLOCK_SIZE_Y,
-				0, 0, 64, 64);
+				BLOCK_SIZE_X * Blocks[i].Width_Quantity, BLOCK_SIZE_Y * Blocks[i].High_Quantity,
+				0, 0, 64 * Blocks[i].Width_Quantity, 64 * Blocks[i].High_Quantity);
 		}
 	}
 
 }
 
-void SetBlock(float x, float y)
+void SetBlock(float x, float y, int w, int h)
 {
 
 	for (int i = 0; i < BLOCK_MAX; i++)
@@ -68,6 +60,8 @@ void SetBlock(float x, float y)
 			Blocks[i].use = true;
 			Blocks[i].xy.x = x;
 			Blocks[i].xy.y = y;
+			Blocks[i].Width_Quantity = w;
+			Blocks[i].High_Quantity = h;
 			break;
 		}
 	}

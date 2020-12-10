@@ -168,17 +168,17 @@ void UpdatePlayer()
 	for (int i = 0; i < BLOCK_MAX; i++)
 	{
 		// 上方判定
-		if (g_Player.position.x + PLAYER_SIZE_X > BlockPosition[i].xy.x && g_Player.position.x < BlockPosition[i].xy.x + BLOCK_SIZE_X)
+		if (g_Player.position.x + PLAYER_SIZE_X > BlockPosition[i].xy.x &&
+			g_Player.position.x < BlockPosition[i].xy.x + BLOCK_SIZE_X * BlockPosition[i].Width_Quantity)
 		{
 
 			if (g_Player.position.y + PLAYER_SIZE_Y >= BlockPosition[i].xy.y)
 			{
-				if (g_Player.position.y + PLAYER_SIZE_Y <= BlockPosition[i].xy.y + BLOCK_SIZE_Y / 2)
+				if (g_Player.position.y + PLAYER_SIZE_Y <= BlockPosition[i].xy.y + (BLOCK_SIZE_Y * BlockPosition[i].High_Quantity) / 2)
 				{
 					on_ground = true;
 					g_Player.isJump = false;
 					g_Player.position.y = BlockPosition[i].xy.y - PLAYER_SIZE_Y;
-					//jump_amount = 0;
 				}
 			}
 			else
@@ -186,63 +186,59 @@ void UpdatePlayer()
 				on_ground = false;
 			}
 
-			if (g_Player.position.y <= BlockPosition[i].xy.y + BLOCK_SIZE_Y)
+			if (g_Player.position.y <= BlockPosition[i].xy.y + BLOCK_SIZE_Y * BlockPosition[i].High_Quantity)
 			{
-				if (g_Player.position.y >= BlockPosition[i].xy.y + BLOCK_SIZE_Y / 2)
+				if (g_Player.position.y >= BlockPosition[i].xy.y + (BLOCK_SIZE_Y * BlockPosition[i].High_Quantity) / 2)
 				{
 					on_ground = false;
-					g_Player.position.y = BlockPosition[i].xy.y + BLOCK_SIZE_Y;
+					g_Player.position.y = BlockPosition[i].xy.y + (BLOCK_SIZE_Y * BlockPosition[i].High_Quantity);
 
 				}
 			}
 		}
-		if ((g_Player.position.y >= BlockPosition[i].xy.y && g_Player.position.y <= BlockPosition[i].xy.y + BLOCK_SIZE_Y))
+		if ((g_Player.position.y >= BlockPosition[i].xy.y &&
+			g_Player.position.y <= BlockPosition[i].xy.y + (BLOCK_SIZE_Y * BlockPosition[i].High_Quantity)))
 		{
 
 			if (g_Player.position.x + PLAYER_SIZE_X > BlockPosition[i].xy.x)
 			{
-				if (g_Player.position.x + PLAYER_SIZE_X < BlockPosition[i].xy.x + BLOCK_SIZE_X)
+				if (g_Player.position.x + PLAYER_SIZE_X < BlockPosition[i].xy.x + BLOCK_SIZE_X * BlockPosition[i].Width_Quantity)
 				{
-					g_Player.position.x = BlockPosition[i].xy.x - BLOCK_SIZE_X;
+					g_Player.position.x = BlockPosition[i].xy.x - BLOCK_SIZE_X * BlockPosition[i].Width_Quantity;
 				}
 			}
 
-			if (g_Player.position.x < BlockPosition[i].xy.x + BLOCK_SIZE_X)
+			if (g_Player.position.x < BlockPosition[i].xy.x + BLOCK_SIZE_X * BlockPosition[i].Width_Quantity)
 			{
-				if (g_Player.position.x > BlockPosition[i].xy.x - BLOCK_SIZE_X / 2)
+				if (g_Player.position.x > BlockPosition[i].xy.x - (BLOCK_SIZE_X * BlockPosition[i].Width_Quantity) / 2)
 				{
-					g_Player.position.x = BlockPosition[i].xy.x + BLOCK_SIZE_X;
+					g_Player.position.x = BlockPosition[i].xy.x + BLOCK_SIZE_X * BlockPosition[i].Width_Quantity;
 				}
 			}
 		}
 		// ブロック左右判定
-		
-			if (g_Player.position.y < BlockPosition[i].xy.y + BLOCK_SIZE_Y && g_Player.position.y + PLAYER_SIZE_Y > BlockPosition[i].xy.y)
+
+		if (g_Player.position.y < BlockPosition[i].xy.y + (BLOCK_SIZE_Y * BlockPosition[i].High_Quantity) &&
+			g_Player.position.y + PLAYER_SIZE_Y > BlockPosition[i].xy.y)
+		{
+
+			if (g_Player.position.x < BlockPosition[i].xy.x + ((BLOCK_SIZE_X * BlockPosition[i].Width_Quantity) * 0.5))
 			{
-
-				if (g_Player.position.x < BlockPosition[i].xy.x + (BLOCK_SIZE_X * 0.5))
+				if (g_Player.position.x + PLAYER_SIZE_X > BlockPosition[i].xy.x)
 				{
-					if (g_Player.position.x + PLAYER_SIZE_X > BlockPosition[i].xy.x)
-					{
-						g_Player.direction.x = 0.0f;
-						//CangoR = false;
-					
-
-					}
-
+					g_Player.direction.x = 0.0f;
 				}
-				if (g_Player.position.x + PLAYER_SIZE_X > BlockPosition[i].xy.x + (BLOCK_SIZE_X * 0.5))
-				{
-					if (g_Player.position.x < BlockPosition[i].xy.x + DORE_SIZE_X)
-					{
-						g_Player.direction.x = 0.0f;
-						
-						//CangoL = false;
 
-					}
-
-				}
 			}
+			if (g_Player.position.x + PLAYER_SIZE_X > BlockPosition[i].xy.x + ((BLOCK_SIZE_X * BlockPosition[i].Width_Quantity) * 0.5))
+			{
+				if (g_Player.position.x < BlockPosition[i].xy.x + BLOCK_SIZE_X * BlockPosition[i].Width_Quantity)
+				{
+					g_Player.direction.x = 0.0f;
+				}
+
+			}
+		}
 		
 	}
 

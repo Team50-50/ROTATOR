@@ -18,6 +18,9 @@ typedef struct {
 	bool  use;
 	D3DXVECTOR2 xy;
 
+	int   Width_Quantity;
+	int   High_Quantity;
+
 }Block;
 
 
@@ -26,7 +29,7 @@ void UninitBlock();
 void UpdateBlock();
 void DrawBlock();
 
-void SetBlock(float x, float y);
+void SetBlock(float x, float y, int w, int h);
 
 //ブロックの位置座標を渡す関数
 Block*  GetBlockPosition();
