@@ -33,6 +33,3 @@ void SetBlock(float x, float y, int w, int h);
 
 //ブロックの位置座標を渡す関数
 Block*  GetBlockPosition();
-
-// 
-CollisionCircle GameBlock_GetCollision(int index);

@@ -11,6 +11,8 @@
 #include"config.h"
 #include"bg.h"
 #include"player.h"
+#include"keylogger.h"
+#include"controller.h"
 
  /*-----------------------------------------------------------------------------------------
    ÉOÉçÅ[ÉoÉãïœêî
@@ -22,9 +24,35 @@ static D3DXVECTOR2 g_cameraPosition;
 -------------------------------------------------------------------------------------------*/
 void GameCamera_Update(void)
 {
+	if (Keylogger_Press(KL_UP) || JoystickPress(UpButton))
+	{
+		g_cameraPosition.y -= 20.0f;
+	}
+
+	if (Keylogger_Press(KL_DOWN) || JoystickPress(DownButton))
+	{
+		g_cameraPosition.y += 20.0f;
+	}
+
+	if (Keylogger_Press(KL_RIGHT) || JoystickPress(RightButton))
+	{
+		g_cameraPosition.x += 20.0f;
+	}
+
+	if (Keylogger_Press(KL_LEFT) || JoystickPress(LeftButton))
+	{
+		g_cameraPosition.x -= 20.0f;
+	}
+
 	D3DXVECTOR2 playerPosition = GetPlayerPosition();
 
-	SetCamera(playerPosition.x, playerPosition.y);
+	if (!Keylogger_Press(KL_UP) && !Keylogger_Press(KL_DOWN) &&
+		!Keylogger_Press(KL_RIGHT) && !Keylogger_Press(KL_LEFT) &&
+		!JoystickPress(UpButton) && !JoystickPress(DownButton) &&
+		!JoystickPress(RightButton) && !JoystickPress(LeftButton))
+	{
+		SetCamera(playerPosition.x, playerPosition.y);
+	}
 
 	if (g_cameraPosition.x <= SCREEN_WIDTH * 0.5f)
 	{

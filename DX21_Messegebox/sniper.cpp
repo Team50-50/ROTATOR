@@ -30,9 +30,6 @@ static D3DXVECTOR2 playerPosition;
 static Rocket g_rocket[ROCKET_MAX];
 static float angle;
 
-//ブロック位置
-Block*	BlocksPosition;
-
 void InitSniper(void)
 {
 	//g_Texturelaser = Texture_SetTextureLoadFile("asset/");
@@ -56,7 +53,6 @@ void UninitSniper(void)
 
 void UpdateSniper(void)
 {
-	BlocksPosition = GetBlockPosition();
 
 	if (Keylogger_Press(KL_J))
 	{
@@ -99,6 +95,8 @@ void UpdateSniper(void)
 	float CX = playerPosition.x + PLAYER_SIZE_X * 0.5f;
 	float CY = playerPosition.y + PLAYER_SIZE_Y * 0.5f;
 
+	Block* block;
+	block = GetBlockPosition();
 
 	for (int i = 0; i < ROCKET_MAX; i++)
 	{
@@ -112,11 +110,16 @@ void UpdateSniper(void)
 
 			for (int j = 0; j < BLOCK_MAX; j++)
 			{
-				if (Collision_CircleAndCircleHit(&GameRocket_GetCollision(i), &GameBlock_GetCollision(j)))
+				if (g_rocket[i].position.x + 32.0f > block[j].xy.x &&
+					g_rocket[i].position.x < block[j].xy.x + BLOCK_SIZE_X * block[j].Width_Quantity&&
+					g_rocket[i].position.y + ROCKET_SIZE_Y > block[j].xy.y&&
+					g_rocket[i].position.y < block[j].xy.y + BLOCK_SIZE_Y * block[j].High_Quantity)
 				{
 					g_rocket[i].enable = false;
 					Explosion_Spawn(g_rocket[i].position.x - 50.0f, g_rocket[i].position.y - 50.0f);
+
 				}
+
 			}
 		
 		}
@@ -176,17 +179,4 @@ void Rocket_Spawn(float x, float y)
 
 		break;
 	}
-}
-
-CollisionCircle GameRocket_GetCollision(int index)
-{
-	CollisionCircle c = {
-		D3DXVECTOR2(
-			g_rocket[index].position.x + ROCKET_SIZE_X * 0.5f,
-			g_rocket[index].position.y + ROCKET_SIZE_Y * 0.5f
-		),
-		ROCKET_SIZE_X * 0.5f
-	};
-
-	return c;
 }

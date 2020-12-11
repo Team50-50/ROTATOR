@@ -43,7 +43,5 @@ void DrawSniper(void);
 
 void Rocket_Spawn(float x, float y);
 
-CollisionCircle GameRocket_GetCollision(int index);
-
 #endif // !SNIPER_H_
 

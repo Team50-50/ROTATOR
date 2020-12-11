@@ -29,6 +29,10 @@ static int g_RecordFrameMax = 0;
  -------------------------------------------------------------------------------------------*/
  //キーロガーキーからキーボードキーへの変換表
 static const Keyboard_Keys g_KKs[KL_MAX] = {
+	KK_UP,
+	KK_DOWN,
+	KK_LEFT,
+	KK_RIGHT,
 	KK_W,
 	KK_S,
 	KK_A,
