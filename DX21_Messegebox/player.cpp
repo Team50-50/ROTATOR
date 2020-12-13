@@ -228,8 +228,10 @@ void UpdatePlayer()
 		}
 		// ブロック左右判定
 
-		if (g_Player.position.y < BlockPosition[i].xy.y + (BLOCK_SIZE_Y * BlockPosition[i].High_Quantity) ||
-			g_Player.position.y + PLAYER_SIZE_Y > BlockPosition[i].xy.y)
+		if ((g_Player.position.y < BlockPosition[i].xy.y + (BLOCK_SIZE_Y * BlockPosition[i].High_Quantity) &&
+			g_Player.position.y > BlockPosition[i].xy.y + ((BLOCK_SIZE_Y * BlockPosition[i].High_Quantity) * 0.5)) ||
+			(g_Player.position.y + PLAYER_SIZE_Y > BlockPosition[i].xy.y &&
+				g_Player.position.y + PLAYER_SIZE_Y > BlockPosition[i].xy.y + ((BLOCK_SIZE_Y * BlockPosition[i].High_Quantity) * 0.5)))
 		{
 			// 左側
 			if (g_Player.position.x < BlockPosition[i].xy.x + ((BLOCK_SIZE_X * BlockPosition[i].Width_Quantity) * 0.5))
