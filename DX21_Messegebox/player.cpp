@@ -58,7 +58,7 @@ void InitPlayer()
 	g_TextureBlue = Texture_SetTextureLoadFile("asset/blue.tga");
 
 	//プレイヤーの初期位置の定義
-	g_Player.position = { 50.0f,200.0f };
+	g_Player.position = { 64.0f,200.0f };
 
 	//移動on/offの初期化
 	CangoR = true;
@@ -128,19 +128,14 @@ void UpdatePlayer()
 			CangoL = true;
 		}
 	}
-	/*if (GetKeyState('A') & 0x80 || JoystickPress(LStickLeft) && GetKeyState('D') & 0x80 || JoystickPress(LStickRight))
-	{
-		CangoR = false;
-		CangoL = false;
-	}
-	else
+	if (CangoR == false && CangoL == false)
 	{
 		CangoR = true;
 		CangoL = true;
-	}*/
+	}
 
 	//ジャンプ
-	if (GetKeyState(VK_SPACE) & 0x80 || JoystickPress(ButtonY))
+	if (Keylogger_Trigger(KL_JUMP)|| JoystickPress(ButtonY))
 	{
 		GamePlayer_Jump();
 
@@ -152,13 +147,12 @@ void UpdatePlayer()
 
 	}
 
-	
-
 	g_Player.position.y += g_Player.speed.y;
 
 	if (on_ground == false)
 	{
 		g_Player.speed.y += GRAVITY;
+		g_Player.isJump = true;
 	}
 
 	if (g_Player.position.y >= 747.0f)
@@ -169,32 +163,37 @@ void UpdatePlayer()
 		g_Player.isJump = false;
 
 	}
+	if (g_Player.isJump == true)
+	{
+		on_ground = false;
+	}
 
 	//ブロックの位置座標を取得
 	Block* BlockPosition = GetBlockPosition();
-
 
 	// ブロックの当たり判定を作成
 	for (int i = 0; i < BLOCK_MAX; i++)
 	{
 		// 上方判定
-		if (g_Player.position.x + PLAYER_SIZE_X > BlockPosition[i].xy.x &&
-			g_Player.position.x < BlockPosition[i].xy.x + BLOCK_SIZE_X * BlockPosition[i].Width_Quantity)
+		if (g_Player.position.x + PLAYER_SIZE_X > BlockPosition[i].xy.x /*+ 20*/ &&
+			g_Player.position.x < BlockPosition[i].xy.x + BLOCK_SIZE_X * BlockPosition[i].Width_Quantity /*- 20*/)
 		{
 
-			if (g_Player.position.y + PLAYER_SIZE_Y >= BlockPosition[i].xy.y)
+			if (g_Player.position.y + PLAYER_SIZE_Y >= BlockPosition[i].xy.y &&
+				g_Player.position.y + PLAYER_SIZE_Y <= BlockPosition[i].xy.y + (BLOCK_SIZE_Y * BlockPosition[i].High_Quantity) / 2)
 			{
-				if (g_Player.position.y + PLAYER_SIZE_Y <= BlockPosition[i].xy.y + (BLOCK_SIZE_Y * BlockPosition[i].High_Quantity) / 2)
-				{
-					on_ground = true;
-					g_Player.isJump = false;
-					g_Player.position.y = BlockPosition[i].xy.y - PLAYER_SIZE_Y;
-				}
+
+				on_ground = true;
+				g_Player.isJump = false;
+				g_Player.position.y = BlockPosition[i].xy.y - PLAYER_SIZE_Y;
+				
 			}
+			// ここ問題あり?↓
 			else
 			{
 				on_ground = false;
 			}
+			// ↑
 
 			if (g_Player.position.y <= BlockPosition[i].xy.y + BLOCK_SIZE_Y * BlockPosition[i].High_Quantity)
 			{
@@ -202,10 +201,10 @@ void UpdatePlayer()
 				{
 					on_ground = false;
 					g_Player.position.y = BlockPosition[i].xy.y + (BLOCK_SIZE_Y * BlockPosition[i].High_Quantity);
-
 				}
 			}
 		}
+
 		if ((g_Player.position.y >= BlockPosition[i].xy.y &&
 			g_Player.position.y <= BlockPosition[i].xy.y + (BLOCK_SIZE_Y * BlockPosition[i].High_Quantity)))
 		{
@@ -215,6 +214,7 @@ void UpdatePlayer()
 				if (g_Player.position.x + PLAYER_SIZE_X < BlockPosition[i].xy.x + BLOCK_SIZE_X * BlockPosition[i].Width_Quantity)
 				{
 					g_Player.position.x = BlockPosition[i].xy.x - BLOCK_SIZE_X * BlockPosition[i].Width_Quantity;
+					//CangoL = false;
 				}
 			}
 
@@ -223,22 +223,21 @@ void UpdatePlayer()
 				if (g_Player.position.x > BlockPosition[i].xy.x - (BLOCK_SIZE_X * BlockPosition[i].Width_Quantity) / 2)
 				{
 					g_Player.position.x = BlockPosition[i].xy.x + BLOCK_SIZE_X * BlockPosition[i].Width_Quantity;
+					//CangoR = false;
 				}
 			}
 		}
 		// ブロック左右判定
-
 		if ((g_Player.position.y < BlockPosition[i].xy.y + (BLOCK_SIZE_Y * BlockPosition[i].High_Quantity) &&
 			g_Player.position.y > BlockPosition[i].xy.y + ((BLOCK_SIZE_Y * BlockPosition[i].High_Quantity) * 0.5)) ||
 			(g_Player.position.y + PLAYER_SIZE_Y > BlockPosition[i].xy.y &&
-				g_Player.position.y + PLAYER_SIZE_Y > BlockPosition[i].xy.y + ((BLOCK_SIZE_Y * BlockPosition[i].High_Quantity) * 0.5)))
+				g_Player.position.y + PLAYER_SIZE_Y < BlockPosition[i].xy.y + ((BLOCK_SIZE_Y * BlockPosition[i].High_Quantity) * 0.5)))
 		{
 			// 左側
 			if (g_Player.position.x < BlockPosition[i].xy.x + ((BLOCK_SIZE_X * BlockPosition[i].Width_Quantity) * 0.5))
 			{
 				if (g_Player.position.x + PLAYER_SIZE_X > BlockPosition[i].xy.x)
 				{
-					//g_Player.direction.x = 0.0f;
 					CangoR = false;
 				}
 
@@ -249,13 +248,21 @@ void UpdatePlayer()
 			{
 				if (g_Player.position.x < BlockPosition[i].xy.x + BLOCK_SIZE_X * BlockPosition[i].Width_Quantity)
 				{
-					//g_Player.direction.x = 0.0f;
 					CangoL = false;
 				}
 
 			}
 		}
-		
+		//下方判定
+		if (g_Player.position.y < BlockPosition[i].xy.y + BLOCK_SIZE_Y * BlockPosition[i].High_Quantity + 10 &&
+			g_Player.position.y > BlockPosition[i].xy.y + BLOCK_SIZE_Y * BlockPosition[i].High_Quantity - 5)
+		{
+			if (g_Player.position.x + PLAYER_SIZE_X > BlockPosition[i].xy.x &&
+				g_Player.position.x < BlockPosition[i].xy.x + BLOCK_SIZE_X * BlockPosition[i].Width_Quantity)
+			
+			g_Player.speed.y = +1;
+		}
+
 	}
 
 	//プレイヤー座標の更新 (移動方向×速度)

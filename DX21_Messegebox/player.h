@@ -28,6 +28,7 @@ typedef struct
 //ƒvƒŒƒCƒ„[‚Ì‘å‚«‚³Y
 #define PLAYER_SIZE_Y (128.0f)
 
+
 #define JUMP_FORCE (-20.0f)
 #define GRAVITY (1.0f)
 
