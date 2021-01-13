@@ -113,21 +113,6 @@ void UpdateSniper(void)
 			g_rocket[i].collision.center.y = g_rocket[i].position.y + sinf(ROCKET_HEIGHT * 0.5f) + ROCKET_HEIGHT * 0.5f;
 			g_rocket[i].collision.radius = ROCKET_WIDTH * 0.5f;
 
-			for (int j = 0; j < BLOCK_MAX; j++)
-			{
-				if (!block[j].use) continue;
-
-				if (g_rocket[i].position.x + 32.0f > block[j].position.x &&
-					g_rocket[i].position.x < block[j].position.x + BLOCK_SIZE_X * block[j].Width_Quantity&&
-					g_rocket[i].position.y + ROCKET_WIDTH > block[j].position.y&&
-					g_rocket[i].position.y < block[j].position.y + BLOCK_SIZE_Y * block[j].High_Quantity)
-				{
-					g_rocket[i].enable = false;
-					Explosion_Spawn(g_rocket[i].position.x - 50.0f, g_rocket[i].position.y - 50.0f);
-					block[j].use = false;
-				}
-
-			}
 		}
 		else
 		{

@@ -299,6 +299,7 @@ void Draw(void)
 
 	
 	DrawBG();
+	DrawMap();
 	DrawPlayer();
 	DrawBlock();
 	DrawKey();
@@ -306,7 +307,7 @@ void Draw(void)
 	ReversionPlayer_Draw();
 	DrawSniper();
 	DrawExplosion();
-	DrawMap();
+
 
 	// FPS•\Ž¦
 	char buf[64];

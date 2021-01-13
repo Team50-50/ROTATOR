@@ -59,7 +59,7 @@ void InitPlayer()
 	g_TextureBlue = Texture_SetTextureLoadFile("asset/blue.tga");
 
 	//プレイヤーの初期位置の定義
-	g_Player.position = { 64.0f,200.0f };
+	g_Player.position = { 90.0f,776.0f };
 	g_Player.JumpVelocity = 0.0f;
 
 	//移動on/offの初期化
@@ -216,9 +216,6 @@ g_Player.start = {
 	//=================================================================================
 	//プレイヤーとブロックの衝突判定
 	//=================================================================================
-	
-
-
 	Block* block = GetBlockPosition();
 
 	for (int i = 0; i < BLOCK_MAX; i++)
@@ -354,15 +351,15 @@ g_Player.start = {
 		}
 	}
 
-	//地面
-	if (g_Player.position.y >= 747.0f)
-	{
+	////地面
+	//if (g_Player.position.y >= 747.0f)
+	//{
 
-		g_Player.position.y = 747.0f;
+	//	g_Player.position.y = 747.0f;
 
-		g_Player.isJump = false;
+	//	g_Player.isJump = false;
 
-	}
+	//}
 
 	g_Player.PrevPosition = g_Player.position;
 
@@ -527,7 +524,6 @@ g_Player.start = {
 			a *= -1;
 		}
 	}
-
 
 }
 

@@ -19,7 +19,7 @@ typedef struct CollisionCircle_tag
 
 }CollisionCircle;
 
-//’·•ûŒ`‚Ìcollision
+//‹éŒ`‚Ìcollision
 typedef struct CollisionRect_tag
 {
 	D3DXVECTOR2 start;	//¶ã‚ÌÀ•W

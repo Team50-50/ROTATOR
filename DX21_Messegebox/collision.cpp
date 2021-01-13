@@ -11,6 +11,7 @@
 #include <d3dx9.h>
 #include "map.h"
 
+ //‰~‚Æ‰~‚ÌÕ“Ë”»’è
 bool Collision_CircleAndCircleHit(const CollisionCircle* pA, const CollisionCircle* pB)
 {
 	D3DXVECTOR2 vec = pA->center - pB->center;
