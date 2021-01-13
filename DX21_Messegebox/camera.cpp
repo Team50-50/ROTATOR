@@ -13,6 +13,7 @@
 #include"player.h"
 #include"keylogger.h"
 #include"controller.h"
+#include"map.h"
 
  /*-----------------------------------------------------------------------------------------
    ÉOÉçÅ[ÉoÉãïœêî
@@ -44,14 +45,14 @@ void GameCamera_Update(void)
 		g_cameraPosition.x -= 20.0f;
 	}
 
-	D3DXVECTOR2 playerPosition = GetPlayerPosition();
+	Player player = GetPlayer();
 
 	if (!Keylogger_Press(KL_UP) && !Keylogger_Press(KL_DOWN) &&
 		!Keylogger_Press(KL_RIGHT) && !Keylogger_Press(KL_LEFT) &&
 		!JoystickPress(UpButton) && !JoystickPress(DownButton) &&
 		!JoystickPress(RightButton) && !JoystickPress(LeftButton))
 	{
-		SetCamera(playerPosition.x, playerPosition.y);
+		SetCamera(player.position.x, player.position.y);
 	}
 
 	if (g_cameraPosition.x <= SCREEN_WIDTH * 0.5f)

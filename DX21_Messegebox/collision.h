@@ -19,7 +19,28 @@ typedef struct CollisionCircle_tag
 
 }CollisionCircle;
 
+//長方形のcollision
+typedef struct CollisionRect_tag
+{
+	D3DXVECTOR2 start;	//左上の座標
+	D3DXVECTOR2 end;	//右下の座標
+
+}CollisionRect;
+
+//矩形の辺の種類
+enum {
+	EDGENONE = -1,
+	LEFTEDGE,
+	RIGHTEDGE,
+	TOPEDGE,
+	BOTTOMEDGE,
+	EDGE_MAX
+};
+
+//円と円の衝突判定
 bool Collision_CircleAndCircleHit(const CollisionCircle* pA, const CollisionCircle* pB);
 
+//矩形とマップチップの辺の衝突判定
+bool Collision_RectAndMapchipEdgeHit(const CollisionRect& rect, D3DXVECTOR2 vec, int& contactEdge, float& contactEdgePosition);
 
 #endif

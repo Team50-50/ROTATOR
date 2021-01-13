@@ -17,20 +17,21 @@
  -------------------------------------------------------------------------------------------*/
 #define ROCKET_MAX    (5)
 #define ROCKET_SPEED  (10.0f)
-#define ROCKET_SIZE_X (32.0f)
-#define ROCKET_SIZE_Y (32.0f)
+#define ROCKET_WIDTH (32.0f)
+#define ROCKET_HEIGHT (32.0f)
 
  /*-----------------------------------------------------------------------------------------
   ç\ë¢ëÃêÈåæ
  -------------------------------------------------------------------------------------------*/
 typedef struct Rocket_tag
 {
-	
-	bool enable;
 	D3DXVECTOR2 position;
 	D3DXVECTOR2 target;
 	float r_angle;
-	
+		
+	bool enable;
+
+	CollisionCircle collision;
 }Rocket;
 
 void InitSniper(void);
@@ -42,6 +43,8 @@ void UpdateSniper(void);
 void DrawSniper(void);
 
 void Rocket_Spawn(float x, float y);
+
+Rocket* Get_Rocket(void);
 
 #endif // !SNIPER_H_
 

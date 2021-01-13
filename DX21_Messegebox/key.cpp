@@ -13,9 +13,6 @@ static int	g_KeyTexture;
 // 鍵の位置座標
 Key Keys[KEY_MAX];
 
-// プレイヤーの位置
-D3DXVECTOR2 PlayerPosition;
-
 // プレイヤーの鍵所持数
 static int g_PlayerKeyPossession;
 
@@ -40,8 +37,6 @@ void InitKey()
 
 	g_PlayerKeyPossession = 0;
 
-	//プレイヤーの現在位置を取得
-	PlayerPosition = GetPlayerPosition();
 
 	g_D_PlayerUsedKey = 0;
 
@@ -59,13 +54,11 @@ void UninitKey()
 void UpdateKey()
 {
 	
-	// プレイヤー位置座標を保存
-	PlayerPosition = GetPlayerPosition();
-
+	Player player = GetPlayer();
 	// プレイヤーが鍵を触ったかどうか
 	for (int i = 0; i < KEY_MAX; i++)
 	{
-		if (Collision_CircleAndCircleHit(&GamePlayer_GetCollision(), &GameKey_GetCollision(i)))
+		if (Collision_CircleAndCircleHit(player.collision, &GameKey_GetCollision(i)))
 		{
 
 			Keys[i].InPlayer = true;

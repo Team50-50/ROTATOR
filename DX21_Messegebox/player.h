@@ -9,8 +9,12 @@
 typedef struct
 {
 	D3DXVECTOR2 position;
-	D3DXVECTOR2 speed;
 	D3DXVECTOR2 direction;
+	D3DXVECTOR2 PrevPosition;
+	D3DXVECTOR2 start;
+	D3DXVECTOR2 end;
+
+	float JumpVelocity;
 
 	bool enable;
 	bool isJump;
@@ -18,18 +22,18 @@ typedef struct
 
 	Animation animation[TYPE_MAX];
 
-	Block *pBlock;
+	CollisionCircle collision[2];
 
 }Player;
 
 //プレイヤーの大きさX
-#define PLAYER_SIZE_X (64.0f)
+#define PLAYER_SIZE_X (60.0f)
 
 //プレイヤーの大きさY
-#define PLAYER_SIZE_Y (128.0f)
+#define PLAYER_SIZE_Y (120.0f)
 
 
-#define JUMP_FORCE (-20.0f)
+#define JUMP_FORCE (22.0f)
 #define GRAVITY (1.0f)
 
 void InitPlayer();
@@ -37,17 +41,15 @@ void UninitPlayer();
 void UpdatePlayer();
 void DrawPlayer();
 
-//ゲームプレイヤーの移動処理
-void GamePlayer_MoveLeft(void);
-void GamePlayer_MoveRight(void);
-void GamePlayer_Jump(void);
-
-CollisionCircle GamePlayer_GetCollision(void);
-D3DXVECTOR2 GetPlayerPosition();
-
 DataStorage GetPrev(void);
 DataStorage GetDebug(void);
 
 int GetPlayerUseKey(void);
+
+CollisionCircle* Get_PlayerCollision(void);
+
+void SetPlayerMapPos(int contact_edge, float contact_pos);
+
+Player GetPlayer(void);
 
 #endif //PLAYER_H

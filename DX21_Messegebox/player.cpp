@@ -14,6 +14,7 @@
 #include "debug_font.h"
 #include "sniper.h"
 #include <stdio.h>
+#include "map.h"
 
 /*-----------------------------------------------------------------------------------------
  グローバル変数
@@ -39,14 +40,14 @@ static int g_PlayerUsedKey;
 
 static bool flag1 = false;
 static bool flag2 = false;
+static bool flag3 = false;
+static bool flag4 = false;
 static float a = 0.f;
 static float g_value = 0.0f;
 
 // 移動方向のon/off
 bool CangoR;
 bool CangoL;
-
-bool on_ground = false;
 
 void InitPlayer()
 {
@@ -59,6 +60,7 @@ void InitPlayer()
 
 	//プレイヤーの初期位置の定義
 	g_Player.position = { 64.0f,200.0f };
+	g_Player.JumpVelocity = 0.0f;
 
 	//移動on/offの初期化
 	CangoR = true;
@@ -69,8 +71,6 @@ void InitPlayer()
 
 	// 鍵の使った数の初期化
 	g_PlayerUsedKey = 0;
-
-
 
 	InitAnimations(g_Player.animation, WALKING, 192, 256, 3, 2, 6);
 }
@@ -89,6 +89,11 @@ void UninitPlayer()
 
 void UpdatePlayer()
 {
+	float speed = 5.0f;
+
+	g_Player.start = g_Player.position;
+	g_Player.end = { g_Player.position.x + PLAYER_SIZE_X, g_Player.position.y + PLAYER_SIZE_Y };
+
 	//進行方向を長さ1にする
 	D3DXVec2Normalize(&g_Player.direction, &g_Player.direction);
 
@@ -109,11 +114,8 @@ void UpdatePlayer()
 		g_Player.RL = true;
 		g_Player.animation[DEFAULT].isUse = false;
 		g_Player.animation[WALKING].isUse = true;
-		if (CangoL == true)
-		{
-			GamePlayer_MoveLeft();
-			CangoR = true;
-		}
+
+		g_Player.direction.x -= speed;
 	}
 
 	//Dを押して右に移動
@@ -122,11 +124,8 @@ void UpdatePlayer()
 		g_Player.RL = false;
 		g_Player.animation[DEFAULT].isUse = false;
 		g_Player.animation[WALKING].isUse = true;
-		if (CangoR == true)
-		{
-			GamePlayer_MoveRight();
-			CangoL = true;
-		}
+
+		g_Player.direction.x += speed;
 	}
 	if (CangoR == false && CangoL == false)
 	{
@@ -135,138 +134,251 @@ void UpdatePlayer()
 	}
 
 	//ジャンプ
-	if (Keylogger_Trigger(KL_JUMP)|| JoystickPress(ButtonY))
+	if (Keylogger_Press(KL_JUMP)|| JoystickPress(ButtonY))
 	{
-		GamePlayer_Jump();
+		if (!g_Player.isJump)
+		{
+			g_Player.isJump = true;
+			g_Player.JumpVelocity = JUMP_FORCE;
+		}
 
 	}
+
+	//プレイヤーの落下
+	if (g_Player.isJump)
+	{
+		g_Player.direction.y = (g_Player.position.y - g_Player.PrevPosition.y) - g_Player.JumpVelocity;
+		g_Player.JumpVelocity -= 1.0f;
+	}
+
+	g_Player.direction.y += GRAVITY;
 
 	if (Keylogger_Release(KL_J) || JoystickRelease(ButtonLT))
 	{
-		Rocket_Spawn(g_Player.position.x + 32.0f, g_Player.position.y + 64.0f);
+		Rocket_Spawn(g_Player.position.x + 32.0f, g_Player.position.y + 48.0f);
 
 	}
 
-	g_Player.position.y += g_Player.speed.y;
-
-	if (on_ground == false)
+	//======================================================================================
+	//プレイヤーとマップチップの判定を行う
+	//======================================================================================
+	CollisionRect rect
 	{
-		g_Player.speed.y += GRAVITY;
+		{g_Player.position.x,g_Player.position.y},
+		{g_Player.position.x + PLAYER_SIZE_X,g_Player.position.y + PLAYER_SIZE_Y}
+	};
+
+	int contact_edge = EDGENONE;
+	float contact_pos = 0.0f;
+	//プレイヤーとチップのX軸判定
+	if (!Collision_RectAndMapchipEdgeHit(rect, { g_Player.direction.x, 0.0f }, contact_edge, contact_pos))
+	{
+		flag3 = false;
+	}
+	else
+	{
+		flag3 = true;
+		SetPlayerMapPos(contact_edge, contact_pos);
+	}
+
+	//プレイヤーとチップのY軸判定
+	if (!Collision_RectAndMapchipEdgeHit(rect, { 0.0f, g_Player.direction.y }, contact_edge, contact_pos))
+	{
+		flag4 = false;
 		g_Player.isJump = true;
 	}
+	else
+	{
+		flag4 = true;
+		SetPlayerMapPos(contact_edge, contact_pos);
 
+	}
+g_Player.start = {
+		g_Player.position.x,
+		g_Player.position.y
+	};
+	g_Player.end = {
+		g_Player.position.x + PLAYER_SIZE_X,
+		g_Player.position.y + PLAYER_SIZE_Y
+	};
+	
+	//プレイヤーの移動処理
+	if (!flag3)
+	{
+		g_Player.position.x += g_Player.direction.x;
+	}
+	if (!flag4)
+	{
+		g_Player.position.y += g_Player.direction.y;
+
+	}
+
+	//=================================================================================
+	//プレイヤーとブロックの衝突判定
+	//=================================================================================
+	
+
+
+	Block* block = GetBlockPosition();
+
+	for (int i = 0; i < BLOCK_MAX; i++)
+	{
+		if (block[i].use)
+		{
+			block[i].start = block[i].position;
+			block[i].end = {
+				block[i].position.x + BLOCK_SIZE_X * block[i].Width_Quantity,
+				block[i].position.y + BLOCK_SIZE_Y * block[i].High_Quantity
+			};
+
+			//プレイヤーがブロックの上にいる時の衝突判定
+			if (g_Player.end.y <= block[i].start.y)
+			{
+				if (g_Player.end.x > block[i].start.x && g_Player.start.x < block[i].end.x)
+				{
+					if (g_Player.end.y + g_Player.direction.y > block[i].start.y)
+					{
+						g_Player.isJump = false;
+						g_Player.position.y = block[i].start.y - PLAYER_SIZE_Y;
+
+					}
+				}
+
+			}
+
+			//プレイヤーがブロックの下にいる時の衝突判定
+			if (g_Player.start.y >= block[i].end.y)
+			{
+
+				if (g_Player.end.x > block[i].start.x && g_Player.start.x < block[i].end.x)
+				{
+
+					if (g_Player.start.y + g_Player.direction.y < block[i].end.y)
+					{
+						g_Player.position.y = block[i].end.y;
+						g_Player.isJump = true;
+
+					}
+				}
+			}
+			//プレイヤーがブロックの左にいる時の衝突判定
+			if (g_Player.direction.x > 0.0f)
+			{
+				if (g_Player.end.x <= block[i].start.x)
+				{
+					if (g_Player.start.y < block[i].end.y && g_Player.end.y > block[i].start.y)
+					{
+						if (g_Player.end.x + g_Player.direction.x > block[i].start.x)
+						{
+							g_Player.position.x = block[i].start.x - PLAYER_SIZE_X;
+						}
+					}
+				}
+			}
+
+			//プレイヤーがブロックの右にいる時の衝突判定
+			if (g_Player.direction.x < 0.0f)
+			{
+				if (g_Player.start.x >= block[i].end.x)
+				{
+					if (g_Player.start.y < block[i].end.y && g_Player.end.y > block[i].start.y)
+					{
+						if (g_Player.start.x + g_Player.direction.x < block[i].end.x)
+						{
+							g_Player.position.x = block[i].end.x;
+						}
+					}
+				}
+			}
+
+			//=========================================================================================
+			//プレイヤーとブロックの <角> の衝突判定
+			//=========================================================================================
+			if (g_Player.end.x - block[i].start.x <= 0 && g_Player.end.y - block[i].start.y <= 0 &&
+				g_Player.end.x + g_Player.direction.x - block[i].start.x > 0 &&
+				g_Player.end.y + g_Player.direction.y - block[i].start.y > 0)
+			{
+				if (g_Player.end.x + g_Player.direction.x - block[i].start.x >= g_Player.end.y + g_Player.direction.y - block[i].start.y)
+				{
+					g_Player.position.y = block[i].start.y - PLAYER_SIZE_Y;
+				}
+				else
+				{
+					g_Player.position.x = block[i].start.x - PLAYER_SIZE_X;
+				}
+
+			}
+
+			if (block[i].end.x - g_Player.start.x <= 0 && g_Player.end.y - block[i].start.y <= 0 &&
+				block[i].end.x - (g_Player.start.x + g_Player.direction.x) > 0 &&
+				g_Player.end.y + g_Player.direction.y - block[i].start.y > 0)
+			{
+				if (block[i].end.x - (g_Player.start.x + g_Player.direction.x) >= g_Player.end.y + g_Player.direction.y - block[i].start.y)
+				{
+					g_Player.position.y = block[i].start.y - PLAYER_SIZE_Y;
+				}
+				else
+				{
+					g_Player.position.x = block[i].end.x;
+				}
+
+			}
+
+			if (g_Player.end.x - block[i].start.x <= 0 && block[i].end.y - g_Player.start.y <= 0 &&
+				g_Player.end.x + g_Player.direction.x - block[i].start.x > 0 &&
+				block[i].end.y - (g_Player.start.y + g_Player.direction.y) > 0)
+			{
+				if (g_Player.end.x + g_Player.direction.x - block[i].start.x >= block[i].end.y - (g_Player.start.y + g_Player.direction.y))
+				{
+					g_Player.position.y = block[i].end.y;
+				}
+				else
+				{
+					g_Player.position.x = block[i].start.x - PLAYER_SIZE_X;
+				}
+			}
+
+			if (block[i].end.x - g_Player.start.x <= 0 && block[i].end.y - g_Player.start.y <= 0 &&
+				block[i].end.x - (g_Player.start.x + g_Player.direction.x) > 0 &&
+				block[i].end.y - (g_Player.start.y + g_Player.direction.y) > 0)
+			{
+				if (block[i].end.x - (g_Player.start.x + g_Player.direction.x) >= block[i].end.y - (g_Player.start.y + g_Player.direction.y))
+				{
+					g_Player.position.y = block[i].end.y;
+				}
+				else
+				{
+					g_Player.position.x = block[i].end.x;
+				}
+			}
+		}
+	}
+
+	//地面
 	if (g_Player.position.y >= 747.0f)
 	{
-		//プレイヤー落下処理
+
 		g_Player.position.y = 747.0f;
 
 		g_Player.isJump = false;
 
 	}
-	if (g_Player.isJump == true)
-	{
-		on_ground = false;
-	}
 
-	//ブロックの位置座標を取得
-	Block* BlockPosition = GetBlockPosition();
+	g_Player.PrevPosition = g_Player.position;
 
-	// ブロックの当たり判定を作成
-	for (int i = 0; i < BLOCK_MAX; i++)
-	{
-		// 上方判定
-		if (g_Player.position.x + PLAYER_SIZE_X > BlockPosition[i].xy.x /*+ 20*/ &&
-			g_Player.position.x < BlockPosition[i].xy.x + BLOCK_SIZE_X * BlockPosition[i].Width_Quantity /*- 20*/)
-		{
+	//プレイヤーの円のcollision
+	g_Player.collision[0].center = {
+		g_Player.position.x + PLAYER_SIZE_X * 0.5f,
+		g_Player.position.y + 64.0f * 0.5f
+	};
+	g_Player.collision[0].radius = PLAYER_SIZE_X * 0.5f;
 
-			if (g_Player.position.y + PLAYER_SIZE_Y >= BlockPosition[i].xy.y &&
-				g_Player.position.y + PLAYER_SIZE_Y <= BlockPosition[i].xy.y + (BLOCK_SIZE_Y * BlockPosition[i].High_Quantity) / 2)
-			{
+	g_Player.collision[1].center = {
+		g_Player.position.x + PLAYER_SIZE_X * 0.5f,
+		(g_Player.position.y + 64.0f) + 64.0f * 0.5f
+	};
+	g_Player.collision[1].radius = PLAYER_SIZE_X * 0.5f;
 
-				on_ground = true;
-				g_Player.isJump = false;
-				g_Player.position.y = BlockPosition[i].xy.y - PLAYER_SIZE_Y;
-				
-			}
-			// ここ問題あり?↓
-			else
-			{
-				on_ground = false;
-			}
-			// ↑
-
-			if (g_Player.position.y <= BlockPosition[i].xy.y + BLOCK_SIZE_Y * BlockPosition[i].High_Quantity)
-			{
-				if (g_Player.position.y >= BlockPosition[i].xy.y + (BLOCK_SIZE_Y * BlockPosition[i].High_Quantity) / 2)
-				{
-					on_ground = false;
-					g_Player.position.y = BlockPosition[i].xy.y + (BLOCK_SIZE_Y * BlockPosition[i].High_Quantity);
-				}
-			}
-		}
-
-		if ((g_Player.position.y >= BlockPosition[i].xy.y &&
-			g_Player.position.y <= BlockPosition[i].xy.y + (BLOCK_SIZE_Y * BlockPosition[i].High_Quantity)))
-		{
-
-			if (g_Player.position.x + PLAYER_SIZE_X > BlockPosition[i].xy.x)
-			{
-				if (g_Player.position.x + PLAYER_SIZE_X < BlockPosition[i].xy.x + BLOCK_SIZE_X * BlockPosition[i].Width_Quantity)
-				{
-					g_Player.position.x = BlockPosition[i].xy.x - BLOCK_SIZE_X * BlockPosition[i].Width_Quantity;
-					//CangoL = false;
-				}
-			}
-
-			if (g_Player.position.x < BlockPosition[i].xy.x + BLOCK_SIZE_X * BlockPosition[i].Width_Quantity)
-			{
-				if (g_Player.position.x > BlockPosition[i].xy.x - (BLOCK_SIZE_X * BlockPosition[i].Width_Quantity) / 2)
-				{
-					g_Player.position.x = BlockPosition[i].xy.x + BLOCK_SIZE_X * BlockPosition[i].Width_Quantity;
-					//CangoR = false;
-				}
-			}
-		}
-		// ブロック左右判定
-		if ((g_Player.position.y < BlockPosition[i].xy.y + (BLOCK_SIZE_Y * BlockPosition[i].High_Quantity) &&
-			g_Player.position.y > BlockPosition[i].xy.y + ((BLOCK_SIZE_Y * BlockPosition[i].High_Quantity) * 0.5)) ||
-			(g_Player.position.y + PLAYER_SIZE_Y > BlockPosition[i].xy.y &&
-				g_Player.position.y + PLAYER_SIZE_Y < BlockPosition[i].xy.y + ((BLOCK_SIZE_Y * BlockPosition[i].High_Quantity) * 0.5)))
-		{
-			// 左側
-			if (g_Player.position.x < BlockPosition[i].xy.x + ((BLOCK_SIZE_X * BlockPosition[i].Width_Quantity) * 0.5))
-			{
-				if (g_Player.position.x + PLAYER_SIZE_X > BlockPosition[i].xy.x)
-				{
-					CangoR = false;
-				}
-
-			}
-
-			// 右側
-			if (g_Player.position.x + PLAYER_SIZE_X > BlockPosition[i].xy.x + ((BLOCK_SIZE_X * BlockPosition[i].Width_Quantity) * 0.5))
-			{
-				if (g_Player.position.x < BlockPosition[i].xy.x + BLOCK_SIZE_X * BlockPosition[i].Width_Quantity)
-				{
-					CangoL = false;
-				}
-
-			}
-		}
-		//下方判定
-		if (g_Player.position.y < BlockPosition[i].xy.y + BLOCK_SIZE_Y * BlockPosition[i].High_Quantity + 10 &&
-			g_Player.position.y > BlockPosition[i].xy.y + BLOCK_SIZE_Y * BlockPosition[i].High_Quantity - 5)
-		{
-			if (g_Player.position.x + PLAYER_SIZE_X > BlockPosition[i].xy.x &&
-				g_Player.position.x < BlockPosition[i].xy.x + BLOCK_SIZE_X * BlockPosition[i].Width_Quantity)
-			
-			g_Player.speed.y = +1;
-		}
-
-	}
-
-	//プレイヤー座標の更新 (移動方向×速度)
-	g_Player.position.x += g_Player.direction.x * g_Player.speed.x;
 
 	// 扉の位置座標を取得
 	DoresPosition = GetDores();
@@ -363,8 +475,9 @@ void UpdatePlayer()
 		}
 	}
 
-
-
+	//================================================================================
+	//プレイヤーの記録&&再生&&逆再生
+	//=================================================================================
 	if (g_Current.Pdata_tail == 0)
 	{
 		flag1 = false;
@@ -482,45 +595,6 @@ void DrawPlayer()
 	DebugFont_Draw(900.0f, 50.0f, Buf);
 }
 
-//ゲームプレイヤーの移動処理
-void GamePlayer_MoveLeft(void)
-{
-	g_Player.direction.x = -1.0f;
-	g_Player.speed.x = 5.0f;
-}
-void GamePlayer_MoveRight(void)
-{
-	g_Player.direction.x = 1.0f;
-	g_Player.speed.x = 5.0f;
-}
-void GamePlayer_Jump(void)
-{
-	if (!g_Player.isJump)
-	{
-		g_Player.speed.y = JUMP_FORCE;
-		g_Player.isJump = true;
-	}
-}
-
-CollisionCircle GamePlayer_GetCollision(void)
-{
-	CollisionCircle c = {
-		D3DXVECTOR2(
-			g_Player.position.x + PLAYER_SIZE_X * 0.5f,
-			g_Player.position.y + PLAYER_SIZE_Y * 0.5f
-		),
-		PLAYER_SIZE_X * 0.5f
-	};
-
-	return c;
-}
-
-D3DXVECTOR2 GetPlayerPosition()
-{
-	return g_Player.position;
-}
-
-
 DataStorage GetPrev(void)
 {
 	return g_Prev;
@@ -534,4 +608,36 @@ DataStorage GetDebug(void)
 int GetPlayerUseKey(void)
 {
 	return g_PlayerUsedKey;
+}
+
+Player GetPlayer(void)
+{
+	return g_Player;
+}
+
+CollisionCircle* Get_PlayerCollision(void)
+{
+	return g_Player.collision;
+}
+
+// マップチップの辺の位置に座標を調整する
+void SetPlayerMapPos(int contact_edge, float contact_pos)
+{
+	switch (contact_edge)
+	{
+	case LEFTEDGE:	//チップの左の辺に当たった時の処理
+		g_Player.position.x = contact_pos - PLAYER_SIZE_X;
+		break;
+	case RIGHTEDGE:	//チップの右の辺に当たった時の処理
+		g_Player.position.x = contact_pos;
+		break;
+	case TOPEDGE:	//チップの上の辺に当たった時の処理
+		g_Player.position.y = contact_pos - PLAYER_SIZE_Y;
+		g_Player.isJump = false;
+		break;
+	case BOTTOMEDGE://チップの下の辺に当たった時の処理
+		g_Player.position.y = contact_pos;
+
+		break;
+	}
 }

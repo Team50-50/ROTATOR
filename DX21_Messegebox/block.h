@@ -15,9 +15,10 @@
 
 typedef struct {
 
+	D3DXVECTOR2 position;
+	D3DXVECTOR2 start;
+	D3DXVECTOR2 end;
 	bool  use;
-	D3DXVECTOR2 xy;
-
 	int   Width_Quantity;
 	int   High_Quantity;
 

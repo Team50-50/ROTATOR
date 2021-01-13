@@ -21,12 +21,12 @@
 #include "keylogger.h"
 #include "bg.h"
 #include "explosion.h"
+#include "map.h"
 
  /*-----------------------------------------------------------------------------------------
   グローバル変数
  -------------------------------------------------------------------------------------------*/
 static int	g_TextureRocket = TEXTURE_INVALID_ID;
-static D3DXVECTOR2 playerPosition;
 static Rocket g_rocket[ROCKET_MAX];
 static float angle;
 
@@ -90,10 +90,10 @@ void UpdateSniper(void)
 	}
 
 
-	playerPosition = GetPlayerPosition();
+	Player player = GetPlayer();
 
-	float CX = playerPosition.x + PLAYER_SIZE_X * 0.5f;
-	float CY = playerPosition.y + PLAYER_SIZE_Y * 0.5f;
+	float CX = player.position.x + PLAYER_SIZE_X * 0.5f;
+	float CY = player.position.y + PLAYER_SIZE_Y * 0.5f;
 
 	Block* block;
 	block = GetBlockPosition();
@@ -108,43 +108,46 @@ void UpdateSniper(void)
 			g_rocket[i].position.x += cosf(g_rocket[i].r_angle) * ROCKET_SPEED;
 			g_rocket[i].position.y += sinf(g_rocket[i].r_angle) * ROCKET_SPEED;
 
+			//ロケットのcollisionの範囲を決める
+			g_rocket[i].collision.center.x = g_rocket[i].position.x + cosf(ROCKET_WIDTH * 0.5f);
+			g_rocket[i].collision.center.y = g_rocket[i].position.y + sinf(ROCKET_HEIGHT * 0.5f) + ROCKET_HEIGHT * 0.5f;
+			g_rocket[i].collision.radius = ROCKET_WIDTH * 0.5f;
+
 			for (int j = 0; j < BLOCK_MAX; j++)
 			{
-				if (g_rocket[i].position.x + 32.0f > block[j].xy.x &&
-					g_rocket[i].position.x < block[j].xy.x + BLOCK_SIZE_X * block[j].Width_Quantity&&
-					g_rocket[i].position.y + ROCKET_SIZE_Y > block[j].xy.y&&
-					g_rocket[i].position.y < block[j].xy.y + BLOCK_SIZE_Y * block[j].High_Quantity)
+				if (!block[j].use) continue;
+
+				if (g_rocket[i].position.x + 32.0f > block[j].position.x &&
+					g_rocket[i].position.x < block[j].position.x + BLOCK_SIZE_X * block[j].Width_Quantity&&
+					g_rocket[i].position.y + ROCKET_WIDTH > block[j].position.y&&
+					g_rocket[i].position.y < block[j].position.y + BLOCK_SIZE_Y * block[j].High_Quantity)
 				{
 					g_rocket[i].enable = false;
 					Explosion_Spawn(g_rocket[i].position.x - 50.0f, g_rocket[i].position.y - 50.0f);
-
+					block[j].use = false;
 				}
 
 			}
-		
 		}
 		else
 		{
 			g_rocket[i].r_angle = angle;
 		}
-	
 
 		if (g_rocket[i].position.y < 0.0f || g_rocket[i].position.y > STAGE_HEIGHT ||
 			g_rocket[i].position.x < 0.0f || g_rocket[i].position.x > STAGE_WIDTH)
 		{
 			g_rocket[i].enable = false;
 		}
-		
-
 	}
 
 }
 
 void DrawSniper(void)
 {
-	playerPosition = GetPlayerPosition();
-	float CX = playerPosition.x + PLAYER_SIZE_X * 0.5f;
-	float CY = playerPosition.y + PLAYER_SIZE_Y * 0.5f;
+	Player player = GetPlayer();
+	float CX = player.position.x + PLAYER_SIZE_X * 0.5f;
+	float CY = player.position.y + PLAYER_SIZE_Y * 0.5f;
 
 	if (Keylogger_Press(KL_J) || JoystickPress(ButtonLT))
 	{
@@ -162,7 +165,7 @@ void DrawSniper(void)
 		Sprite_Draw(g_TextureRocket,
 			g_rocket[i].position.x,
 			g_rocket[i].position.y,
-			32.0f, 32.0f, 0, 0, 32.0f, 32.0f, 0.0f, 16.0f, g_rocket[i].r_angle);
+			ROCKET_WIDTH, ROCKET_HEIGHT, 0, 0, 32.0f, 32.0f, 0.0f, 16.0f, g_rocket[i].r_angle);
 
 	}
 }
@@ -179,4 +182,9 @@ void Rocket_Spawn(float x, float y)
 
 		break;
 	}
+}
+
+Rocket* Get_Rocket(void)
+{
+	return g_rocket;
 }

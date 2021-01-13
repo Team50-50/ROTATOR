@@ -14,9 +14,6 @@ static int	g_DoreTexture;
 // 扉の位置座標
 Dore Dores[KEY_MAX];
 
-// プレイヤーの位置
-D3DXVECTOR2 PlayerPosition2;
-
 // プレイヤーの鍵所持数
 static int g_PlayerKeyPossession2;
 
@@ -35,10 +32,6 @@ void InitDore()
 		Dores[i].xy.y = 0;
 	}
 
-	//プレイヤーの現在位置を取得
-	PlayerPosition2 = GetPlayerPosition();
-
-
 }
 
 
@@ -53,8 +46,6 @@ void UninitDore()
 void UpdateDore()
 {
 
-	// プレイヤー位置座標を保存
-	PlayerPosition2 = GetPlayerPosition();
 	// プレイヤーの鍵所持数を保存
 	g_PlayerKeyPossession2 = GetPlayerKeyPossession();
 

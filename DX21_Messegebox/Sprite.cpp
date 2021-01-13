@@ -167,6 +167,9 @@ void Sprite_Draw(int textureId, float dx, float dy, int tcx, int tcy, int tcw, i
 	float u1 = (float)(tcx + tcw) / w;
 	float v1 = (float)(tcy + tch) / h;
 
+	dx = WorldToScreen({ dx,dy }).x;
+	dy = WorldToScreen({ dx,dy }).y;
+
 	// 頂点データの作成
 	Vertex2D v[] = {
 		{D3DXVECTOR4(dx - 0.5f,       dy + -0.5f,    1.0f, 1.0f), D3DCOLOR_RGBA(255, 255, 255, 255),D3DXVECTOR2(u0,v0)},

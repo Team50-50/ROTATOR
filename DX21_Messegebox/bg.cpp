@@ -4,6 +4,7 @@
 #include "Sprite.h"
 #include "camera.h"
 #include "bg.h"
+#include "map.h"
 
 static int g_TextureBG;
 

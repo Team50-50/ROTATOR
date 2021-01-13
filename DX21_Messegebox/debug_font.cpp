@@ -45,7 +45,7 @@ void DebugFont_Draw(float dx, float dy, const char* pString)
 		int tcx = (offset % DEBUG_FONT_ONE_LINE_CHAR_COUNT) * DEBUG_FONT_WIDTH;
 		int tcy = (offset / DEBUG_FONT_ONE_LINE_CHAR_COUNT) * DEBUG_FONT_HEIGHT;
 
-		Sprite_Draw(g_TextureId, dx + i * DEBUG_FONT_WIDTH, dy, 
+		Screen_Draw(g_TextureId, dx + i * DEBUG_FONT_WIDTH, dy, 30.0f,40.0f,
 			tcx, tcy, DEBUG_FONT_WIDTH, DEBUG_FONT_HEIGHT);
 	}
 }
