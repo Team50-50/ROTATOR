@@ -8,165 +8,235 @@
  =========================================================================================*/
 #include"data_control.h"
 
-void DataRecord(DataStorage* data, D3DXVECTOR2 playerPosition, bool RL, int anim, float direction)
+
+ //データの記録
+ //
+ //ゲームobjectのデータを記録する
+ //
+ //引数：(DataStorage*) data....... データを格納する構造体
+ //				
+ //			vec2Data... vector2型データ
+ //
+void DataRecord(DataStorage* data, D3DXVECTOR2 Vec2Data)
 {
-	if (data->Pdata_tail > RECORDFRAME_MAX ||
-		data->Rdata_tail > RECORDFRAME_MAX ||
-		data->Adata_tail > RECORDFRAME_MAX ||
-		data->Ddata_tail > RECORDFRAME_MAX)
+	if (data->Vdata_tail > RECORDFRAME_MAX)
 	{
 		return;
 	}
-	data->positionData[data->Pdata_tail] = playerPosition;
-	data->rlData[data->Rdata_tail] = RL;
-	data->animData[data->Adata_tail] = anim;
-	data->directionData[data->Ddata_tail] = direction;
+	data->vec2Data[data->Vdata_tail] = Vec2Data;
 
-	data->Pdata_tail++;
-	data->Rdata_tail++;
-	data->Adata_tail++;
-	data->Ddata_tail++;
+
+	data->Vdata_tail++;
+}
+
+
+//データの記録
+//
+//ゲームobjectのデータを記録する
+//
+//引数：(DataStorage*) data....... データを格納する構造体
+//				
+//			vec2Data...... vector2型データ
+//			TFData........ bool型データ
+//			DecimalData... flaot型データ
+//
+//
+void DataRecord(DataStorage* data, D3DXVECTOR2 Vec2Data, bool TFData, float DecimalData)
+{
+	if (data->Vdata_tail > RECORDFRAME_MAX ||
+		data->Bdata_tail > RECORDFRAME_MAX ||
+		data->Fdata_tail > RECORDFRAME_MAX)
+	{
+		return;
+	}
+	data->vec2Data[data->Vdata_tail] = Vec2Data;
+	data->tfData[data->Bdata_tail] = TFData;
+	data->decimalData[data->Fdata_tail] = DecimalData;
+
+	data->Vdata_tail++;
+	data->Bdata_tail++;
+	data->Fdata_tail++;
+}
+
+
+//データの記録
+//
+//ゲームobjectのデータを記録する
+//
+//引数：(DataStorage*) data....... データを格納する構造体
+//				
+//			vec2Data...... vector2型データ
+//			TFData........ bool型データ
+//			NumData....... int型データ
+//			DecimalData... flaot型データ
+//
+void DataRecord(DataStorage* data, D3DXVECTOR2 Vec2Data, bool TFData, int NumData, float DecimalData)
+{
+	if (data->Vdata_tail > RECORDFRAME_MAX ||
+		data->Bdata_tail > RECORDFRAME_MAX ||
+		data->Idata_tail > RECORDFRAME_MAX ||
+		data->Fdata_tail > RECORDFRAME_MAX)
+	{
+		return;
+	}
+	data->vec2Data[data->Vdata_tail] = Vec2Data;
+	data->tfData[data->Bdata_tail] = TFData;
+	data->numData[data->Idata_tail] = NumData;
+	data->decimalData[data->Fdata_tail] = DecimalData;
+
+	data->Vdata_tail++;
+	data->Bdata_tail++;
+	data->Idata_tail++;
+	data->Fdata_tail++;
 
 }
 
-D3DXVECTOR2 deq_Positiondata(DataStorage* data)
+//vector2型のデータ配列の <先頭> からデータを取り出す
+D3DXVECTOR2 deq_Vec2Data(DataStorage* data)
 {
 	D3DXVECTOR2 tmp;
-	if (data->Pdata_tail == 0)
+	if (data->Vdata_tail == 0)
 	{
-		return data->positionData[0];
+		return data->vec2Data[0];
 	}
 
-	tmp = data->positionData[0];
+	tmp = data->vec2Data[0];
 
-	for (int i = 0; i < data->Pdata_tail - 1; i++)
+	for (int i = 0; i < data->Vdata_tail - 1; i++)
 	{
-		data->positionData[i] = data->positionData[i + 1];
+		data->vec2Data[i] = data->vec2Data[i + 1];
 	}
-	data->positionData[data->Pdata_tail - 1] = D3DXVECTOR2(0.0f, 0.0f);
+	data->vec2Data[data->Vdata_tail - 1] = D3DXVECTOR2(0.0f, 0.0f);
 
-	data->Pdata_tail--;
+	data->Vdata_tail--;
 	return tmp;
 }
 
-D3DXVECTOR2 pop_Positiondata(DataStorage* data)
+//vector2型のデータ配列の <末尾> からデータを取り出す
+D3DXVECTOR2 pop_Vec2Data(DataStorage* data)
 {
 	D3DXVECTOR2 ret;
 
-	if (data->Pdata_tail == 0)
+	if (data->Vdata_tail == 0)
 	{
-		return data->positionData[data->Pdata_tail];
+		return data->vec2Data[data->Vdata_tail];
 	}
 
-	ret = data->positionData[data->Pdata_tail - 1];
+	ret = data->vec2Data[data->Vdata_tail - 1];
 
-	data->Pdata_tail--;
+	data->Vdata_tail--;
 
 	return ret;
 }
 
-bool deq_RLdata(DataStorage* data)
+//bool型のデータ配列の <先頭> からデータを取り出す
+bool deq_TFData(DataStorage* data)
 {
 	bool tmp;
-	if (data->Rdata_tail == 0)
+	if (data->Bdata_tail == 0)
 	{
-		return data->rlData[0];
+		return data->tfData[0];
 	}
 
-	tmp = data->rlData[0];
+	tmp = data->tfData[0];
 
-	for (int i = 0; i < data->Rdata_tail - 1; i++)
+	for (int i = 0; i < data->Bdata_tail - 1; i++)
 	{
-		data->rlData[i] = data->rlData[i + 1];
+		data->tfData[i] = data->tfData[i + 1];
 	}
 
-	data->Rdata_tail--;
+	data->Bdata_tail--;
 
 	return tmp;
 }
 
-bool pop_RLdata(DataStorage* data)
+//bool型のデータ配列の <末尾> からデータを取り出す
+bool pop_TFData(DataStorage* data)
 {
 	bool ret;
 
-	if (data->Rdata_tail == 0)
+	if (data->Bdata_tail == 0)
 	{
-		return data->rlData[data->Rdata_tail];
+		return data->tfData[data->Bdata_tail];
 	}
 
-	ret = data->rlData[data->Rdata_tail - 1];
+	ret = data->tfData[data->Bdata_tail - 1];
 
-	data->Rdata_tail--;
+	data->Bdata_tail--;
 
 	return ret;
 }
 
-int deq_Animdata(DataStorage* data)
+//int型のデータ配列の <先頭> からデータを取り出す
+int deq_NumData(DataStorage* data)
 {
 	int tmp;
-	if (data->Adata_tail == 0)
+	if (data->Idata_tail == 0)
 	{
-		return data->animData[0];
+		return data->numData[0];
 	}
 
-	tmp = data->animData[0];
+	tmp = data->numData[0];
 
-	for (int i = 0; i < data->Adata_tail - 1; i++)
+	for (int i = 0; i < data->Idata_tail - 1; i++)
 	{
-		data->animData[i] = data->animData[i + 1];
+		data->numData[i] = data->numData[i + 1];
 	}
 
-	data->Adata_tail--;
+	data->Idata_tail--;
 
 	return tmp;
 }
 
-int pop_Animdata(DataStorage* data)
+//int型のデータ配列の <末尾> からデータを取り出す
+int pop_NumData(DataStorage* data)
 {
 	int ret;
 
-	if (data->Adata_tail == 0)
+	if (data->Idata_tail == 0)
 	{
-		return data->animData[data->Adata_tail];
+		return data->numData[data->Idata_tail];
 	}
 
-	ret = data->animData[data->Adata_tail - 1];
+	ret = data->numData[data->Idata_tail - 1];
 
-	data->Adata_tail--;
+	data->Idata_tail--;
 	return ret;
 }
 
-float deq_Directiondata(DataStorage* data)
+//float型のデータ配列の <先頭> からデータを取り出す
+float deq_DecimalData(DataStorage* data)
 {
 	float tmp;
-	if (data->Ddata_tail == 0)
+	if (data->Fdata_tail == 0)
 	{
-		return data->directionData[0];
+		return data->decimalData[0];
 	}
 
-	tmp = data->directionData[0];
+	tmp = data->decimalData[0];
 
-	for (int i = 0; i < data->Ddata_tail - 1; i++)
+	for (int i = 0; i < data->Fdata_tail - 1; i++)
 	{
-		data->directionData[i] = data->directionData[i + 1];
+		data->decimalData[i] = data->decimalData[i + 1];
 	}
 
-	data->Ddata_tail--;
+	data->Fdata_tail--;
 	return tmp;
 }
 
-float pop_Directiondata(DataStorage* data)
+//float型のデータ配列の <末尾> からデータを取り出す
+float pop_DecimalData(DataStorage* data)
 {
 	float ret;
 
-	if (data->Ddata_tail == 0)
+	if (data->Fdata_tail == 0)
 	{
-		return data->directionData[data->Ddata_tail];
+		return data->decimalData[data->Fdata_tail];
 	}
 
-	ret = data->directionData[data->Ddata_tail - 1];
+	ret = data->decimalData[data->Fdata_tail - 1];
 
-	data->Ddata_tail--;
+	data->Fdata_tail--;
 
 	return ret;
 }

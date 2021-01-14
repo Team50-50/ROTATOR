@@ -6,8 +6,8 @@
  -----------------------------------------------------------------------------------------
 
  =========================================================================================*/
-#ifndef DATA_H_
-#define DATA_H_
+#ifndef DATA_CONTROL_H_
+#define DATA_CONTROL_H_
 
 #include<d3dx9.h>
 
@@ -16,35 +16,79 @@
 
 typedef struct
 {
-	D3DXVECTOR2 positionData[RECORDFRAME_MAX];
-	bool rlData[RECORDFRAME_MAX];
-	int animData[RECORDFRAME_MAX];
-	float directionData[RECORDFRAME_MAX];
+	D3DXVECTOR2 vec2Data[RECORDFRAME_MAX];
+	bool tfData[RECORDFRAME_MAX];
+	int numData[RECORDFRAME_MAX];
+	float decimalData[RECORDFRAME_MAX];
 
-	int Pdata_tail;
-	int Rdata_tail;
-	int Adata_tail;
-	int Ddata_tail;
+	int Vdata_tail;
+	int Bdata_tail;
+	int Idata_tail;
+	int Fdata_tail;
 
 }DataStorage;
 
-void DataRecord(DataStorage* data, D3DXVECTOR2 playerPosition, bool RL, int anim, float direction);
+//データの記録
+//
+//ゲームobjectのデータを記録する
+//
+//引数：(DataStorage*) data....... データを格納する構造体
+//				
+//			vec2Data... vector2型データ
+//
+void DataRecord(DataStorage* data, D3DXVECTOR2 Vec2Data);
 
-D3DXVECTOR2 deq_Positiondata(DataStorage* data);
 
-D3DXVECTOR2 pop_Positiondata(DataStorage* data);
+//データの記録
+//
+//ゲームobjectのデータを記録する
+//
+//引数：(DataStorage*) data....... データを格納する構造体
+//				
+//			vec2Data...... vector2型データ
+//			TFData........ bool型データ
+//			DecimalData... flaot型データ
+//
+//
+void DataRecord(DataStorage* data, D3DXVECTOR2 Vec2Data, bool TFData, float DecimalData);
 
-bool deq_RLdata(DataStorage* data);
 
-bool pop_RLdata(DataStorage* data);
+//データの記録
+//
+//ゲームobjectのデータを記録する
+//
+//引数：(DataStorage*) data....... データを格納する構造体
+//				
+//			vec2Data...... vector2型データ
+//			TFData........ bool型データ
+//			NumData....... int型データ
+//			DecimalData... flaot型データ
+//
+void DataRecord(DataStorage* data, D3DXVECTOR2 Vec2Data, bool TFData, int NumData, float DecimalData);
 
-int deq_Animdata(DataStorage* data);
+//vector2型のデータ配列の <先頭> からデータを取り出す
+D3DXVECTOR2 deq_Vec2Data(DataStorage* data);
 
-int pop_Animdata(DataStorage* data);
+//vector2型のデータ配列の <末尾> からデータを取り出す
+D3DXVECTOR2 pop_Vec2Data(DataStorage* data);
 
-float deq_Directiondata(DataStorage* data);
+//bool型のデータ配列の <先頭> からデータを取り出す
+bool deq_TFData(DataStorage* data);
 
-float pop_Directiondata(DataStorage* data);
+//bool型のデータ配列の <末尾> からデータを取り出す
+bool pop_TFData(DataStorage* data);
 
-#endif // !DATA_H_
+//int型のデータ配列の <先頭> からデータを取り出す
+int deq_NumData(DataStorage* data);
+
+//int型のデータ配列の <末尾> からデータを取り出す
+int pop_NumData(DataStorage* data);
+
+//float型のデータ配列の <先頭> からデータを取り出す
+float deq_DecimalData(DataStorage* data);
+
+//float型のデータ配列の <末尾> からデータを取り出す
+float pop_DecimalData(DataStorage* data);
+
+#endif // !DATA_CONTROL_H_
 

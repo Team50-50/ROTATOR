@@ -44,23 +44,23 @@ void ReversionPlayer_Update(void)
 	DataStorage debugData = GetDebug();
 
 	
-	for (int i = 0; i < prevData.Pdata_tail; i++)
+	for (int i = 0; i < prevData.Vdata_tail; i++)
 	{
 		if (GetKeyState('B') & 0x80 || JoystickPress(ButtonRT))
 		{
-			g_ReversionPlayer[0].position = prevData.positionData[i];
-			g_ReversionPlayer[0].RL = prevData.rlData[i];
-			g_ReversionPlayer[0].animation[WALKING].animNo = prevData.animData[i];
-			g_ReversionPlayer[0].direction.x = prevData.directionData[i];
+			g_ReversionPlayer[0].position = prevData.vec2Data[i];
+			g_ReversionPlayer[0].RL = prevData.tfData[i];
+			g_ReversionPlayer[0].animation[WALKING].animNo = prevData.numData[i];
+			g_ReversionPlayer[0].direction.x = prevData.decimalData[i];
 		}
 
 	}
-	for (int i = 0; i < debugData.Pdata_tail; i++)
+	for (int i = 0; i < debugData.Vdata_tail; i++)
 	{
-		g_ReversionPlayer[1].position = debugData.positionData[i];
-		g_ReversionPlayer[1].RL = debugData.rlData[i];
-		g_ReversionPlayer[1].animation[WALKING].animNo = debugData.animData[i];
-		g_ReversionPlayer[1].direction.x = debugData.directionData[i];
+		g_ReversionPlayer[1].position = debugData.vec2Data[i];
+		g_ReversionPlayer[1].RL = debugData.tfData[i];
+		g_ReversionPlayer[1].animation[WALKING].animNo = debugData.numData[i];
+		g_ReversionPlayer[1].direction.x = debugData.decimalData[i];
 	}
 	if (frame >= 360)
 	{

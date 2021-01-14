@@ -475,13 +475,13 @@ g_Player.start = {
 	//================================================================================
 	//ƒvƒŒƒCƒ„[‚Ì‹L˜^&&Ä¶&&‹tÄ¶
 	//=================================================================================
-	if (g_Current.Pdata_tail == 0)
+	if (g_Current.Vdata_tail == 0)
 	{
 		flag1 = false;
 		flag2 = true;
 
 	}
-	if (g_Current.Pdata_tail == 360)
+	if (g_Current.Vdata_tail == 360)
 	{
 		flag1 = true;
 	}
@@ -490,28 +490,28 @@ g_Player.start = {
 	{
 		DataRecord(&g_Current, g_Player.position, g_Player.RL, g_Player.animation[WALKING].animNo, g_Player.direction.x);
 
-		deq_Positiondata(&g_Prev);
-		deq_RLdata(&g_Prev);
-		deq_Animdata(&g_Prev);
-		deq_Directiondata(&g_Prev);
+		deq_Vec2Data(&g_Prev);
+		deq_TFData(&g_Prev);
+		deq_NumData(&g_Prev);
+		deq_DecimalData(&g_Prev);
 	}
-	if (g_Current.Pdata_tail > 360)
+	if (g_Current.Vdata_tail > 360)
 	{
-		DataRecord(&g_Debug, deq_Positiondata(&g_Current), deq_RLdata(&g_Current), deq_Animdata(&g_Current), deq_Directiondata(&g_Current));
+		DataRecord(&g_Debug, deq_Vec2Data(&g_Current), deq_TFData(&g_Current), deq_NumData(&g_Current), deq_DecimalData(&g_Current));
 	}
-	if (g_Debug.Pdata_tail > 360)
+	if (g_Debug.Vdata_tail > 360)
 	{
-		deq_Positiondata(&g_Debug);
-		deq_RLdata(&g_Debug);
-		deq_Animdata(&g_Debug);
-		deq_Directiondata(&g_Debug);
+		deq_Vec2Data(&g_Debug);
+		deq_TFData(&g_Debug);
+		deq_NumData(&g_Debug);
+		deq_DecimalData(&g_Debug);
 	}
 	if (flag1)
 	{
 		if (GetKeyState('B') & 0x80 || JoystickPress(ButtonRT))
 		{
 			flag2 = false;
-			DataRecord(&g_Prev, pop_Positiondata(&g_Current), pop_RLdata(&g_Current), pop_Animdata(&g_Current), pop_Directiondata(&g_Current));
+			DataRecord(&g_Prev, pop_Vec2Data(&g_Current), pop_TFData(&g_Current), pop_NumData(&g_Current), pop_DecimalData(&g_Current));
 
 		}
 	}
@@ -572,13 +572,13 @@ void DrawPlayer()
 	{
 		D3DXCOLOR color(1.0f, 1.0f, 1.0f, a);
 
-		Screen_Draw(g_TextureGreen, 850.0f, 5.0f, g_Current.Pdata_tail, 50.0f, 0, 0, 1000, 200, color);
+		Screen_Draw(g_TextureGreen, 850.0f, 5.0f, g_Current.Vdata_tail, 50.0f, 0, 0, 1000, 200, color);
 
 		//Sprite_SetColor(D3DCOLOR_RGBA(255, 255, 255, 255));
 	}
 	else
 	{
-		Screen_Draw(g_TextureGreen, 850.0f, 5.0f, g_Current.Pdata_tail, 50.0f, 0, 0, 1000, 200);
+		Screen_Draw(g_TextureGreen, 850.0f, 5.0f, g_Current.Vdata_tail, 50.0f, 0, 0, 1000, 200);
 	}
 
 	if (flag1 && flag2)
@@ -587,7 +587,7 @@ void DrawPlayer()
 	}
 
 	char Buf[64];
-	sprintf(Buf, "frame=%d", g_Current.Pdata_tail);
+	sprintf(Buf, "frame=%d", g_Current.Vdata_tail);
 	DebugFont_Draw(900.0f, 50.0f, Buf);
 }
 
