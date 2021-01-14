@@ -27,12 +27,13 @@
   ÉOÉçÅ[ÉoÉãïœêî
  -------------------------------------------------------------------------------------------*/
 static int	g_TextureRocket = TEXTURE_INVALID_ID;
+static int	g_Texturelaser = TEXTURE_INVALID_ID;
 static Rocket g_rocket[ROCKET_MAX];
 static float angle;
 
 void InitSniper(void)
 {
-	//g_Texturelaser = Texture_SetTextureLoadFile("asset/");
+	g_Texturelaser = Texture_SetTextureLoadFile("asset/red.tga");
 	g_TextureRocket = Texture_SetTextureLoadFile("asset/bullet.png");
 
 	angle = 0.0f;
@@ -136,7 +137,7 @@ void DrawSniper(void)
 
 	if (Keylogger_Press(KL_J) || JoystickPress(ButtonLT))
 	{
-		Sprite_Draw(-1,CX, CY ,
+		Sprite_Draw(g_Texturelaser,CX, CY ,
 			1000.0f, 5.0f, 0, 0, 1000, 5,
 			0.0f, 2.5f, angle);
 	}

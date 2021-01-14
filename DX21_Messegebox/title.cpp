@@ -14,6 +14,8 @@ void InitTitle(void)
 	g_TextureTitle = Texture_SetTextureLoadFile("asset/title(kari).png");
 
 	Texture_SetTextureLoadFile("asset/stageC(kari).png");
+	Texture_SetTextureLoadFile("asset/stageCS.png");
+	Texture_SetTextureLoadFile("asset/redwaku.png");
 	Texture_SetTextureLoadFile("asset/player.png");
 	Texture_SetTextureLoadFile("asset/HEW_CHARA_Aniamtion_run_renban.png");
 	Texture_SetTextureLoadFile("asset/green.tga");
@@ -29,6 +31,10 @@ void InitTitle(void)
 	Texture_SetTextureLoadFile("asset/bullet.png");
 	Texture_SetTextureLoadFile("asset/Explosion_black.png");
 	Texture_SetTextureLoadFile("asset/mapchip.png");
+	Texture_SetTextureLoadFile("asset/bullet.png");
+	/*Texture_SetTextureLoadFile("asset/red.tge");*/
+	Texture_SetTextureLoadFile("asset/debug_font_32x64.png");
+	
 }
 
 

@@ -181,5 +181,3 @@ void SetBlockMapPos(int contact_edge, float contact_pos, int index)
 		break;
 	}
 }
-
-
