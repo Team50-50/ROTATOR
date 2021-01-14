@@ -81,9 +81,9 @@ void DrawFade(void)
 		0.0f, 0.0f, 1.0f, 1.0f,
 		g_Color);
 
-	Sprite_Draw(NULL, 0.0f, 0.0f, SCREEN_WIDTH, SCREEN_HEIGHT,
+	/*Sprite_Draw(NULL, 0.0f, 0.0f, SCREEN_WIDTH, SCREEN_HEIGHT,
 		0.0f, 0.0f, 1.0f, 1.0f,
-		g_Color);
+		g_Color);*/
 
 	/*DrawSprite(0.0f, 0.0f, SCREEN_WIDTH, SCREEN_HEIGHT,
 		0.0f, 0.0f, 1.0f, 1.0f,

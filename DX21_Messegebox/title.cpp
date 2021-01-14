@@ -53,7 +53,7 @@ void DrawTitle(void)
 {
 
 	// スプライトを描画
-	Sprite_Draw(g_TextureTitle, 0.0f, 0.0f, SCREEN_WIDTH, SCREEN_HEIGHT,
+	Sprite_Draw(g_TextureTitle, -SCREEN_WIDTH * 0.5, -SCREEN_HEIGHT * 0.5, SCREEN_WIDTH, SCREEN_HEIGHT,
 		0, 0, 1920, 1080);
 
 }
