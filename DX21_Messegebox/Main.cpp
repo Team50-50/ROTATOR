@@ -1,6 +1,6 @@
 /*==============================================================================
 
-	TITLE
+	MAIN
 													Author : トウミンヨウ
 													Date   : 2020 / 07 / 21
 													
@@ -24,6 +24,9 @@
 #include "revesion_player.h"
 
 #include "bg.h"
+#include "fade.h"
+#include "title.h"
+#include "stagechoice.h"
 #include "player.h"
 #include "camera.h"
 #include "sniper.h"
@@ -55,6 +58,8 @@ static int g_BaseFrame = 0;
 static double g_BaseTime = 0;
 static double g_FPS = 0.0;
 static double g_ReserveTime = 0.0;
+
+int scene = SCENE_NONE;
 
 
 /*------------------------------------------------------------------------------
@@ -232,7 +237,10 @@ bool Initialize(void)
 
 	InitController();
 
-	InitBG();
+	InitFade();
+	SetScene(SCENE_TITLE);
+
+	/*InitBG();
 	InitPlayer();
 	InitBlock();
 	InitKey();
@@ -241,7 +249,7 @@ bool Initialize(void)
 	ReversionPlayer_Initialize();
 	InitSniper();
 	InitExplosion();
-	InitMap();
+	InitMap();*/
 
 	Sprite_Initialize();
 	DebugFont_Initialize();
@@ -255,17 +263,45 @@ void Update(void)
 	//キーロガーの更新処理
 	Keylogger_Update();
 
+	switch (scene)
+	{
+	case SCENE_TITLE:
+		UpdateTitle();
+		break;
+
+	case SCENE_STAGECHOICE:
+		UpdateStageChoice();
+		break;
+
+	case SCENE_GAME:
+		
+		//UpdateBG();			      // 背景の更新処理
+		//UpdatePlayer();		      // プレイヤーの更新処理
+		//UpdateEnemy();            // 敵キャラの更新処理
+		//UpdateTama();             // 弾の更新処理
+		//Update_EnemyTama();       // 敵の弾の更新処理
+		//Playertama_ifHIT_Enemy(); // プレイヤーの弾敵に当たった判定
+		//Enemytama_ifHIT_Player(); // 敵の弾プレイヤーに当たった判定
+		////UpdateBall();		      // Ballの更新処理
+		////UpdateScore();		      // スコアの更新処理
+		GameCamera_Update();
+		UpdateController();
+		UpdatePlayer();
+		UpdateBlock();
+		UpdateKey();
+		UpdateDore();
+		ReversionPlayer_Update();
+		UpdateSniper();
+		UpdateExplosion();
+		UpdateMap();
+		break;
+
+	case SCENE_NONE:
+		break;
+	}
+
 	//Game_Update();
-	GameCamera_Update();
-	UpdateController();
-	UpdatePlayer();
-	UpdateBlock();
-	UpdateKey();
-	UpdateDore();
-	ReversionPlayer_Update();
-	UpdateSniper();
-	UpdateExplosion();
-	UpdateMap();
+	UpdateFade();
 
 
 	// 計測
@@ -297,17 +333,43 @@ void Draw(void)
 	// ゲームの描画 *
 	//int* Gamemord = GetGamemord();
 
-	
-	DrawBG();
-	DrawMap();
-	DrawPlayer();
-	DrawBlock();
-	DrawKey();
-	DrawDore();
-	ReversionPlayer_Draw();
-	DrawSniper();
-	DrawExplosion();
+	switch (scene)
+	{
+	case SCENE_TITLE:
+		DrawTitle();
+		break;
 
+	case SCENE_STAGECHOICE:
+		DrawStageChoice();
+		break;
+
+	case SCENE_GAME:
+
+		//UpdateBG();			      // 背景の更新処理
+		//UpdatePlayer();		      // プレイヤーの更新処理
+		//UpdateEnemy();            // 敵キャラの更新処理
+		//UpdateTama();             // 弾の更新処理
+		//Update_EnemyTama();       // 敵の弾の更新処理
+		//Playertama_ifHIT_Enemy(); // プレイヤーの弾敵に当たった判定
+		//Enemytama_ifHIT_Player(); // 敵の弾プレイヤーに当たった判定
+		////UpdateBall();		      // Ballの更新処理
+		////UpdateScore();		      // スコアの更新処理
+		DrawBG();
+		DrawMap();
+		DrawPlayer();
+		DrawBlock();
+		DrawKey();
+		DrawDore();
+		ReversionPlayer_Draw();
+		DrawSniper();
+		DrawExplosion();
+		break;
+
+	case SCENE_NONE:
+		break;
+	}
+
+	DrawFade();
 
 	// FPS表示
 	char buf[64];
@@ -342,4 +404,79 @@ void Finalize(void)
 	//キーロガーの終了処理
 	Keylogger_Finalize();
 	ReleaseInput();
+}
+
+//	シーン(ステージ)の切り替え処理
+void SetScene(int scene_no)
+{
+	// まず現在のステージの終了処理を実行
+	switch (scene)
+	{
+	case SCENE_TITLE:
+		UninitTitle();
+		break;
+
+	case SCENE_STAGECHOICE:
+		UninitStageChoice();
+		break;
+
+	case SCENE_GAME:
+		//UninitBlock();			// Blockの終了処理
+		//UninitBall();			// Ballの終了処理
+		//Uninit_EnemyTama();     // 敵の弾の終了処理
+		//UninitTama();           // 弾の終了処理
+		//UninitEnemy();          // 敵キャラの終了処理
+		//UninitPlayer();			// プレイヤーの終了処理
+		//UninitScore();			// スコアの終了処理
+		//UninitBG();				// 背景の終了処理
+		UninitMap();
+		UninitExplosion();
+		UninitSniper();
+		ReversionPlayer_Finalize();
+		UninitKey();
+		UninitDore();
+		UninitBlock();
+		UninitPlayer();			// プレイヤーの終了処理
+		UninitBG();				// 背景の終了処理
+		break;
+
+	case SCENE_NONE:
+		break;
+	}
+
+	scene = scene_no;
+
+	switch (scene)
+	{
+	case SCENE_TITLE:
+		InitTitle();
+		break;
+
+	case SCENE_STAGECHOICE:
+		InitStageChoice();
+		break;
+
+	case SCENE_GAME:
+		//InitBG();				// 背景の初期化処理
+		////InitScore();			// スコアの初期化
+		//InitPlayer();			// プレイヤーの初期化
+		//InitTama();             // 弾の初期化
+		//Init_EnemyTama();       // 敵の弾の初期化
+		////InitBall();				// Ballの初期化
+		////InitBlock();			// Blockの初期化
+		InitBG();
+		InitPlayer();
+		InitBlock();
+		InitKey();
+		InitDore();
+		InitStage();
+		ReversionPlayer_Initialize();
+		InitSniper();
+		InitExplosion();
+		InitMap();
+		break;
+
+	case SCENE_NONE:
+		break;
+	}
 }

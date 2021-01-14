@@ -7,6 +7,8 @@
 #ifndef SPRITE_H_
 #define SPRITE_H_
 
+#include <d3dx9.h>
+
 void Sprite_Initialize(void);
 
 void Sprite_Finalize(void);

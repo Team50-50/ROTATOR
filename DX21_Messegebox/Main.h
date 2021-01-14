@@ -4,3 +4,14 @@
 
 #define SCREEN_WIDTH  1280
 #define SCREEN_HEIGHT 720
+
+enum {
+
+	SCENE_TITLE,
+	SCENE_STAGECHOICE,
+	SCENE_GAME,
+	SCENE_NONE,
+
+};
+
+void SetScene(int stage_no);

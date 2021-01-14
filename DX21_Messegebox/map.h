@@ -16,9 +16,9 @@
  /*-----------------------------------------------------------------------------------------
   定数宣言
  -------------------------------------------------------------------------------------------*/
-#define STAGE_WIDTH (1920)
-#define STAGE_HEIGHT (960)
-#define MAPCHIP_WIDTH (64)								// マップチップの横幅
+#define STAGE_WIDTH    (1920)
+#define STAGE_HEIGHT   (960)
+#define MAPCHIP_WIDTH  (64)								// マップチップの横幅
 #define MAPCHIP_HEIGHT (64)								// マップチップの縦幅
 #define MAP_XSIZE (STAGE_WIDTH / MAPCHIP_WIDTH)			// MAPの横幅(値はチップ数)
 #define MAP_YSIZE (STAGE_HEIGHT / MAPCHIP_HEIGHT)		// MAPの縦幅(値はチップ数)
