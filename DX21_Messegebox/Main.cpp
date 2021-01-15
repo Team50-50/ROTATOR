@@ -32,6 +32,7 @@
 #include "sniper.h"
 #include "explosion.h"
 #include "map.h"
+#include "Texture.h"
 
 /*------------------------------------------------------------------------------
 	プロトタイプ宣言
@@ -237,21 +238,14 @@ bool Initialize(void)
 
 	InitController();
 
+
+	Texture_Initialize();
+
+	Sprite_Initialize();
+
 	InitFade();
 	SetScene(SCENE_TITLE);
 
-	/*InitBG();
-	InitPlayer();
-	InitBlock();
-	InitKey();
-	InitDore();
-	InitStage();
-	ReversionPlayer_Initialize();
-	InitSniper();
-	InitExplosion();
-	InitMap();*/
-
-	Sprite_Initialize();
 	DebugFont_Initialize();
 
 	return true;
@@ -400,6 +394,10 @@ void Finalize(void)
 	UninitMap();
 
 	Sprite_Finalize();
+
+	//テクスチ管理モジュールの終了処理
+	Texture_Finalize();
+
 	MyDirect3D_Finalize();
 	//キーロガーの終了処理
 	Keylogger_Finalize();
@@ -474,6 +472,14 @@ void SetScene(int scene_no)
 		InitSniper();
 		InitExplosion();
 		InitMap();
+
+		//テクスチャの読み込み
+		if (Texture_Load() > 0)
+		{
+			//デバイスの取得に失敗
+			MessageBox(NULL, "テクスチャの読み込みに失敗しました", "エラー", MB_OK);
+
+		}
 		break;
 
 	case SCENE_NONE:

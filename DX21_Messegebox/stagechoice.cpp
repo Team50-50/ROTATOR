@@ -11,6 +11,7 @@
 #include "texture.h"
 #include "fade.h"
 #include "keylogger.h"
+#include "Texture.h"
 
 static int g_TextureStageChoiceBG;
 static int g_TextureStageChoiceS;
@@ -28,6 +29,8 @@ void InitStageChoice(void)
 	g_TextureStageChoiceBG = Texture_SetTextureLoadFile("asset/stageC(kari).png");
 	g_TextureStageChoiceS  = Texture_SetTextureLoadFile("asset/stageCS.png");
 	g_TextureStageChoiceRW = Texture_SetTextureLoadFile("asset/redwaku.png");
+
+	Texture_Load();
 
 }
 
