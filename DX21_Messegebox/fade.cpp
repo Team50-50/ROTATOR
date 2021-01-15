@@ -84,7 +84,7 @@ void DrawFade(void)
 	//SetTexture(NULL);	// テクスチャーを使わない
 
 	// スプライトを描画
-	Sprite_Draw(g_TextureFade, -SCREEN_WIDTH * 0.5, -SCREEN_HEIGHT * 0.5, SCREEN_WIDTH, SCREEN_HEIGHT,
+	Screen_Draw(g_TextureFade, 0.0f, 0.0f, SCREEN_WIDTH, SCREEN_HEIGHT,
 		0.0f, 0.0f, 1.0f, 1.0f,
 		g_Color);
 

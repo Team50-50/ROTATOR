@@ -22,6 +22,7 @@
 #include "map.h"
 #include <stdio.h>
 #include "debug_font.h"
+#include "fade.h"
 
  /*-----------------------------------------------------------------------------------------
   ÉOÉçÅ[ÉoÉãïœêî
@@ -31,7 +32,7 @@ static int g_Mapchip[MAP_YSIZE][MAP_XSIZE]
 	{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
 	{ 1, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1},
 	{ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1},
-	{ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1},
+	{ 1, 0, 9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1},
 	{ 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1},
 	{ 1, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 1},
 	{ 1, 0, 0, 0, 0, 0, 0, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 1},
@@ -47,8 +48,10 @@ static int g_Mapchip[MAP_YSIZE][MAP_XSIZE]
 
 static int g_TextureId = TEXTURE_INVALID_ID;
 static int g_Texturekey = TEXTURE_INVALID_ID;
+static int g_TextureGoal = TEXTURE_INVALID_ID;
 CollisionCircle keyCircleCollision[20];
 CollisionCircle blockCircleCollision[350];
+CollisionCircle goalCircleCollision;
 static int g_keyCnt;
 static int g_playerkey;
 static int g_blockCnt;
@@ -65,6 +68,7 @@ void InitMap()
 {
 	g_TextureId = Texture_SetTextureLoadFile("asset/mapchip.png");
 	g_Texturekey = Texture_SetTextureLoadFile("asset/key.png");
+	g_TextureGoal= Texture_SetTextureLoadFile("asset/exit6.png");
 
 	hit = false;
 	g_playerkey = 0;
@@ -130,6 +134,15 @@ void InitMap()
 			{
 				SetBlock(MAPCHIP_WIDTH * x, MAPCHIP_HEIGHT * y, 8, 1, BLOCK_TYPE::BLOCK_OFFSETY);
 			}
+
+			if (chipNO == 9)
+			{
+				goalCircleCollision.center = {
+					(float)MAPCHIP_WIDTH * x + MAPCHIP_WIDTH * 0.5f,
+					(float)MAPCHIP_HEIGHT * y + MAPCHIP_HEIGHT * 0.5f
+				};
+				goalCircleCollision.radius = MAPCHIP_WIDTH * 0.4f;
+			}
 		}
 	}
 
@@ -139,6 +152,7 @@ void UninitMap()
 {
 	Texture_Release(&g_Texturekey, 1);
 	Texture_Release(&g_TextureId, 1);
+	Texture_Release(&g_TextureGoal, 1);
 }
 
 void UpdateMap()
@@ -161,12 +175,18 @@ void UpdateMap()
 
 			}
 		}
+
+		if (Collision_CircleAndCircleHit(&playerCollision[i], &goalCircleCollision))
+		{
+			SetFade(FADE_OUT, SCENE_TITLE);
+		}
 	}
 
 	if (hit)
 	{
 		g_playerkey++;
 	}
+
 
 	Rocket* rocket = Get_Rocket();
 
@@ -210,6 +230,10 @@ void DrawMap()
 
 			Sprite_Draw(g_TextureId, position.x, position.y, tcx, tcy, MAPCHIP_WIDTH, MAPCHIP_HEIGHT);
 
+			if (chipNO == 9)
+			{
+				Sprite_Draw(g_TextureGoal, MAPCHIP_WIDTH * x, MAPCHIP_HEIGHT * y, 64.0f, 64.0f, 0, 0, 64, 32);
+			}
 		}
 	}
 

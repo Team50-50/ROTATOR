@@ -13,6 +13,8 @@
 #include "keylogger.h"
 #include "Texture.h"
 #include "controller.h"
+#include<stdio.h>
+#include "debug_font.h"
 
 static int g_TextureStageChoiceBG;
 static int g_TextureStageChoiceS;
@@ -50,13 +52,13 @@ void UpdateStageChoice(void)
 	switch (Gamemord_sentaku)
 	{
 	case 0:
-		Gamemord_sx = -500;
+		Gamemord_sx = 200.0f;
 		break;
 	case 1:
-		Gamemord_sx = -144;
+		Gamemord_sx = 520.0f;
 		break;
 	case 2:
-		Gamemord_sx = 212;
+		Gamemord_sx = 820.0f;
 		break;
 	}
 
@@ -96,24 +98,33 @@ void UpdateStageChoice(void)
 
 void DrawStageChoice(void)
 {
-
+	//360
 	// スプライトを描画
-	Sprite_Draw(g_TextureStageChoiceBG, -SCREEN_WIDTH * 0.5, -SCREEN_HEIGHT * 0.5, SCREEN_WIDTH, SCREEN_HEIGHT,
+	Screen_Draw(g_TextureStageChoiceBG, 0.0f, 0.0f, SCREEN_WIDTH, SCREEN_HEIGHT,
 		0, 0, 1920, 1080);
 	
-	Sprite_Draw(g_TextureStageChoiceS, -500, -96, 288, 192,
-	    0, 0, 1440, 960);
-	Sprite_Draw(g_TextureStageChoiceS, -144, -96, 288, 192,
-		1440, 0, 1440, 960);
-	Sprite_Draw(g_TextureStageChoiceS,  212, -96, 288, 192,
+	Screen_Draw(g_TextureStageChoiceS, 200.0f, 420.0f, 288.0f, 192.0f,
+	    0, 0, 1440, 960);						  		  		 
+	Screen_Draw(g_TextureStageChoiceS, 520.0f, 420.0f, 288.0f, 192.0f,
+		1440, 0, 1440, 960);					  		  		 
+	Screen_Draw(g_TextureStageChoiceS, 820.0f, 420.0f, 288.0f, 192.0f,
 		2880, 0, 1440, 960);
 
-	Sprite_Draw(g_TextureStageChoiceRW, Gamemord_sx, -96, 288, 192,
+	Screen_Draw(g_TextureStageChoiceRW, Gamemord_sx, 420.0f, 288.0f, 192.0f,
 		0, 0, 1440, 960/*, (255, 255, 255, 255)*/);
+
+	char Buf[64];
+	sprintf(Buf, "s=%d", Gamemord_sentaku);
+	DebugFont_Draw(900.0f, 300.0f, Buf);
 
 }
 
 int* GetGamemord()
 {
 	return &GameStage;
+}
+
+int& Getmap(void)
+{
+	return Gamemord_sentaku;
 }

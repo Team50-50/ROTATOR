@@ -18,3 +18,5 @@ void UpdateStageChoice(void);
 void DrawStageChoice(void);
 
 int* GetGamemord();
+
+int& Getmap(void);

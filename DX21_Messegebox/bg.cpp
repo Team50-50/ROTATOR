@@ -12,11 +12,22 @@
 #include "camera.h"
 #include "bg.h"
 #include "map.h"
+#include "stagechoice.h"
 
 /*-----------------------------------------------------------------------------------------
   グローバル変数
  -------------------------------------------------------------------------------------------*/
-static int g_TextureBG;
+static const char* TextureFileNames[] = {
+	"asset/BG.jpg",
+	"asset/messageImage_1610629813418.jpg",
+	"asset/messageImage_1610629806617.jpg"
+	
+};
+
+static const int TextureCnt = ARRAYSIZE(TextureFileNames);
+
+//ブロックのテクスチャの読み込み
+static int	g_BGTexture[TextureCnt];
 
 /*-----------------------------------------------------------------------------------------
  関数定義
@@ -24,15 +35,20 @@ static int g_TextureBG;
 void InitBG(void)
 {
 
-	g_TextureBG = Texture_SetTextureLoadFile("asset/BG.png");	//背景画像
+	for (int i = 0; i < TextureCnt; i++)
+	{
+		g_BGTexture[i] = Texture_SetTextureLoadFile(TextureFileNames[i]);
+	}
 
 }
 
 
 void UninitBG(void)
 {
-
-	Texture_Release(&g_TextureBG, 1);
+	for (int i = 0; i < TextureCnt; i++)
+	{
+		Texture_Release(&g_BGTexture[i], 1);
+	}
 
 }
 
@@ -41,7 +57,7 @@ void DrawBG(void)
 {
 
 	// スプライトを描画
-	Sprite_Draw(g_TextureBG, 0.0f, 0.0f, STAGE_WIDTH, STAGE_HEIGHT,
+	Sprite_Draw(g_BGTexture[Getmap()], 0.0f, 0.0f, STAGE_WIDTH, STAGE_HEIGHT,
 		0, 0, 1440, 960);
 
 }

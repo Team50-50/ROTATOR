@@ -479,7 +479,7 @@ void SetScene(int scene_no)
 		if (Texture_Load() > 0)
 		{
 			//デバイスの取得に失敗
-			MessageBox(NULL, "テクスチャの読み込みに失敗しました", "エラー", MB_OK);
+			//MessageBox(NULL, "テクスチャの読み込みに失敗しました", "エラー", MB_OK);
 
 		}
 		break;
