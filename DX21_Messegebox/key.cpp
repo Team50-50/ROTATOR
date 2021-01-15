@@ -1,3 +1,12 @@
+/*==============================================================================
+
+	鍵の制御[key.cpp]
+
+													Author : トウ ミンヨウ　& マコウチュウ
+													Date   :
+
+
+==============================================================================*/
 #include "main.h"
 #include "texture.h"
 #include "sprite.h"
@@ -6,7 +15,9 @@
 #include "stage.h"
 #include "camera.h"
 
-
+/*-----------------------------------------------------------------------------------------
+  グローバル変数
+ -------------------------------------------------------------------------------------------*/
 //ブロックのテクスチャの読み込み
 static int	g_KeyTexture;
 
@@ -20,6 +31,9 @@ static int g_PlayerKeyPossession;
 static int g_D_PlayerUsedKey;
 
 
+/*-----------------------------------------------------------------------------------------
+ 関数定義
+-------------------------------------------------------------------------------------------*/
 void InitKey()
 {
 
@@ -116,6 +130,7 @@ void DrawKey()
 
 }
 
+// 鍵を配置
 void SetKey(float x, float y)
 {
 	for (int i = 0; i < KEY_MAX; i++)
@@ -131,6 +146,7 @@ void SetKey(float x, float y)
 	}
 }
 
+// 鍵判定円
 CollisionCircle GameKey_GetCollision(int index)
 {
 	CollisionCircle c = {
@@ -146,10 +162,12 @@ CollisionCircle GameKey_GetCollision(int index)
 
 Key* GetKeys()
 {
+	// 鍵の座標
 	return Keys;
 }
 
 int GetPlayerKeyPossession()
 {
+	// プレイヤーの鍵所持数
 	return g_PlayerKeyPossession;
 }

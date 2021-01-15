@@ -1,3 +1,12 @@
+/*==============================================================================
+
+	扉の制御[dore.cpp]
+
+													Author : トウ ミンヨウ　& マコウチュウ
+													Date   :
+
+
+==============================================================================*/
 #include "main.h"
 #include "texture.h"
 #include "sprite.h"
@@ -7,7 +16,9 @@
 #include "stage.h"
 #include "camera.h"
 
-
+/*-----------------------------------------------------------------------------------------
+  グローバル変数
+ -------------------------------------------------------------------------------------------*/
 // 扉のテクスチャの読み込み
 static int	g_DoreTexture;
 
@@ -17,7 +28,9 @@ Dore Dores[KEY_MAX];
 // プレイヤーの鍵所持数
 static int g_PlayerKeyPossession2;
 
-
+/*-----------------------------------------------------------------------------------------
+ 関数定義
+-------------------------------------------------------------------------------------------*/
 void InitDore()
 {
 
@@ -54,7 +67,7 @@ void UpdateDore()
 void DrawDore()
 {
 
-	// 鍵を描画
+	// 扉を描画
 	for (int i = 0; i < DORE_MAX; i++)
 	{
 		if (Dores[i].use == true)
@@ -70,6 +83,7 @@ void DrawDore()
 
 void SetDore(float x, float y)
 {
+	// 扉を配置
 	for (int i = 0; i < KEY_MAX; i++)
 	{
 		if (Dores[i].use == false)
@@ -84,7 +98,7 @@ void SetDore(float x, float y)
 
 void DelDore(int num)
 {
-	
+	// 扉を削除
 	Dores[num].use = false;
 	Dores[num].xy.x = 0;
 	Dores[num].xy.y = 0;
@@ -93,5 +107,6 @@ void DelDore(int num)
 
 Dore* GetDores()
 {
+	// 扉の座標取得
 	return Dores;
 }

@@ -31,6 +31,10 @@ static int	g_Texturelaser = TEXTURE_INVALID_ID;
 static Rocket g_rocket[ROCKET_MAX];
 static float angle;
 
+
+/*-----------------------------------------------------------------------------------------
+ ä÷êîíËã`
+-------------------------------------------------------------------------------------------*/
 void InitSniper(void)
 {
 	g_Texturelaser = Texture_SetTextureLoadFile("asset/red.tga");

@@ -1,18 +1,31 @@
+/*==============================================================================
 
+	タイトル画面の制御[titile.cpp]
+
+													Author : トウ ミンヨウ
+													Date   :
+
+==============================================================================*/
 #include "Main.h"
 #include "texture.h"
 #include "Sprite.h"
 #include "fade.h"
 #include "keylogger.h"
 
+/*----------------------------------------------------------------------------------------
+  グローバル変数
+ ----------------------------------------------------------------------------------------*/
 static int g_TextureTitle;
 
-
+/*-----------------------------------------------------------------------------------------
+ 関数定義
+-------------------------------------------------------------------------------------------*/
 void InitTitle(void)
 {
 
 	g_TextureTitle = Texture_SetTextureLoadFile("asset/title(kari).png");
 
+	// load
 	Texture_SetTextureLoadFile("asset/stageC(kari).png");
 	Texture_SetTextureLoadFile("asset/stageCS.png");
 	Texture_SetTextureLoadFile("asset/redwaku.png");
