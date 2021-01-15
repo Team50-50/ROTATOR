@@ -12,6 +12,7 @@
 #include "fade.h"
 #include "keylogger.h"
 #include "Texture.h"
+#include "controller.h"
 
 static int g_TextureStageChoiceBG;
 static int g_TextureStageChoiceS;
@@ -59,7 +60,7 @@ void UpdateStageChoice(void)
 		break;
 	}
 
-	if (Keylogger_Trigger(KL_RIGHT))
+	if (Keylogger_Trigger(KL_RIGHT) || JoystickTrigger(RightButton))
 	{
 		Gamemord_sentaku++;
 
@@ -68,7 +69,7 @@ void UpdateStageChoice(void)
 			Gamemord_sentaku = 0;
 		}
 	}
-	if (Keylogger_Trigger(KL_LEFT))
+	if (Keylogger_Trigger(KL_LEFT) || JoystickTrigger(LeftButton))
 	{
 		Gamemord_sentaku--;
 
@@ -78,7 +79,7 @@ void UpdateStageChoice(void)
 		}
 	}
 
-	if (Keylogger_Press(KL_JUMP))
+	if (Keylogger_Press(KL_JUMP) || JoystickPress(ButtonB))
 	{
 		GameStage = Gamemord_sentaku;
 		SetFade(FADE_OUT, SCENE_GAME);

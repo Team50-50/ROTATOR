@@ -257,6 +257,8 @@ void Update(void)
 	//キーロガーの更新処理
 	Keylogger_Update();
 
+	UpdateController();
+
 	switch (scene)
 	{
 	case SCENE_TITLE:
@@ -279,7 +281,7 @@ void Update(void)
 		////UpdateBall();		      // Ballの更新処理
 		////UpdateScore();		      // スコアの更新処理
 		GameCamera_Update();
-		UpdateController();
+		
 		UpdatePlayer();
 		UpdateBlock();
 		UpdateKey();
