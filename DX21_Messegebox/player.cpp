@@ -40,7 +40,7 @@ static DataStorage g_Prev;
 static DataStorage g_Debug;
 
 // 扉位置
-Dore* DoresPosition;
+Dore* dore;
 // 鍵の所持数
 static int g_PlayerKey;
 // 鍵の使った数
@@ -390,93 +390,49 @@ g_Player.start = {
 
 
 	// 扉の位置座標を取得
-	DoresPosition = GetDores();
+	dore = GetDores();
 	// プレイヤーの鍵所持数を取得
 	g_PlayerKey = GetPlayerKeyPossession();
 
 	// 扉の当たり判定
 	for (int i = 0; i < DORE_MAX; i++)
 	{
-		// 上方判定
-		//if (g_Player.position.x + PLAYER_SIZE_X > DoresPosition[i].xy.x && g_Player.position.x < DoresPosition[i].xy.x + DORE_SIZE_X)
-		//{
+		if (!dore[i].use) continue;
 
-		//	if (g_Player.position.y + PLAYER_SIZE_Y >= DoresPosition[i].xy.y)
-		//	{
-		//		if (g_Player.position.y + PLAYER_SIZE_Y <= DoresPosition[i].xy.y + DORE_SIZE_Y / 2)
-		//		{
-		//			on_ground = true;
-		//			g_Player.isJump = false;
-		//			g_Player.position.y = DoresPosition[i].xy.y - PLAYER_SIZE_Y;
-		//			//jump_amount = 0;
-		//		}
-		//	}
-		//	else
-		//	{
-		//		on_ground = false;
-		//	}
-
-		//	if (g_Player.position.y <= DoresPosition[i].xy.y + DORE_SIZE_Y)
-		//	{
-		//		if (g_Player.position.y >= DoresPosition[i].xy.y + DORE_SIZE_Y / 2)
-		//		{
-		//			on_ground = false;
-		//			g_Player.position.y = DoresPosition[i].xy.y + DORE_SIZE_Y;
-
-		//		}
-		//	}
-		//}
-		//if ((g_Player.position.y >= DoresPosition[i].xy.y && g_Player.position.y <= DoresPosition[i].xy.y + DORE_SIZE_Y))
-		//{
-
-		//	if (g_Player.position.x + PLAYER_SIZE_X > DoresPosition[i].xy.x)
-		//	{
-		//		if (g_Player.position.x + PLAYER_SIZE_X < DoresPosition[i].xy.x + DORE_SIZE_X)
-		//		{
-		//			g_Player.position.x = DoresPosition[i].xy.x - DORE_SIZE_X;
-		//		}
-		//	}
-		//	if (g_Player.position.x < DoresPosition[i].xy.x + DORE_SIZE_X)
-		//	{
-		//		if (g_Player.position.x > DoresPosition[i].xy.x - DORE_SIZE_X / 2)
-		//		{
-		//			g_Player.position.x = DoresPosition[i].xy.x + DORE_SIZE_X;
-		//		}
-		//	}
-		//}
-
-		// 左右判定
-		if (DoresPosition[i].use == true)
+		//プレイヤーがドアの左にいる時の衝突判定
+		if (g_Player.direction.x > 0.0f)
 		{
-			if (g_Player.position.y <= DoresPosition[i].xy.y + DORE_SIZE_Y && g_Player.position.y + PLAYER_SIZE_Y >= DoresPosition[i].xy.y)
+			if (g_Player.end.x <= dore[i].start.x)
 			{
-				if (g_Player.position.x < DoresPosition[i].xy.x + (DORE_SIZE_X * 0.5))
+				if (g_Player.start.y < dore[i].end.y && g_Player.end.y > dore[i].start.y)
 				{
-					if (g_Player.position.x + PLAYER_SIZE_X > DoresPosition[i].xy.x)
+					if (g_Player.end.x + g_Player.direction.x > dore[i].start.x)
 					{
-						if (g_PlayerKey > 0)
+						g_Player.position.x = dore[i].start.x - PLAYER_SIZE_X;
+						if (GetplayerKey() > 0)
 						{
-							DelDore(i);
-							g_PlayerUsedKey++;
-						}
-						else
-						{
-							CangoR = false;
+							dore[i].use = false;
+							GetplayerKey() -= 1;
 						}
 					}
 				}
-				if (g_Player.position.x + PLAYER_SIZE_X > DoresPosition[i].xy.x + (DORE_SIZE_X * 0.5))
+			}
+		}
+
+		//プレイヤーがドアの右にいる時の衝突判定
+		if (g_Player.direction.x < 0.0f)
+		{
+			if (g_Player.start.x >= dore[i].end.x)
+			{
+				if (g_Player.start.y < dore[i].end.y && g_Player.end.y > dore[i].start.y)
 				{
-					if (g_Player.position.x < DoresPosition[i].xy.x + DORE_SIZE_X)
+					if (g_Player.start.x + g_Player.direction.x < dore[i].end.x)
 					{
-						if (g_PlayerKey > 0)
+						g_Player.position.x = dore[i].end.x;
+						if (GetplayerKey() > 0)
 						{
-							DelDore(i);
-							g_PlayerUsedKey++;
-						}
-						else
-						{
-							CangoL = false;
+							dore[i].use = false;
+							GetplayerKey() -= 1;
 						}
 					}
 				}

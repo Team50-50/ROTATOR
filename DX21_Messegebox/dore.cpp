@@ -23,7 +23,7 @@
 static int	g_DoreTexture;
 
 // 扉の位置座標
-Dore Dores[KEY_MAX];
+static Dore Dores[KEY_MAX];
 
 // プレイヤーの鍵所持数
 static int g_PlayerKeyPossession2;
@@ -62,6 +62,18 @@ void UpdateDore()
 	// プレイヤーの鍵所持数を保存
 	g_PlayerKeyPossession2 = GetPlayerKeyPossession();
 
+	for (int i = 0; i < DORE_MAX; i++)
+	{
+		if (!Dores[i].use) continue;
+
+		Dores[i].start = { Dores[i].xy.x,Dores[i].xy.y };
+		Dores[i].end = {
+			Dores[i].xy.x + DORE_SIZE_X,
+			Dores[i].xy.y + DORE_SIZE_Y + 64.0f
+		};
+
+	}
+
 }
 
 void DrawDore()
@@ -73,7 +85,7 @@ void DrawDore()
 		if (Dores[i].use == true)
 		{
 			
-		    Sprite_Draw(g_DoreTexture, Dores[i].xy.x, Dores[i].xy.y, DORE_SIZE_X, DORE_SIZE_Y,
+		    Sprite_Draw(g_DoreTexture, Dores[i].xy.x, Dores[i].xy.y, DORE_SIZE_X, DORE_SIZE_Y+64.0f,
 				0, 0, 64, 64);
 			
 		}

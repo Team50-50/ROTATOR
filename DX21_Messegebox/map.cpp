@@ -18,10 +18,10 @@
 #include "block.h"
 #include "explosion.h"
 #include "collision.h"
+#include "dore.h"
 #include "map.h"
 #include <stdio.h>
 #include "debug_font.h"
-
 
  /*-----------------------------------------------------------------------------------------
   グローバル変数
@@ -46,15 +46,17 @@ static int g_Mapchip[MAP_YSIZE][MAP_XSIZE]
 };
 
 static int g_TextureId = TEXTURE_INVALID_ID;
+static int g_Texturekey = TEXTURE_INVALID_ID;
 CollisionCircle keyCircleCollision[20];
 CollisionCircle blockCircleCollision[350];
 static int g_keyCnt;
+static int g_playerkey;
 static int g_blockCnt;
 static int kx_NO[20];
 static int ky_NO[20];
 static int bx_NO[20];
 static int by_NO[20];
-static int aa = 0;
+static bool hit = false;
 
 /*-----------------------------------------------------------------------------------------
  関数定義
@@ -62,7 +64,10 @@ static int aa = 0;
 void InitMap()
 {
 	g_TextureId = Texture_SetTextureLoadFile("asset/mapchip.png");
+	g_Texturekey = Texture_SetTextureLoadFile("asset/key.png");
 
+	hit = false;
+	g_playerkey = 0;
 	g_keyCnt = 0;
 	g_blockCnt = 0;
 
@@ -106,6 +111,8 @@ void InitMap()
 				};
 				keyCircleCollision[g_keyCnt].radius = MAPCHIP_WIDTH * 0.4f;
 
+				keyCircleCollision[g_keyCnt].enable = true;
+
 				g_keyCnt++;
 			}
 
@@ -113,6 +120,12 @@ void InitMap()
 			{
 				SetBlock(MAPCHIP_WIDTH * x, MAPCHIP_HEIGHT * y, 1, 1, BLOCK_TYPE::BLOCK_NORMAL);
 			}
+
+			if (chipNO == 7)
+			{
+				SetDore(MAPCHIP_WIDTH * x, MAPCHIP_HEIGHT * y);
+			}
+
 			if (chipNO == 8)
 			{
 				SetBlock(MAPCHIP_WIDTH * x, MAPCHIP_HEIGHT * y, 8, 1, BLOCK_TYPE::BLOCK_OFFSETY);
@@ -124,24 +137,35 @@ void InitMap()
 
 void UninitMap()
 {
+	Texture_Release(&g_Texturekey, 1);
 	Texture_Release(&g_TextureId, 1);
 }
 
 void UpdateMap()
 {
 	CollisionCircle* playerCollision = Get_PlayerCollision();
+	hit = false;
 
 	//プレイヤーと鍵の衝突判定
 	for (int i = 0; i < 2; i++)
 	{
 		for (int j = 0; j < g_keyCnt; j++)
 		{
+			if(!keyCircleCollision[j].enable) continue;
+
 			if (Collision_CircleAndCircleHit(&playerCollision[i], &keyCircleCollision[j]))
 			{
 				g_Mapchip[ky_NO[j]][kx_NO[j]] = 0;
+				hit = true;
+				keyCircleCollision[j].enable = false;
 
 			}
 		}
+	}
+
+	if (hit)
+	{
+		g_playerkey++;
 	}
 
 	Rocket* rocket = Get_Rocket();
@@ -189,6 +213,14 @@ void DrawMap()
 		}
 	}
 
+	Screen_Draw(g_Texturekey, 500.0f, 0.0f, 80.0f, 80.0f, 0, 0, 64, 64);
+	char Buf[64];
+	sprintf(Buf, "X");
+	DebugFont_Draw(590.0f, 20.0f, Buf);
+
+	sprintf(Buf, "%d", g_playerkey);
+	DebugFont_Draw(650.0f, 20.0f, Buf);
+
 }
 
 //チップ4辺の接触情報を返す
@@ -231,4 +263,9 @@ int GetKeyCnt(void)
 CollisionCircle* Get_KeyCollision(void)
 {
 	return keyCircleCollision;
+}
+
+int& GetplayerKey(void)
+{
+	return g_playerkey;
 }

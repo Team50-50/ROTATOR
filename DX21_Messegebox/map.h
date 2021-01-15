@@ -40,5 +40,7 @@ int GetKeyCnt(void);
 
 CollisionCircle* Get_KeyCollision(void);
 
+int& GetplayerKey(void);
+
 #endif // !MAP_H_
 

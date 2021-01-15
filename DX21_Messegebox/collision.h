@@ -17,6 +17,7 @@ typedef struct CollisionCircle_tag
 	D3DXVECTOR2 center;
 	float radius;
 
+	bool enable;
 }CollisionCircle;
 
 //‹éŒ`‚Ìcollision

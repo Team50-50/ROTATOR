@@ -25,6 +25,8 @@ typedef struct {
 
 	bool  use;
 	D3DXVECTOR2 xy;
+	D3DXVECTOR2 start;
+	D3DXVECTOR2 end;
 
 } Dore;
 
