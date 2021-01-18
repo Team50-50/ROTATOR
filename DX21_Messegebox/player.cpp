@@ -23,6 +23,7 @@
 #include "sniper.h"
 #include <stdio.h>
 #include "map.h"
+#include "fade.h"
 
 /*-----------------------------------------------------------------------------------------
  ƒOƒ[ƒoƒ‹•Ï”
@@ -491,6 +492,12 @@ g_Player.start = {
 		{
 			a *= -1;
 		}
+	}
+
+	if (Keylogger_Press(KL_R))
+	{
+		SetFade(FADE_OUT, SCENE_GAME);
+		//PlaySE(SE_06);
 	}
 
 }
