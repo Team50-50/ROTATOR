@@ -15,6 +15,7 @@
 #include "controller.h"
 #include<stdio.h>
 #include "debug_font.h"
+#include "sound.h"
 
 static int g_TextureStageChoiceBG;
 static int g_TextureStageChoiceS;
@@ -25,6 +26,8 @@ static  int    Gamemord_sentaku = 0;
 
 static  float  Gamemord_sx = -500;
 static  bool   Gamemord_st;
+
+static int sec;
 
 void InitStageChoice(void)
 {
@@ -85,7 +88,11 @@ void UpdateStageChoice(void)
 	{
 		GameStage = Gamemord_sentaku;
 		SetFade(FADE_OUT, SCENE_GAME);
-		//PlaySE(SE_06);
+		if (sec == 0)
+		{
+			PlaySound(SOUND_LABEL_SE_TITLE);
+			sec = 1;
+		}
 	}
 
 	if (GetKeyState('Z') & 0x80)

@@ -18,11 +18,12 @@
 #include "Sprite.h"
 #include "Main.h"
 #include "stage.h"
+#include "sound.h"
+#include "revesion_player.h"
+
 #include "block.h"
 #include "key.h"
 #include "dore.h"
-#include "revesion_player.h"
-
 #include "bg.h"
 #include "fade.h"
 #include "title.h"
@@ -238,6 +239,7 @@ bool Initialize(void)
 
 	InitController();
 
+	InitSound(g_hWnd);
 
 	Texture_Initialize();
 
