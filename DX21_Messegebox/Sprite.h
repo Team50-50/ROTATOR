@@ -97,6 +97,9 @@ void Sprite_Draw(int textureId, float dx, float dy, float dw, float dh, int tcx,
 void Sprite_Draw(int textureId, float dx, float dy, float dw, float dh, int tcx, int tcy, int tcw, int tch,
 	float cx, float cy, float angle);
 
+void Sprite_Draw(int textureId, float dx, float dy, float dw, float dh, int tcx, int tcy, int tcw, int tch,
+	float cx, float cy, float angle, D3DCOLOR color);
+
 void Screen_Draw(int textureId, float dx, float dy, float dw, float dh, int tcx, int tcy, int tcw, int tch);
 
 void Screen_Draw(int textureId, float dx, float dy, float dw, float dh, int tcx, int tcy, int tcw, int tch, D3DCOLOR color);

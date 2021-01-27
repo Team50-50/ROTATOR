@@ -445,7 +445,7 @@ void SetScene(int scene_no)
 		InitDore();
 		InitStage();
 		ReversionPlayer_Initialize();
-		InitSniper();
+		InitSniper(12);
 		//InitRERocket();
 		InitExplosion();
 		InitRExplosion();

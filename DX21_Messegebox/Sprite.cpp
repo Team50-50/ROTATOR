@@ -360,6 +360,72 @@ void Sprite_Draw(int textureId, float dx, float dy, float dw, float dh, int tcx,
 
 }
 
+void Sprite_Draw(int textureId, float dx, float dy, float dw, float dh, int tcx, int tcy, int tcw, int tch,
+	float cx, float cy, float angle, D3DCOLOR color)
+{
+	// 1次変数に格納
+	LPDIRECT3DDEVICE9 pDevice = MyDirect3D_GetDevice();
+	// 念のためpDeviceがNULLでないことを確認
+	if (!pDevice) {
+		return;
+	}
+
+	// デバイスのFVF設定
+	pDevice->SetFVF(FVF_VERTEX2D);
+
+	// デバイスにテクスチャの設定をする
+	pDevice->SetTexture(0, Texture_GetTexture(textureId));
+
+	// テクスチャのサイズ取得
+	int w = Texture_GetTextureWidth(textureId);
+	int h = Texture_GetTextureHeight(textureId);
+
+	float u0 = (float)tcx / w;
+	float v0 = (float)tcy / h;
+	float u1 = (float)(tcx + tcw) / w;
+	float v1 = (float)(tcy + tch) / h;
+
+	dx = WorldToScreen({ dx,dy }).x;
+	dy = WorldToScreen({ dx,dy }).y;
+
+	// 頂点データの作成
+	Vertex2D v[] = {
+		{D3DXVECTOR4(0.5f,     -0.5f, 1.0f, 1.0f), color,D3DXVECTOR2(u0,v0)},
+		{D3DXVECTOR4(dw - 0.5f,     -0.5f, 1.0f, 1.0f), color,D3DXVECTOR2(u1,v0)},
+		{D3DXVECTOR4(0.5f, dh - 0.5f, 1.0f, 1.0f), color,D3DXVECTOR2(u0,v1)},
+		{D3DXVECTOR4(dw - 0.5f, dh - 0.5f, 1.0f, 1.0f), color,D3DXVECTOR2(u1,v1)},
+	};
+
+	// 平行移動行列の作成
+	D3DXMATRIX mtxTranslationC;
+	D3DXMatrixTranslation(&mtxTranslationC, -cx, -cy, 0.0f);
+
+	// 元に戻す平行移動行列の作成
+	D3DXMATRIX mtxTranslationI;
+	D3DXMatrixTranslation(&mtxTranslationI, cx + dx, cy + dy, 0.0f);
+
+	// 回転行列の作成
+	D3DXMATRIX mtxRotation;
+	D3DXMatrixRotationZ(&mtxRotation, angle);
+
+	// 拡大行列の作成
+	D3DXMATRIX mtxScale;
+	D3DXMatrixScaling(&mtxScale, 1.0f, 1.0f, 1.0f);	// 1が等倍、負の値は裏表が逆になる
+
+	// 行列の合成
+	D3DXMATRIX mtxWorld;
+	mtxWorld = mtxTranslationC * mtxScale * mtxRotation * mtxTranslationI;	// *は行列の合成を表す(順番には意味があるため要注意！！！！)
+
+	// 座標変換
+	for (int i = 0; i < 4; i++) {
+		D3DXVec4Transform(&v[i].Position, &v[i].Position, &mtxWorld);
+	}
+
+	// ポリゴンの描画（簡易版）
+	pDevice->DrawPrimitiveUP(D3DPT_TRIANGLESTRIP, 2, v, sizeof(Vertex2D));
+
+}
+
 void Screen_Draw(int textureId, float dx, float dy, float dw, float dh, int tcx, int tcy, int tcw, int tch)
 {
 	// 1次変数に格納

@@ -11,6 +11,7 @@
 
 #include <d3dx9.h>
 #include "collision.h"
+#include "data_control.h"
 
  /*-----------------------------------------------------------------------------------------
    íËêîêÈåæ
@@ -28,13 +29,15 @@ typedef struct Rocket_tag
 	D3DXVECTOR2 position;
 	D3DXVECTOR2 target;
 	float r_angle;
+	int frame;
+	int a;
 		
 	bool enable;
 
 	CollisionCircle collision;
 }Rocket;
 
-void InitSniper(void);
+void InitSniper(int rocket_max);
 
 void UninitSniper(void);
 
@@ -44,7 +47,17 @@ void DrawSniper(void);
 
 void Rocket_Spawn(float x, float y);
 
+void Rocket_Destory(int index);
+
+void reversionRocket_Destory(int index);
+
 Rocket* Get_Rocket(void);
+
+int* Get_RocketMax(void);
+
+DataStorage* GetRocket_Prev(void);
+
+int& Get_RocketCount(void);
 
 #endif // !SNIPER_H_
 
