@@ -23,7 +23,7 @@
 #include "explosion.h"
 #include "map.h"
 #include "debug_font.h"
-#include "reversion_rocket.h"
+
 #include<stdio.h>
 
  /*-----------------------------------------------------------------------------------------
@@ -42,10 +42,6 @@ static int g_rocketCnt;
 static DataStorage g_RocketCurrent[ROCKET_MAX];
 static DataStorage g_RocketPrev[ROCKET_MAX];
 static DataStorage g_RocketDebug[ROCKET_MAX];
-
-static DataStorage g_LaserCurrent;
-static DataStorage g_LaserPrev;
-static DataStorage g_LaserDebug;
 
 static bool flag1 = false;
 static bool flag2 = false;
@@ -224,7 +220,7 @@ void UpdateSniper(void)
 		}
 
 		//=================================================================================
-		//
+		//ロケットの記録&&逆再生
 		//=================================================================================
 		for (int j = 0; j < g_RocketPrev[i].Vdata_tail; j++)
 		{

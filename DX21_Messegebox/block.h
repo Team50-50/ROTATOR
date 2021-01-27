@@ -10,6 +10,7 @@
 
 #include <d3dx9.h>
 #include "collision.h"
+#include "data_control.h"
 
 // ブロックのMax数（配列の数）
 #define BLOCK_MAX (1024)
@@ -32,6 +33,9 @@ typedef struct {
 	int   Width_Quantity;
 	int   High_Quantity;
 	int type;
+	int a;
+	int lifeFrame;
+
 	CollisionRect rect;
 }Block;
 

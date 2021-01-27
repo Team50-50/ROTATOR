@@ -233,14 +233,9 @@ g_Player.start = {
 
 	for (int i = 0; i < BLOCK_MAX; i++)
 	{
-		if (block[i].use)
+		if (block[i].use && block[i].a == 255)
 		{
-			block[i].start = block[i].position;
-			block[i].end = {
-				block[i].position.x + BLOCK_SIZE_X * block[i].Width_Quantity,
-				block[i].position.y + BLOCK_SIZE_Y * block[i].High_Quantity
-			};
-
+			
 			//プレイヤーがブロックの上にいる時の衝突判定
 			if (g_Player.end.y <= block[i].start.y)
 			{

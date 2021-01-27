@@ -33,6 +33,25 @@ void DataRecord(DataStorage* data, D3DXVECTOR2 Vec2Data)
 //ゲームobjectのデータを記録する
 //
 //引数：(DataStorage*) data....... データを格納する構造体
+//				
+//			  aData.... アルファデータ
+//
+void DataRecord(DataStorage* data, int aData)
+{
+	if (data->Adata_tail > RECORDFRAME_MAX)
+	{
+		return;
+	}
+	data->aData[data->Adata_tail] = aData;
+
+	data->Adata_tail++;
+}
+
+//データの記録
+//
+//ゲームobjectのデータを記録する
+//
+//引数：(DataStorage*) data....... データを格納する構造体
 //
 //			vec2Data... vector2型データ
 //			  aData.... アルファデータ
