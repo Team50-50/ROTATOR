@@ -18,7 +18,7 @@
   ƒOƒ[ƒoƒ‹•Ï”
  -------------------------------------------------------------------------------------------*/
 static const char* TextureFileNames[] = {
-	"asset/BG.jpg",
+	"asset/BG.png",
 	"asset/messageImage_1610629813418.jpg",
 	"asset/messageImage_1610629806617.jpg"
 	
