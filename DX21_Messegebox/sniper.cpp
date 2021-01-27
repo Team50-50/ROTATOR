@@ -41,7 +41,6 @@ static int g_rocketCnt;
 
 static DataStorage g_RocketCurrent[ROCKET_MAX];
 static DataStorage g_RocketPrev[ROCKET_MAX];
-static DataStorage g_RocketDebug[ROCKET_MAX];
 
 static bool flag1 = false;
 static bool flag2 = false;
@@ -73,6 +72,10 @@ void InitSniper(int rocket_max)
 		g_reversionRocket[i].enable = false;
 		g_reversionRocket[i].a = 255;
 		g_reversionRocket[i].frame = 0;
+
+		InitRecord(&g_RocketCurrent[i]);
+		InitRecord(&g_RocketPrev[i]);
+
 	}
 
 }

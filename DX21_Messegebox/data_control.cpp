@@ -9,6 +9,26 @@
 #include"data_control.h"
 
 
+ //データの記録の初期化
+void InitRecord(DataStorage* data)
+{
+	for (int i = 0; i < RECORDFRAME_MAX; i++)
+	{
+		data->vec2Data[i] = { 0.0f,0.0f };
+		data->tfData[i] = NULL;
+		data->numData[i] = NULL;
+		data->aData[i] = NULL;
+		data->decimalData[i] = NULL;
+
+		data->Vdata_tail = 0;
+		data->Bdata_tail = 0;
+		data->Idata_tail = 0;
+		data->Adata_tail = 0;
+		data->Fdata_tail = 0;
+	}
+}
+
+
  //データの記録
  //
  //ゲームobjectのデータを記録する

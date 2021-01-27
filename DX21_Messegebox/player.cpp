@@ -85,6 +85,10 @@ void InitPlayer()
 	// Œ®‚Ìg‚Á‚½”‚Ì‰Šú‰»
 	g_PlayerUsedKey = 0;
 
+	InitRecord(&g_Current);
+	InitRecord(&g_Prev);
+	InitRecord(&g_Debug);
+
 	InitAnimations(g_Player.animation, WALKING, 192, 256, 3, 2, 6);
 }
 

@@ -32,8 +32,11 @@ void ReversionPlayer_Initialize(void)
 
 	for (int i = 0; i < 2; i++)
 	{
+		g_ReversionPlayer[i].enable = false;
 		InitAnimations(g_ReversionPlayer[i].animation, WALKING, 192, 256, 3, 2, 6);
 	}
+
+	frame = 0;
 }
 
 

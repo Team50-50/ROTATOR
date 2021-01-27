@@ -60,6 +60,9 @@ void InitBlock()
 		g_Blocks[i].fall = false;
 		g_Blocks[i].a = 255;
 		g_Blocks[i].lifeFrame = 0;
+
+		InitRecord(&g_Current[i]);
+		InitRecord(&g_Prev[i]);
 	}
 
 }

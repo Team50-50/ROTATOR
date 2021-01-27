@@ -30,6 +30,11 @@ typedef struct
 
 }DataStorage;
 
+
+
+//データの記録の初期化
+void InitRecord(DataStorage* data);
+
 //データの記録
 //
 //ゲームobjectのデータを記録する

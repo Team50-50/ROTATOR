@@ -22,7 +22,6 @@ static Explosion g_Explosions[EXPLOSION_MAX];
 
 static DataStorage g_Current[EXPLOSION_MAX];
 static DataStorage g_Prev[EXPLOSION_MAX];
-static DataStorage g_Debug[EXPLOSION_MAX];
 
 static bool flag1 = false;
 static bool flag2 = false;
@@ -42,6 +41,9 @@ void InitExplosion(void)
 		g_Explosions[i].enable = false;
 
 		InitAnimations(g_Explosions[i].animation, DEFAULT, 500, 400, 5, 4, 20);
+
+		InitRecord(&g_Current[i]);
+		InitRecord(&g_Prev[i]);
 	}
 
 }
