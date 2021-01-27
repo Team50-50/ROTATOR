@@ -20,6 +20,7 @@
 #include "stage.h"
 #include "sound.h"
 #include "revesion_player.h"
+#include "reversion_explosion.h"
 
 #include "block.h"
 #include "key.h"
@@ -273,15 +274,6 @@ void Update(void)
 
 	case SCENE_GAME:
 		
-		//UpdateBG();			      // 背景の更新処理
-		//UpdatePlayer();		      // プレイヤーの更新処理
-		//UpdateEnemy();            // 敵キャラの更新処理
-		//UpdateTama();             // 弾の更新処理
-		//Update_EnemyTama();       // 敵の弾の更新処理
-		//Playertama_ifHIT_Enemy(); // プレイヤーの弾敵に当たった判定
-		//Enemytama_ifHIT_Player(); // 敵の弾プレイヤーに当たった判定
-		////UpdateBall();		      // Ballの更新処理
-		////UpdateScore();		      // スコアの更新処理
 		GameCamera_Update();
 		
 		UpdatePlayer();
@@ -290,7 +282,9 @@ void Update(void)
 		UpdateDore();
 		ReversionPlayer_Update();
 		UpdateSniper();
+		//UpdateRERocket();
 		UpdateExplosion();
+		UpdateRExplosion();
 		UpdateMap();
 		break;
 
@@ -342,16 +336,6 @@ void Draw(void)
 		break;
 
 	case SCENE_GAME:
-
-		//UpdateBG();			      // 背景の更新処理
-		//UpdatePlayer();		      // プレイヤーの更新処理
-		//UpdateEnemy();            // 敵キャラの更新処理
-		//UpdateTama();             // 弾の更新処理
-		//Update_EnemyTama();       // 敵の弾の更新処理
-		//Playertama_ifHIT_Enemy(); // プレイヤーの弾敵に当たった判定
-		//Enemytama_ifHIT_Player(); // 敵の弾プレイヤーに当たった判定
-		////UpdateBall();		      // Ballの更新処理
-		////UpdateScore();		      // スコアの更新処理
 		DrawBG();
 		DrawMap();
 		DrawPlayer();
@@ -360,6 +344,8 @@ void Draw(void)
 		DrawDore();
 		ReversionPlayer_Draw();
 		DrawSniper();
+		//DrawRERocket();
+		DrawRExplosion();
 		DrawExplosion();
 		break;
 
@@ -384,9 +370,6 @@ void Draw(void)
 // ゲームの終了処理
 void Finalize(void)
 {
-	//Game_Finalize();
-
-
 	UninitBG();
 	UninitPlayer();
 	UninitBlock();
@@ -394,6 +377,8 @@ void Finalize(void)
 	UninitKey();
 	ReversionPlayer_Finalize();
 	UninitSniper();
+	//UninitRERocket();
+	UninitRExplosion();
 	UninitExplosion();
 	UninitMap();
 
@@ -423,17 +408,11 @@ void SetScene(int scene_no)
 		break;
 
 	case SCENE_GAME:
-		//UninitBlock();			// Blockの終了処理
-		//UninitBall();			// Ballの終了処理
-		//Uninit_EnemyTama();     // 敵の弾の終了処理
-		//UninitTama();           // 弾の終了処理
-		//UninitEnemy();          // 敵キャラの終了処理
-		//UninitPlayer();			// プレイヤーの終了処理
-		//UninitScore();			// スコアの終了処理
-		//UninitBG();				// 背景の終了処理
 		UninitMap();
+		UninitRExplosion();
 		UninitExplosion();
 		UninitSniper();
+		//UninitRERocket();
 		ReversionPlayer_Finalize();
 		UninitKey();
 		UninitDore();
@@ -459,13 +438,6 @@ void SetScene(int scene_no)
 		break;
 
 	case SCENE_GAME:
-		//InitBG();				// 背景の初期化処理
-		////InitScore();			// スコアの初期化
-		//InitPlayer();			// プレイヤーの初期化
-		//InitTama();             // 弾の初期化
-		//Init_EnemyTama();       // 敵の弾の初期化
-		////InitBall();				// Ballの初期化
-		////InitBlock();			// Blockの初期化
 		InitBG();
 		InitPlayer();
 		InitBlock();
@@ -474,7 +446,9 @@ void SetScene(int scene_no)
 		InitStage();
 		ReversionPlayer_Initialize();
 		InitSniper();
+		//InitRERocket();
 		InitExplosion();
+		InitRExplosion();
 		InitMap();
 
 		//テクスチャの読み込み

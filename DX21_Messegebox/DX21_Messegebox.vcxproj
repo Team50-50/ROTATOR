@@ -39,6 +39,7 @@
     <ClCompile Include="mouse.cpp" />
     <ClCompile Include="Mydirect3d.cpp" />
     <ClCompile Include="player.cpp" />
+    <ClCompile Include="reversion_explosion.cpp" />
     <ClCompile Include="reversion_player.cpp" />
     <ClCompile Include="sniper.cpp" />
     <ClCompile Include="sound.cpp" />
@@ -72,6 +73,7 @@
     <ClInclude Include="mouse.h" />
     <ClInclude Include="Mydirect3d.h" />
     <ClInclude Include="player.h" />
+    <ClInclude Include="reversion_explosion.h" />
     <ClInclude Include="revesion_player.h" />
     <ClInclude Include="sniper.h" />
     <ClInclude Include="sound.h" />

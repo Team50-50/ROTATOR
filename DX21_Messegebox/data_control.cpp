@@ -25,8 +25,67 @@ void DataRecord(DataStorage* data, D3DXVECTOR2 Vec2Data)
 	}
 	data->vec2Data[data->Vdata_tail] = Vec2Data;
 
+	data->Vdata_tail++;
+}
+
+//データの記録
+//
+//ゲームobjectのデータを記録する
+//
+//引数：(DataStorage*) data....... データを格納する構造体
+//
+//			vec2Data... vector2型データ
+//			  aData.... アルファデータ
+//		DecimalData.... flaot型データ
+//
+void DataRecord(DataStorage* data, D3DXVECTOR2 Vec2Data, int aData, float DecimalData)
+{
+	if (data->Vdata_tail > RECORDFRAME_MAX ||
+		data->Adata_tail > RECORDFRAME_MAX ||
+		data->Fdata_tail > RECORDFRAME_MAX)
+	{
+		return;
+	}
+
+	data->vec2Data[data->Vdata_tail] = Vec2Data;
+	data->aData[data->Adata_tail] = aData;
+	data->decimalData[data->Fdata_tail] = DecimalData;
 
 	data->Vdata_tail++;
+	data->Adata_tail++;
+	data->Fdata_tail++;
+}
+
+//データの記録
+//
+//ゲームobjectのデータを記録する
+//
+//引数：(DataStorage*) data....... データを格納する構造体
+//
+ //			vec2Data... vector2型データ
+//			NumData.... int型データ
+//			  aData.... アルファデータ
+//			TFData..... bool型データ
+//
+void DataRecord(DataStorage* data, D3DXVECTOR2 Vec2Data, int NumData, int aData, bool TFData)
+{
+	if (data->Vdata_tail > RECORDFRAME_MAX ||
+		data->Idata_tail > RECORDFRAME_MAX ||
+		data->Adata_tail > RECORDFRAME_MAX ||
+		data->Bdata_tail > RECORDFRAME_MAX)
+	{
+		return;
+	}
+
+	data->vec2Data[data->Vdata_tail] = Vec2Data;
+	data->numData[data->Idata_tail] = NumData;
+	data->aData[data->Adata_tail] = aData;
+	data->tfData[data->Bdata_tail] = TFData;
+
+	data->Vdata_tail++;
+	data->Idata_tail++;
+	data->Adata_tail++;
+	data->Bdata_tail++;
 }
 
 
@@ -39,7 +98,6 @@ void DataRecord(DataStorage* data, D3DXVECTOR2 Vec2Data)
 //			vec2Data...... vector2型データ
 //			TFData........ bool型データ
 //			DecimalData... flaot型データ
-//
 //
 void DataRecord(DataStorage* data, D3DXVECTOR2 Vec2Data, bool TFData, float DecimalData)
 {
@@ -201,6 +259,43 @@ int pop_NumData(DataStorage* data)
 	ret = data->numData[data->Idata_tail - 1];
 
 	data->Idata_tail--;
+	return ret;
+}
+
+//アルファデータ配列の <先頭> からデータを取り出す
+int deq_aData(DataStorage* data)
+{
+	int tmp;
+	if (data->Adata_tail == 0)
+	{
+		return data->aData[0];
+	}
+
+	tmp = data->aData[0];
+
+	for (int i = 0; i < data->Adata_tail - 1; i++)
+	{
+		data->aData[i] = data->aData[i + 1];
+	}
+
+	data->Adata_tail--;
+
+	return tmp;
+}
+
+//アルファデータ配列の <末尾> からデータを取り出す
+int pop_aData(DataStorage* data)
+{
+	int ret;
+
+	if (data->Adata_tail == 0)
+	{
+		return data->aData[data->Adata_tail];
+	}
+
+	ret = data->aData[data->Adata_tail - 1];
+
+	data->Adata_tail--;
 	return ret;
 }
 

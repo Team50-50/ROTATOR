@@ -6,11 +6,12 @@
  -----------------------------------------------------------------------------------------
 
  =========================================================================================*/
-#ifndef GAME_EXPLOSION_H_
-#define GAME_EXPLOSION_H_
+#ifndef EXPLOSION_H_
+#define EXPLOSION_H_
 
 #include<d3dx9.h>
 #include"animation.h"
+#include"data_control.h"
 
  /*-----------------------------------------------------------------------------------------
    ç\ë¢ëÃêÈåæ
@@ -18,7 +19,9 @@
 typedef struct Explosion_tag
 {
 	D3DXVECTOR2 position;
+	int a;
 	int frame;
+	int lifeFrame;
 	bool enable;
 
 	Animation animation[TYPE_MAX];
@@ -43,7 +46,8 @@ void DrawExplosion(void);
 
 void Explosion_Spawn(float x, float y);
 
+void Explosion_Destory(int index);
 
+DataStorage* GetRE_Prev(void);
 
-
-#endif // !GAME_Explosion_H_
+#endif // !Explosion_H_
