@@ -27,4 +27,4 @@ inline void DebugPrintf(const char* pFormat, ...)
 #endif // _DEBUG || DEBUG
 }
 
-#endif // _DEBUG_PRINTF_H_
+#endif // _DEBUG_PRINTF_H_ 

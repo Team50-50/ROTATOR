@@ -6,6 +6,8 @@
 													Date   :
 
 ==============================================================================*/
+#define _CRT_SECURE_NO_WARNINGS
+
 #include "main.h"
 #include "Sprite.h"
 #include "texture.h"
@@ -16,6 +18,7 @@
 #include<stdio.h>
 #include "debug_font.h"
 #include "sound.h"
+
 
 static int g_TextureStageChoiceBG;
 static int g_TextureStageChoiceS;

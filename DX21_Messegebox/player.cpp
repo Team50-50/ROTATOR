@@ -7,6 +7,8 @@
 
 
 ==============================================================================*/
+#define _CRT_SECURE_NO_WARNINGS
+
 #include "Main.h"
 #include "texture.h"
 #include "Sprite.h"
@@ -24,6 +26,8 @@
 #include <stdio.h>
 #include "map.h"
 #include "fade.h"
+
+
 
 /*-----------------------------------------------------------------------------------------
  ƒOƒ[ƒoƒ‹•Ï”
