@@ -289,11 +289,14 @@ void DrawSniper(void)
 
 		if (g_reversionRocket[i].enable)
 		{
-			Sprite_Draw(g_TextureReRocket,
-				g_reversionRocket[i].position.x,
-				g_reversionRocket[i].position.y,
-				ROCKET_WIDTH, ROCKET_HEIGHT, 0, 0, 32.0f, 32.0f, 0.0f, 16.0f, g_reversionRocket[i].r_angle,
-				D3DCOLOR_RGBA(255, 255, 255, g_reversionRocket[i].a));
+			if (GetKeyState('B') & 0x80 || JoystickPress(ButtonRT))
+			{
+				Sprite_Draw(g_TextureReRocket,
+					g_reversionRocket[i].position.x,
+					g_reversionRocket[i].position.y,
+					ROCKET_WIDTH, ROCKET_HEIGHT, 0, 0, 32.0f, 32.0f, 0.0f, 16.0f, g_reversionRocket[i].r_angle,
+					D3DCOLOR_RGBA(255, 255, 255, g_reversionRocket[i].a));
+			}
 		}
 
 	}

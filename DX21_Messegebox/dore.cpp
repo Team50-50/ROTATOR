@@ -35,7 +35,7 @@ void InitDore()
 {
 
 	// TEX‚Ì“Ç‚İ‚İ
-	g_DoreTexture = Texture_SetTextureLoadFile("asset/dore.png");
+	g_DoreTexture = Texture_SetTextureLoadFile("asset/door1.png");
 
 	// ”à”z—ñ‚Ì‰Šú‰»
 	for (int i = 0; i < KEY_MAX; i++)
@@ -85,8 +85,8 @@ void DrawDore()
 		if (Dores[i].use == true)
 		{
 			
-		    Sprite_Draw(g_DoreTexture, Dores[i].xy.x, Dores[i].xy.y, DORE_SIZE_X, DORE_SIZE_Y+64.0f,
-				0, 0, 64, 64);
+			Sprite_Draw(g_DoreTexture, Dores[i].xy.x, Dores[i].xy.y, DORE_SIZE_X, DORE_SIZE_Y,
+				0, 0, 64, 96);
 			
 		}
 	}

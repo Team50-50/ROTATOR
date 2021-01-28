@@ -562,7 +562,7 @@ void DrawPlayer()
 
 	char Buf[64];
 	sprintf(Buf, "frame=%d", g_Current.Vdata_tail);
-	DebugFont_Draw(900.0f, 50.0f, Buf);
+	//DebugFont_Draw(900.0f, 50.0f, Buf);
 }
 
 DataStorage GetPrev(void)

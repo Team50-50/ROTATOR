@@ -22,7 +22,7 @@
   ƒOƒ[ƒoƒ‹•Ï”
  ----------------------------------------------------------------------------------------*/
 static const char* TextureFileNames[] = {
-	"asset/testblock.jpg",
+	"asset/block(cracked).png",
 	"asset/block.png"
 };
 

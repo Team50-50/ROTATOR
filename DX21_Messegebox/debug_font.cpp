@@ -40,6 +40,7 @@ void DebugFont_Finalize(void)
 //       pString:デバッグ文字列へのポインタ
 void DebugFont_Draw(float dx, float dy, const char* pString)
 {
+	
 	for (int i = 0; i < strlen(pString); i++) {
 		int offset = pString[i] - ' ';
 		int tcx = (offset % DEBUG_FONT_ONE_LINE_CHAR_COUNT) * DEBUG_FONT_WIDTH;
@@ -48,4 +49,5 @@ void DebugFont_Draw(float dx, float dy, const char* pString)
 		Screen_Draw(g_TextureId, dx + i * DEBUG_FONT_WIDTH, dy, 30.0f,40.0f,
 			tcx, tcy, DEBUG_FONT_WIDTH, DEBUG_FONT_HEIGHT);
 	}
+	
 }

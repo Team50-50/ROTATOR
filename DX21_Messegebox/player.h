@@ -47,7 +47,7 @@ typedef struct
 #define PLAYER_SIZE_Y (120.0f)
 
 
-#define JUMP_FORCE (22.0f)
+#define JUMP_FORCE (18.0f)
 #define GRAVITY (1.0f)
 
 void InitPlayer();

@@ -19,6 +19,7 @@
   グローバル変数
  ----------------------------------------------------------------------------------------*/
 static int g_TextureTitle;
+static int g_TextureTitleLogo;
 static int sec;
 
 /*-----------------------------------------------------------------------------------------
@@ -27,7 +28,11 @@ static int sec;
 void InitTitle(void)
 {
 
-	g_TextureTitle = Texture_SetTextureLoadFile("asset/title(kari).png");
+	g_TextureTitle = Texture_SetTextureLoadFile("asset/title.jpg");
+
+	Texture_Load();
+
+	g_TextureTitleLogo = Texture_SetTextureLoadFile("asset/title_logo.png");
 
 	Texture_Load();
 
@@ -65,6 +70,10 @@ void DrawTitle(void)
 
 	// スプライトを描画
 	Screen_Draw(g_TextureTitle, 0.0f, 0.0f, SCREEN_WIDTH, SCREEN_HEIGHT,
-		0, 0, 1920, 1080);
+		0, 0, 1280, 720);
+
+	// スプライトを描画
+	Screen_Draw(g_TextureTitleLogo, (SCREEN_WIDTH - 400) / 2, 100, 371, 122,
+		0, 0, 371, 122);
 
 }

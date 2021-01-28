@@ -358,7 +358,7 @@ void Draw(void)
 	// FPS表示
 	char buf[64];
 	sprintf_s(buf, "FPS = %.2f", g_FPS);
-	DebugFont_Draw(0.0f, 0.0f, buf);
+	//DebugFont_Draw(0.0f, 0.0f, buf);
 
 	// 描画バッチ命令の終了
 	pDevice->EndScene();

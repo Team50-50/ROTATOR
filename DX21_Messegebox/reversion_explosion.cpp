@@ -15,6 +15,7 @@
 #include"animation.h"
 #include"data_control.h"
 #include"controller.h"
+#include "keylogger.h"
 
  /*----------------------------------------------------------------------------------------
 	ÉOÉçÅ[ÉoÉãïœêî
@@ -80,10 +81,13 @@ void DrawRExplosion(void)
 
 			if (g_RExplosions[i].animation[DEFAULT].isUse && g_RExplosions[i].animation[DEFAULT].animNo != 0)
 			{
-				Sprite_Draw(g_TextureRExplosion, g_RExplosions[i].position.x, g_RExplosions[i].position.y, 100.0f, 100.0f,
-					g_RExplosions[i].animation[DEFAULT].tcx, g_RExplosions[i].animation[DEFAULT].tcy,
-					g_RExplosions[i].animation[DEFAULT].tcw, g_RExplosions[i].animation[DEFAULT].tch,
-					D3DCOLOR_RGBA(255, 255, 255, g_RExplosions[i].a));
+				if (GetKeyState('B') & 0x80 || JoystickPress(ButtonRT))
+				{
+					Sprite_Draw(g_TextureRExplosion, g_RExplosions[i].position.x, g_RExplosions[i].position.y, 100.0f, 100.0f,
+						g_RExplosions[i].animation[DEFAULT].tcx, g_RExplosions[i].animation[DEFAULT].tcy,
+						g_RExplosions[i].animation[DEFAULT].tcw, g_RExplosions[i].animation[DEFAULT].tch,
+						D3DCOLOR_RGBA(255, 255, 255, g_RExplosions[i].a));
+				}
 			}
 		}
 	}

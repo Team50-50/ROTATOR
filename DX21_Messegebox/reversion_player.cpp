@@ -16,6 +16,7 @@
 #include "camera.h"
 #include "data_control.h"
 #include "animation.h"
+#include "keylogger.h"
 
 /*-----------------------------------------------------------------------------------------
  ÉOÉçÅ[ÉoÉãïœêî
@@ -111,46 +112,52 @@ void ReversionPlayer_Draw(void)
 {
 	if (g_ReversionPlayer[0].enable)
 	{
-		if (g_ReversionPlayer[0].animation[DEFAULT].isUse)
+		if (GetKeyState('B') & 0x80 || JoystickPress(ButtonRT))
 		{
-			if (!g_ReversionPlayer[0].RL)
+			if (g_ReversionPlayer[0].animation[DEFAULT].isUse)
 			{
-				Sprite_Draw(g_TextureVPlayer[DEFAULT], g_ReversionPlayer[0].position.x,
-					g_ReversionPlayer[0].position.y,
-					PLAYER_SIZE_X, PLAYER_SIZE_Y, 0, 0, 64, 128);
-			}
-			else
-			{
-				Sprite_DrawLeft(g_TextureVPlayer[DEFAULT], g_ReversionPlayer[0].position.x,
-					g_ReversionPlayer[0].position.y,
-					PLAYER_SIZE_X, PLAYER_SIZE_Y, 0, 0, 64, 128);
-			}
-		}
+				if (!g_ReversionPlayer[0].RL)
+				{
 
-		if (g_ReversionPlayer[0].animation[WALKING].isUse)
-		{
-			UpdateAnimations(g_ReversionPlayer[0].animation, WALKING);
-
-			if (!g_ReversionPlayer[0].RL)
-			{
-				Sprite_Draw(g_TextureVPlayer[WALKING], g_ReversionPlayer[0].position.x,
-					g_ReversionPlayer[0].position.y, PLAYER_SIZE_X, PLAYER_SIZE_Y,
-					g_ReversionPlayer[0].animation[WALKING].tcx, g_ReversionPlayer[0].animation[WALKING].tcy,
-					g_ReversionPlayer[0].animation[WALKING].tcw, g_ReversionPlayer[0].animation[WALKING].tch);
-			}
-			else
-			{
-				Sprite_DrawLeft(g_TextureVPlayer[WALKING], g_ReversionPlayer[0].position.x,
-					g_ReversionPlayer[0].position.y, PLAYER_SIZE_X, PLAYER_SIZE_Y,
-					g_ReversionPlayer[0].animation[WALKING].tcx, g_ReversionPlayer[0].animation[WALKING].tcy,
-					g_ReversionPlayer[0].animation[WALKING].tcw, g_ReversionPlayer[0].animation[WALKING].tch);
+					Sprite_Draw(g_TextureVPlayer[DEFAULT], g_ReversionPlayer[0].position.x,
+						g_ReversionPlayer[0].position.y,
+						PLAYER_SIZE_X, PLAYER_SIZE_Y, 0, 0, 64, 128);
+				}
+				else
+				{
+					Sprite_DrawLeft(g_TextureVPlayer[DEFAULT], g_ReversionPlayer[0].position.x,
+						g_ReversionPlayer[0].position.y,
+						PLAYER_SIZE_X, PLAYER_SIZE_Y, 0, 0, 64, 128);
+				}
 			}
 
+			if (g_ReversionPlayer[0].animation[WALKING].isUse)
+			{
+				UpdateAnimations(g_ReversionPlayer[0].animation, WALKING);
+
+				if (!g_ReversionPlayer[0].RL)
+				{
+					Sprite_Draw(g_TextureVPlayer[WALKING], g_ReversionPlayer[0].position.x,
+						g_ReversionPlayer[0].position.y, PLAYER_SIZE_X, PLAYER_SIZE_Y,
+						g_ReversionPlayer[0].animation[WALKING].tcx, g_ReversionPlayer[0].animation[WALKING].tcy,
+						g_ReversionPlayer[0].animation[WALKING].tcw, g_ReversionPlayer[0].animation[WALKING].tch);
+				}
+
+				else
+				{
+					Sprite_DrawLeft(g_TextureVPlayer[WALKING], g_ReversionPlayer[0].position.x,
+						g_ReversionPlayer[0].position.y, PLAYER_SIZE_X, PLAYER_SIZE_Y,
+						g_ReversionPlayer[0].animation[WALKING].tcx, g_ReversionPlayer[0].animation[WALKING].tcy,
+						g_ReversionPlayer[0].animation[WALKING].tcw, g_ReversionPlayer[0].animation[WALKING].tch);
+				}
+
+			}
 		}
 	}
 
 	if (g_ReversionPlayer[1].enable)
 	{
+		/*
 		if (g_ReversionPlayer[1].animation[DEFAULT].isUse)
 		{
 			if (!g_ReversionPlayer[1].RL)
@@ -166,7 +173,7 @@ void ReversionPlayer_Draw(void)
 					PLAYER_SIZE_X, PLAYER_SIZE_Y, 0, 0, 64, 128, D3DCOLOR_RGBA(255, 0, 255, 110));
 			}
 		}
-
+		
 		if (g_ReversionPlayer[1].animation[WALKING].isUse)
 		{
 			UpdateAnimations(g_ReversionPlayer[1].animation, WALKING);
@@ -189,5 +196,6 @@ void ReversionPlayer_Draw(void)
 			}
 
 		}
+		*/
 	}
 }

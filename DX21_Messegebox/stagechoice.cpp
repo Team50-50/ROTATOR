@@ -32,7 +32,7 @@ static int sec;
 void InitStageChoice(void)
 {
 
-	g_TextureStageChoiceBG = Texture_SetTextureLoadFile("asset/stageC(kari).png");
+	g_TextureStageChoiceBG = Texture_SetTextureLoadFile("asset/title.jpg");
 	g_TextureStageChoiceS  = Texture_SetTextureLoadFile("asset/stageCS.png");
 	g_TextureStageChoiceRW = Texture_SetTextureLoadFile("asset/redwaku.png");
 
@@ -108,7 +108,7 @@ void DrawStageChoice(void)
 	//360
 	// スプライトを描画
 	Screen_Draw(g_TextureStageChoiceBG, 0.0f, 0.0f, SCREEN_WIDTH, SCREEN_HEIGHT,
-		0, 0, 1920, 1080);
+		0, 0, 1280, 720);
 	
 	Screen_Draw(g_TextureStageChoiceS, 200.0f, 420.0f, 288.0f, 192.0f,
 	    0, 0, 1440, 960);						  		  		 
@@ -122,7 +122,7 @@ void DrawStageChoice(void)
 
 	char Buf[64];
 	sprintf(Buf, "s=%d", Gamemord_sentaku);
-	DebugFont_Draw(900.0f, 300.0f, Buf);
+	//DebugFont_Draw(900.0f, 300.0f, Buf);
 
 }
 
