@@ -40,7 +40,7 @@ static int g_Mapchip[MAP_YSIZE][MAP_XSIZE]
 	{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 6, 6, 6, 1},
 	{ 1, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1},
 	{ 1, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1},
-	{ 1, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1},
+	{ 1, 0, 0, 0, 10, 0, 0, 6, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1},
 	{ 1, 0, 0, 0, 4, 0, 0, 1, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1},
 	{ 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1},
 	{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
@@ -83,6 +83,26 @@ void InitMap()
 			int chipNO = g_Mapchip[y][x];
 
 			if (chipNO == 0) continue;
+
+			if (chipNO == 10)
+			{
+				g_Mapchip[y][x] = 4;
+
+				//鍵のチップ番号の要素数を取得
+				kx_NO[g_keyCnt] = x;
+				ky_NO[g_keyCnt] = y;
+
+				//鍵のcollisionの範囲を決める
+				keyCircleCollision[g_keyCnt].center =
+				{ (float)MAPCHIP_WIDTH * x + MAPCHIP_WIDTH * 0.5f,
+				  (float)MAPCHIP_HEIGHT * y + MAPCHIP_HEIGHT * 0.5f
+				};
+				keyCircleCollision[g_keyCnt].radius = MAPCHIP_WIDTH * 0.4f;
+
+				keyCircleCollision[g_keyCnt].enable = true;
+
+				g_keyCnt++;
+			}
 
 			if (chipNO == 1)
 			{
@@ -169,7 +189,7 @@ void UpdateMap()
 
 			if (Collision_CircleAndCircleHit(&playerCollision[i], &keyCircleCollision[j]))
 			{
-				g_Mapchip[ky_NO[j]][kx_NO[j]] = 0;
+				g_Mapchip[ky_NO[j]][kx_NO[j]] = 10;
 				hit = true;
 				keyCircleCollision[j].enable = false;
 
