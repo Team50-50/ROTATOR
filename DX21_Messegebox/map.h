@@ -35,6 +35,8 @@ void DrawMap();
 void GetChipEdgeHit(int rectEdge, int chip_id_x, int chip_id_y, int& contactEdge, float& contactPosition);
 
 int* GetMapchip(void);
+int* GetMapchip2(void);
+int* GetMapchip3(void);
 
 int GetKeyCnt(void);
 

@@ -125,18 +125,34 @@ void InitMap()
 	g_keyCnt = 0;
 	g_blockCnt = 0;
 
+	int* map = NULL;
+
+	switch (Getmap())
+	{
+	case 0:
+		map = GetMapchip();
+		break;
+	case 1:
+		map = GetMapchip2();
+		break;
+	case 2:
+		map = GetMapchip3();
+		break;
+	}
+
 	for (int y = 0; y < MAP_YSIZE; y++)
 	{
 		for (int x = 0; x < MAP_XSIZE; x++)
 		{
 			// チップ番号取得
-			int chipNO = g_Mapchip[y][x];
+			//int chipNO = g_Mapchip[y][x];
+			int chipNO = *(map + (y * MAP_XSIZE) + x);
 
 			if (chipNO == 0) continue;
 
 			if (chipNO == 10)
 			{
-				g_Mapchip[y][x] = 4;
+				*(map + (y * MAP_XSIZE) + x) = 4;
 
 				//鍵のチップ番号の要素数を取得
 				kx_NO[g_keyCnt] = x;
@@ -230,6 +246,19 @@ void UpdateMap()
 {
 	CollisionCircle* playerCollision = Get_PlayerCollision();
 	hit = false;
+	int* map = NULL;
+	switch (Getmap())
+	{
+	case 0:
+		map = GetMapchip();
+		break;
+	case 1:
+		map = GetMapchip2();
+		break;
+	case 2:
+		map = GetMapchip3();
+		break;
+	}
 
 	//プレイヤーと鍵の衝突判定
 	for (int i = 0; i < 2; i++)
@@ -240,7 +269,7 @@ void UpdateMap()
 
 			if (Collision_CircleAndCircleHit(&playerCollision[i], &keyCircleCollision[j]))
 			{
-				g_Mapchip[ky_NO[j]][kx_NO[j]] = 10;
+				*(map + (ky_NO[j] * MAP_XSIZE) + kx_NO[j]) = 10;
 				hit = true;
 				keyCircleCollision[j].enable = false;
 				
@@ -292,12 +321,26 @@ void UpdateMap()
 
 void DrawMap()
 {
+	int* map = NULL;
+	switch (Getmap())
+	{
+	case 0:
+		map = GetMapchip();
+		break;
+	case 1:
+		map = GetMapchip2();
+		break;
+	case 2:
+		map = GetMapchip3();
+		break;
+	}
+
 	for (int y = 0; y < MAP_YSIZE; y++)
 	{
 		for (int x = 0; x < MAP_XSIZE; x++)
 		{
 			// チップ番号取得
-			int chipNO = g_Mapchip[y][x];
+			int chipNO = *(map + (y * MAP_XSIZE) + x);
 
 			if (chipNO == 0) continue;
 
@@ -357,6 +400,14 @@ void GetChipEdgeHit(int rectEdge, int chip_No_x, int chip_No_y, int& contactEdge
 int* GetMapchip(void)
 {
 	return (int*)g_Mapchip;
+}
+int* GetMapchip2(void)
+{
+	return (int*)g_Mapchip2;
+}
+int* GetMapchip3(void)
+{
+	return (int*)g_Mapchip3;
 }
 
 int GetKeyCnt(void)

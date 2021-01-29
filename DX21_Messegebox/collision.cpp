@@ -10,6 +10,7 @@
 #include "collision.h"
 #include <d3dx9.h>
 #include "map.h"
+#include "stagechoice.h"
 
  //‰~‚Æ‰~‚ÌÕ“Ë”»’è
 bool Collision_CircleAndCircleHit(const CollisionCircle* pA, const CollisionCircle* pB)
@@ -92,7 +93,19 @@ bool Collision_RectAndMapchipEdgeHit(const CollisionRect& rect, D3DXVECTOR2 vec,
 		vec.y > 0.0f ? true : false,
 	};
 
-	int* map = GetMapchip();
+	int* map = NULL;
+	switch (Getmap())
+	{
+	case 0:
+		map = GetMapchip();
+		break;
+	case 1:
+		map = GetMapchip2();
+		break;
+	case 2:
+		map = GetMapchip3();
+		break;
+	}
 
 	for (int i = 0; i < EDGE_MAX; i++)
 	{
