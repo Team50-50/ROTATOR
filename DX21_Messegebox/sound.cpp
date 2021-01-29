@@ -38,7 +38,7 @@ SOUNDPARAM g_aParam[SOUND_LABEL_MAX] =
 	{"asset/sound/se_maoudamashii_system46.wav", 0},  // コイン音
 	{"asset/sound/se_maoudamashii_system37.wav", 0},  // 鍵解除音
 	{"asset/sound/se_maoudamashii_jingle12.wav", 0},  // クリア音
-
+	{"asset/sound/se_maoudamashii_chear.wav", 0},  // クリア音 X
 
 };
 

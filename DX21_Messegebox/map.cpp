@@ -66,6 +66,7 @@ static int ky_NO[20];
 static int bx_NO[20];
 static int by_NO[20];
 static bool hit = false;
+static int sec = 0;
 
 /*-----------------------------------------------------------------------------------------
  ä÷êîíËã`
@@ -210,10 +211,16 @@ void UpdateMap()
 			}
 		}
 
+		// ÉSÅ[Éã
 		if (Collision_CircleAndCircleHit(&playerCollision[i], &goalCircleCollision))
 		{
-			PlaySound(SOUND_LABEL_SE_CLEAR);
-			SetFade(FADE_OUT, SCENE_TITLE);
+			if (sec == 0)
+			{
+				PlaySound(SOUND_LABEL_SE_CLEAR);
+				sec = 1;
+			}
+			
+			SetFade(FADE_OUT, SCENE_SCLEAR);
 		}
 	}
 

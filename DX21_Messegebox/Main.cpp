@@ -28,6 +28,7 @@
 #include "bg.h"
 #include "fade.h"
 #include "title.h"
+#include "clear.h"
 #include "stagechoice.h"
 #include "player.h"
 #include "camera.h"
@@ -247,7 +248,7 @@ bool Initialize(void)
 	Sprite_Initialize();
 
 	InitFade();
-	SetScene(SCENE_TITLE);
+	SetScene(SCENE_SCLEAR);
 
 	DebugFont_Initialize();
 
@@ -286,6 +287,10 @@ void Update(void)
 		UpdateExplosion();
 		UpdateRExplosion();
 		UpdateMap();
+		break;
+
+	case SCENE_SCLEAR:
+		UpdateClear();
 		break;
 
 	case SCENE_NONE:
@@ -348,6 +353,10 @@ void Draw(void)
 		DrawExplosion();
 		break;
 
+	case SCENE_SCLEAR:
+		DrawClear();
+		break;
+
 	case SCENE_NONE:
 		break;
 	}
@@ -380,6 +389,7 @@ void Finalize(void)
 	UninitRExplosion();
 	UninitExplosion();
 	UninitMap();
+	UninitClear();
 
 	Sprite_Finalize();
 
@@ -420,6 +430,10 @@ void SetScene(int scene_no)
 		UninitBG();				// 背景の終了処理
 		break;
 
+	case SCENE_SCLEAR:
+		UninitClear();
+		break;
+
 	case SCENE_NONE:
 		break;
 	}
@@ -457,6 +471,10 @@ void SetScene(int scene_no)
 			//MessageBox(NULL, "テクスチャの読み込みに失敗しました", "エラー", MB_OK);
 
 		}
+		break;
+
+	case SCENE_SCLEAR:
+		InitClear();
 		break;
 
 	case SCENE_NONE:
