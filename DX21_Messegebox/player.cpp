@@ -544,14 +544,14 @@ void DrawPlayer()
 		if (!g_Player.RL)
 		{
 			Sprite_Draw(g_PlayerTexture[WALKING], g_Player.position.x,
-				g_Player.position.y, PLAYER_SIZE_X, PLAYER_SIZE_Y,
+				g_Player.position.y+10, PLAYER_SIZE_X, PLAYER_SIZE_Y,
 				g_Player.animation[WALKING].tcx, g_Player.animation[WALKING].tcy,
 				g_Player.animation[WALKING].tcw, g_Player.animation[WALKING].tch);
 		}
 		else
 		{
 			Sprite_DrawLeft(g_PlayerTexture[WALKING], g_Player.position.x,
-				g_Player.position.y, PLAYER_SIZE_X, PLAYER_SIZE_Y,
+				g_Player.position.y+10, PLAYER_SIZE_X, PLAYER_SIZE_Y,
 				g_Player.animation[WALKING].tcx, g_Player.animation[WALKING].tcy,
 				g_Player.animation[WALKING].tcw, g_Player.animation[WALKING].tch);
 		}
