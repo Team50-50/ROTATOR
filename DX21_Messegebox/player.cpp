@@ -26,6 +26,7 @@
 #include <stdio.h>
 #include "map.h"
 #include "fade.h"
+#include "sound.h"
 
 
 
@@ -74,6 +75,8 @@ void InitPlayer()
 	g_TextureGreen = Texture_SetTextureLoadFile("asset/green.tga");
 	g_TextureRed = Texture_SetTextureLoadFile("asset/red.tga");
 	g_TextureBlue = Texture_SetTextureLoadFile("asset/blue.tga");
+
+	Texture_Load();
 
 	//プレイヤーの初期位置の定義
 	g_Player.position = { 90.0f,776.0f };
@@ -417,6 +420,8 @@ g_Player.start = {
 						{
 							dore[i].use = false;
 							GetplayerKey() -= 1;
+
+							PlaySound(SOUND_LABEL_SE_DOOR);
 						}
 					}
 				}
@@ -437,6 +442,8 @@ g_Player.start = {
 						{
 							dore[i].use = false;
 							GetplayerKey() -= 1;
+
+							PlaySound(SOUND_LABEL_SE_DOOR);
 						}
 					}
 				}

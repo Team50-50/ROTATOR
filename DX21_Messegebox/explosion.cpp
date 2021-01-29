@@ -13,6 +13,7 @@
 #include"animation.h"
 #include"data_control.h"
 #include"controller.h"
+#include"sound.h"
 
  /*----------------------------------------------------------------------------------------
 	ƒOƒ[ƒoƒ‹•Ï”
@@ -32,7 +33,7 @@ static bool flag2 = false;
 void InitExplosion(void)
 {
 	g_TextureExplosion = Texture_SetTextureLoadFile("asset/Explosion_black.png");
-
+	Texture_Load();
 	for (int i = 0; i < EXPLOSION_MAX; i++)
 	{
 		g_Explosions[i].a = 255;
@@ -175,8 +176,11 @@ void Explosion_Spawn(float x, float y)
 			g_Explosions[i].a = 255;
 			g_Explosions[i].frame = 0;
 			g_Explosions[i].lifeFrame = 0;
+			
+			PlaySound(SOUND_LABEL_SE_EXPLOSION);
 
 			break;
+			
 		}
 	}
 

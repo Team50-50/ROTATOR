@@ -35,6 +35,11 @@ SOUNDPARAM g_aParam[SOUND_LABEL_MAX] =
 	{"asset/sound/maoudamashii_titleBGM.wav", -1},       // BGM 01
 	{"asset/sound/maoudamashii_system.wav",  0},         // 確認音
 	{"asset/sound/se_maoudamashii_explosion03.wav", 0},  // 爆発音
+	{"asset/sound/se_maoudamashii_system46.wav", 0},  // コイン音
+	{"asset/sound/se_maoudamashii_system37.wav", 0},  // 鍵解除音
+	{"asset/sound/se_maoudamashii_jingle12.wav", 0},  // クリア音
+
+
 };
 
 //=============================================================================

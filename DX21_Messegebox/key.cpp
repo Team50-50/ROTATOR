@@ -14,6 +14,7 @@
 #include "player.h"
 #include "stage.h"
 #include "camera.h"
+#include "sound.h"
 
 
 /*-----------------------------------------------------------------------------------------
@@ -40,7 +41,7 @@ void InitKey()
 
 	// TEX‚Ì“Ç‚İ‚İ
 	g_KeyTexture = Texture_SetTextureLoadFile("asset/key.png");
-
+	Texture_Load;
 	// Œ®”z—ñ‚Ì‰Šú‰»
 	for (int i = 0; i < KEY_MAX; i++)
 	{

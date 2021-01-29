@@ -22,8 +22,6 @@ inline void DebugPrintf(const char* pFormat, ...)
 	vsprintf_s(buf, 256, pFormat, argp); //バッファ量と第２引数を合わせること
 	va_end(argp);
 	OutputDebugStringA(buf);
-#else
-	UNREFERENCED_PARAMETER(pFprmat)
 #endif // _DEBUG || DEBUG
 }
 

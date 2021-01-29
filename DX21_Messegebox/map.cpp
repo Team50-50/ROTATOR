@@ -25,6 +25,8 @@
 #include <stdio.h>
 #include "debug_font.h"
 #include "fade.h"
+#include "stagechoice.h"
+#include "sound.h"
 
 
 
@@ -37,20 +39,20 @@ static int g_Mapchip[MAP_YSIZE][MAP_XSIZE]
 	{ 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1},
 	{ 1, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1},
 	{ 1, 0, 9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1},
-	{ 1, 1, 1, 1, 1, 1, 1, 6, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1},
-	{ 1, 0, 0, 0, 0, 0, 0, 6, 6, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 1},
-	{ 1, 0, 0, 0, 0, 0, 0, 6, 6, 6, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 1},
-	{ 1, 0, 0, 0, 0, 4, 0, 6, 6, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 4, 1},
+	{ 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1},
+	{ 1, 1, 1, 1, 1, 0, 0, 0, 6, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 1},
+	{ 1, 1, 1, 1, 1, 0, 0, 0, 6, 6, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 1},
+	{ 1, 1, 1, 1, 1, 0, 4, 0, 6, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 4, 1},
 	{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 6, 6, 6, 1},
 	{ 1, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1},
 	{ 1, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1},
-	{ 1, 0, 0, 0, 10, 0, 0, 6, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1},
+	{ 1, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1},
 	{ 1, 0, 0, 0, 4, 0, 0, 1, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1},
 	{ 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1},
 	{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
 };
 
-static int g_TextureId = TEXTURE_INVALID_ID;
+static int g_TextureMapchip = TEXTURE_INVALID_ID;
 static int g_Texturekey = TEXTURE_INVALID_ID;
 static int g_TextureGoal = TEXTURE_INVALID_ID;
 CollisionCircle keyCircleCollision[20];
@@ -70,9 +72,14 @@ static bool hit = false;
 -------------------------------------------------------------------------------------------*/
 void InitMap()
 {
-	g_TextureId = Texture_SetTextureLoadFile("asset/mapchips.png");
+	g_TextureMapchip = Texture_SetTextureLoadFile("asset/mapchips.png");
+	Texture_Load();
+
 	g_Texturekey = Texture_SetTextureLoadFile("asset/key.png");
+	Texture_Load();
+
 	g_TextureGoal= Texture_SetTextureLoadFile("asset/exit6.png");
+	Texture_Load();
 
 	hit = false;
 	g_playerkey = 0;
@@ -169,13 +176,14 @@ void InitMap()
 			}
 		}
 	}
+	
 
 }
 
 void UninitMap()
 {
 	Texture_Release(&g_Texturekey, 1);
-	Texture_Release(&g_TextureId, 1);
+	Texture_Release(&g_TextureMapchip, 1);
 	Texture_Release(&g_TextureGoal, 1);
 }
 
@@ -196,12 +204,15 @@ void UpdateMap()
 				g_Mapchip[ky_NO[j]][kx_NO[j]] = 10;
 				hit = true;
 				keyCircleCollision[j].enable = false;
+				
+				PlaySound(SOUND_LABEL_SE_COIN);
 
 			}
 		}
 
 		if (Collision_CircleAndCircleHit(&playerCollision[i], &goalCircleCollision))
 		{
+			PlaySound(SOUND_LABEL_SE_CLEAR);
 			SetFade(FADE_OUT, SCENE_TITLE);
 		}
 	}
@@ -252,7 +263,7 @@ void DrawMap()
 			//ï`âÊç¿ïW
 			D3DXVECTOR2 position = { (float)MAPCHIP_WIDTH * x,(float)MAPCHIP_HEIGHT * y };
 
-			Sprite_Draw(g_TextureId, position.x, position.y, tcx, tcy, MAPCHIP_WIDTH, MAPCHIP_HEIGHT);
+			Sprite_Draw(g_TextureMapchip, position.x, position.y, tcx, tcy, MAPCHIP_WIDTH, MAPCHIP_HEIGHT);
 
 			if (chipNO == 9)
 			{

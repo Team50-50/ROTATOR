@@ -15,6 +15,7 @@
 #include "key.h"
 #include "stage.h"
 #include "camera.h"
+#include "sound.h"
 
 /*-----------------------------------------------------------------------------------------
   グローバル変数
@@ -36,7 +37,7 @@ void InitDore()
 
 	// TEXの読み込み
 	g_DoreTexture = Texture_SetTextureLoadFile("asset/door1.png");
-
+	Texture_Load();
 	// 扉配列の初期化
 	for (int i = 0; i < KEY_MAX; i++)
 	{
@@ -114,7 +115,7 @@ void DelDore(int num)
 	Dores[num].use = false;
 	Dores[num].xy.x = 0;
 	Dores[num].xy.y = 0;
-
+	
 }
 
 Dore* GetDores()

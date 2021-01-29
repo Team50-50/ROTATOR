@@ -30,6 +30,7 @@ static Explosion g_RExplosions[REXPLOSION_MAX];
 void InitRExplosion(void)
 {
 	g_TextureRExplosion = Texture_SetTextureLoadFile("asset/Explosion_black.png");
+	Texture_Load();
 
 	for (int i = 0; i < REXPLOSION_MAX; i++)
 	{

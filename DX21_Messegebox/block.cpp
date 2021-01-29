@@ -21,12 +21,12 @@
 /*----------------------------------------------------------------------------------------
   グローバル変数
  ----------------------------------------------------------------------------------------*/
-static const char* TextureFileNames[] = {
+static const char* TextureFileNamesBlock[] = {
 	"asset/block(cracked).png",
 	"asset/block.png"
 };
 
-static const int TextureCnt = ARRAYSIZE(TextureFileNames);
+static const int TextureCnt = ARRAYSIZE(TextureFileNamesBlock);
 
 //ブロックのテクスチャの読み込み
 static int	g_BlockTexture[TextureCnt];
@@ -51,7 +51,8 @@ void InitBlock()
 {
 	for (int i = 0; i < TextureCnt; i++)
 	{
-		g_BlockTexture[i] = Texture_SetTextureLoadFile(TextureFileNames[i]);
+		g_BlockTexture[i] = Texture_SetTextureLoadFile(TextureFileNamesBlock[i]);
+		Texture_Load();
 	}
 
 	for (int i = 0; i < BLOCK_MAX; i++)

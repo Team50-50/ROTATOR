@@ -13,21 +13,23 @@
 #include "bg.h"
 #include "map.h"
 #include "stagechoice.h"
+#include "texture.h"
 
 /*-----------------------------------------------------------------------------------------
   グローバル変数
  -------------------------------------------------------------------------------------------*/
-static const char* TextureFileNames[] = {
+static const char* TextureFileNamesBG[] = {
 	"asset/BG.png",
 	"asset/messageImage_1610629813418.jpg",
 	"asset/messageImage_1610629806617.jpg"
 	
 };
 
-static const int TextureCnt = ARRAYSIZE(TextureFileNames);
+static const int TextureCnt = ARRAYSIZE(TextureFileNamesBG);
 
 //ブロックのテクスチャの読み込み
 static int	g_BGTexture[TextureCnt];
+
 
 /*-----------------------------------------------------------------------------------------
  関数定義
@@ -37,7 +39,8 @@ void InitBG(void)
 
 	for (int i = 0; i < TextureCnt; i++)
 	{
-		g_BGTexture[i] = Texture_SetTextureLoadFile(TextureFileNames[i]);
+		g_BGTexture[i] = Texture_SetTextureLoadFile(TextureFileNamesBG[i]);
+		Texture_Load();
 	}
 
 }
