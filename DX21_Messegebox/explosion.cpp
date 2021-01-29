@@ -33,7 +33,7 @@ static bool flag2 = false;
 void InitExplosion(void)
 {
 	g_TextureExplosion = Texture_SetTextureLoadFile("asset/Explosion_black.png");
-	Texture_Load();
+
 	for (int i = 0; i < EXPLOSION_MAX; i++)
 	{
 		g_Explosions[i].a = 255;

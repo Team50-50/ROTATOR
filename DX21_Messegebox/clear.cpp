@@ -1,6 +1,6 @@
 /*==============================================================================
 
-	タイトル画面の制御[titile.cpp]
+	クリア画面の制御[clear.cpp]
 
 													Author : トウ ミンヨウ
 													Date   :
@@ -18,59 +18,54 @@
 /*----------------------------------------------------------------------------------------
   グローバル変数
  ----------------------------------------------------------------------------------------*/
-static int g_TextureTitle;
-static int g_TextureTitleLogo;
+static int g_TextureChear;
+//static int g_TextureTitleLogo;
 static int sec;
 
 /*-----------------------------------------------------------------------------------------
  関数定義
 -------------------------------------------------------------------------------------------*/
-void InitTitle(void)
+void InitClear(void)
 {
 
-	g_TextureTitle = Texture_SetTextureLoadFile("asset/title.jpg");
-	g_TextureTitleLogo = Texture_SetTextureLoadFile("asset/title_logo.png");
+	g_TextureChear = Texture_SetTextureLoadFile("asset/Clear.png");
 
 	Texture_Load();
 
-	PlaySound(SOUND_LABEL_BGM000);
+	PlaySound(SOUND_LABEL_SE_CLEARX);
 	sec = 0;
 }
 
 
-void UninitTitle(void)
+void UninitClear(void)
 {
 
-	Texture_Release(&g_TextureTitle, 1);
+	Texture_Release(&g_TextureChear, 1);
 	
 }
 
 
-void UpdateTitle(void)
+void UpdateClear(void)
 {
 	if (Keylogger_Press(KL_JUMP) || JoystickPress(ButtonB))
 	{
-		SetFade(FADE_OUT, SCENE_STAGECHOICE);
-		if (sec == 0)
-		{
-			PlaySound(SOUND_LABEL_SE_TITLE);
-			sec = 1;
-		}
+		
+		SetFade(FADE_OUT, SCENE_TITLE);
 		
 	}
 	
 }
 
 
-void DrawTitle(void)
+void DrawClear(void)
 {
 
 	// スプライトを描画
-	Screen_Draw(g_TextureTitle, 0.0f, 0.0f, SCREEN_WIDTH, SCREEN_HEIGHT,
+	Screen_Draw(g_TextureChear, 0.0f, 0.0f, SCREEN_WIDTH, SCREEN_HEIGHT,
 		0, 0, 1280, 720);
 
-	// スプライトを描画
-	Screen_Draw(g_TextureTitleLogo, (SCREEN_WIDTH - 400) / 2, 100, 371, 122,
-		0, 0, 371, 122);
+	//// スプライトを描画
+	//Screen_Draw(g_TextureTitleLogo, (SCREEN_WIDTH - 400) / 2, 100, 371, 122,
+	//	0, 0, 371, 122);
 
 }

@@ -19,7 +19,8 @@ typedef enum
 	SOUND_LABEL_SE_EXPLOSION,	// 爆発音
 	SOUND_LABEL_SE_COIN,		// コイン音
 	SOUND_LABEL_SE_DOOR,		// ドア　音
-	SOUND_LABEL_SE_CLEAR,		// クリア　音
+	SOUND_LABEL_SE_CLEAR,		// クリア音
+	SOUND_LABEL_SE_CLEARX,		// クリア音 X
 	SOUND_LABEL_MAX,
 } SOUND_LABEL;
 

@@ -104,6 +104,7 @@ static int ky_NO[20];
 static int bx_NO[20];
 static int by_NO[20];
 static bool hit = false;
+static int sec = 0;
 
 /*-----------------------------------------------------------------------------------------
  ä÷êîíËã`
@@ -111,13 +112,13 @@ static bool hit = false;
 void InitMap()
 {
 	g_TextureMapchip = Texture_SetTextureLoadFile("asset/mapchips.png");
-	Texture_Load();
+
 
 	g_Texturekey = Texture_SetTextureLoadFile("asset/key.png");
-	Texture_Load();
+
 
 	g_TextureGoal= Texture_SetTextureLoadFile("asset/exit6.png");
-	Texture_Load();
+
 
 	hit = false;
 	g_playerkey = 0;
@@ -248,10 +249,16 @@ void UpdateMap()
 			}
 		}
 
+		// ÉSÅ[Éã
 		if (Collision_CircleAndCircleHit(&playerCollision[i], &goalCircleCollision))
 		{
-			PlaySound(SOUND_LABEL_SE_CLEAR);
-			SetFade(FADE_OUT, SCENE_TITLE);
+			if (sec == 0)
+			{
+				PlaySound(SOUND_LABEL_SE_CLEAR);
+				sec = 1;
+			}
+			
+			SetFade(FADE_OUT, SCENE_SCLEAR);
 		}
 	}
 

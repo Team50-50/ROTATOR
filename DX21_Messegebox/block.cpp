@@ -52,7 +52,7 @@ void InitBlock()
 	for (int i = 0; i < TextureCnt; i++)
 	{
 		g_BlockTexture[i] = Texture_SetTextureLoadFile(TextureFileNamesBlock[i]);
-		Texture_Load();
+	
 	}
 
 	for (int i = 0; i < BLOCK_MAX; i++)
