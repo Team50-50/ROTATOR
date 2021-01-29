@@ -248,7 +248,7 @@ bool Initialize(void)
 	Sprite_Initialize();
 
 	InitFade();
-	SetScene(SCENE_SCLEAR);
+	SetScene(SCENE_TITLE);
 
 	DebugFont_Initialize();
 
