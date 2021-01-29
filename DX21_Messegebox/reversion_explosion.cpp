@@ -16,6 +16,7 @@
 #include"data_control.h"
 #include"controller.h"
 #include "keylogger.h"
+#include "player.h"
 
  /*----------------------------------------------------------------------------------------
 	ÉOÉçÅ[ÉoÉãïœêî
@@ -56,7 +57,7 @@ void UpdateRExplosion(void)
 		{
 			if (!GetRE_Prev()[i].tfData[j]) continue;
 
-			if (GetKeyState('B') & 0x80 || JoystickPress(ButtonRT))
+			if (GetFlag())
 			{
 				g_RExplosions[i].enable = GetRE_Prev()[i].tfData[j];
 				g_RExplosions[i].position = GetRE_Prev()[i].vec2Data[j];
@@ -82,7 +83,7 @@ void DrawRExplosion(void)
 
 			if (g_RExplosions[i].animation[DEFAULT].isUse && g_RExplosions[i].animation[DEFAULT].animNo != 0)
 			{
-				if (GetKeyState('B') & 0x80 || JoystickPress(ButtonRT))
+				if (GetFlag())
 				{
 					Sprite_Draw(g_TextureRExplosion, g_RExplosions[i].position.x, g_RExplosions[i].position.y, 100.0f, 100.0f,
 						g_RExplosions[i].animation[DEFAULT].tcx, g_RExplosions[i].animation[DEFAULT].tcy,
