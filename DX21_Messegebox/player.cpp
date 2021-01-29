@@ -55,6 +55,7 @@ static bool flag1 = false;
 static bool flag2 = false;
 static bool flag3 = false;
 static bool flag4 = false;
+static bool flag5 = false;
 static float a = 0.f;
 static float g_value = 0.0f;
 
@@ -451,6 +452,7 @@ g_Player.start = {
 	{
 		flag1 = false;
 		flag2 = true;
+		flag5 = false;
 
 	}
 	if (g_Current.Vdata_tail == 360)
@@ -480,11 +482,10 @@ g_Player.start = {
 	}
 	if (flag1)
 	{
-		if (GetKeyState('B') & 0x80 || JoystickPress(ButtonRT))
+		if (Keylogger_Trigger(KL_B) || JoystickTrigger(ButtonRT))
 		{
 			flag2 = false;
-			DataRecord(&g_Prev, pop_Vec2Data(&g_Current), pop_TFData(&g_Current), pop_NumData(&g_Current), pop_DecimalData(&g_Current));
-
+			flag5 = true;	
 		}
 	}
 	else
@@ -495,6 +496,11 @@ g_Player.start = {
 		{
 			a *= -1;
 		}
+	}
+
+	if (flag5)
+	{
+		DataRecord(&g_Prev, pop_Vec2Data(&g_Current), pop_TFData(&g_Current), pop_NumData(&g_Current), pop_DecimalData(&g_Current));
 	}
 
 	if (Keylogger_Press(KL_R))
@@ -614,4 +620,9 @@ void SetPlayerMapPos(int contact_edge, float contact_pos)
 
 		break;
 	}
+}
+
+bool GetFlag(void)
+{
+	return flag5;
 }

@@ -58,7 +58,7 @@ void ReversionPlayer_Update(void)
 	
 	for (int i = 0; i < prevData.Vdata_tail; i++)
 	{
-		if (GetKeyState('B') & 0x80 || JoystickPress(ButtonRT))
+		if (GetFlag())
 		{
 			g_ReversionPlayer[0].position = prevData.vec2Data[i];
 			g_ReversionPlayer[0].RL = prevData.tfData[i];
@@ -67,7 +67,7 @@ void ReversionPlayer_Update(void)
 		}
 
 	}
-	for (int i = 0; i < debugData.Vdata_tail; i++)
+	/*for (int i = 0; i < debugData.Vdata_tail; i++)
 	{
 		g_ReversionPlayer[1].position = debugData.vec2Data[i];
 		g_ReversionPlayer[1].RL = debugData.tfData[i];
@@ -88,8 +88,8 @@ void ReversionPlayer_Update(void)
 			g_ReversionPlayer[1].animation[DEFAULT].isUse = true;
 			g_ReversionPlayer[1].animation[WALKING].isUse = false;
 		}
-	}
-	if ((frame >= 360 && GetKeyState('B') & 0x80) || 
+	}*/
+	if ((frame >= 360 && GetFlag()) ||
 		(frame >= 360 && JoystickPress(ButtonRT)))
 	{
 		g_ReversionPlayer[0].enable = true;
@@ -112,7 +112,7 @@ void ReversionPlayer_Draw(void)
 {
 	if (g_ReversionPlayer[0].enable)
 	{
-		if (GetKeyState('B') & 0x80 || JoystickPress(ButtonRT))
+		if (GetFlag())
 		{
 			if (g_ReversionPlayer[0].animation[DEFAULT].isUse)
 			{

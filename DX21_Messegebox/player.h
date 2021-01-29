@@ -66,4 +66,6 @@ void SetPlayerMapPos(int contact_edge, float contact_pos);
 
 Player GetPlayer(void);
 
+bool GetFlag(void);
+
 #endif //PLAYER_H

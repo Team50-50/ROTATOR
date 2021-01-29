@@ -212,7 +212,7 @@ void UpdateSniper(void)
 
 		if (flag1)
 		{
-			if (GetKeyState('B') & 0x80 || JoystickPress(ButtonRT))
+			if (GetFlag())
 			{
 				flag2 = false;
 
@@ -228,13 +228,13 @@ void UpdateSniper(void)
 		}
 
 		//=================================================================================
-		//ロケットの記録&&逆再生
+		//ロケットの逆行システム
 		//=================================================================================
 		for (int j = 0; j < g_RocketPrev[i].Vdata_tail; j++)
 		{
 			if (!g_RocketPrev[i].tfData[j]) continue;
 
-			if (GetKeyState('B') & 0x80 || JoystickPress(ButtonRT))
+			if (GetFlag())
 			{
 				g_reversionRocket[i].enable = g_RocketPrev[i].tfData[j];
 				g_reversionRocket[i].position = g_RocketPrev[i].vec2Data[j];
@@ -294,7 +294,7 @@ void DrawSniper(void)
 
 		if (g_reversionRocket[i].enable)
 		{
-			if (GetKeyState('B') & 0x80 || JoystickPress(ButtonRT))
+			if (GetFlag())
 			{
 				Sprite_Draw(g_TextureReRocket,
 					g_reversionRocket[i].position.x,
@@ -305,13 +305,6 @@ void DrawSniper(void)
 		}
 
 	}
-
-	Screen_Draw(g_TextureRocket, 500.0f, 60.0f, 80.0f, 80.0f, 0, 0, 32, 32);
-	char Buf[64];
-	sprintf(Buf, "X");
-	DebugFont_Draw(590.0f, 70.0f, Buf);
-	sprintf(Buf, "%d", g_rmax);
-	DebugFont_Draw(650.0f, 70.0f, Buf);
 
 }
 

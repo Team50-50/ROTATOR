@@ -146,7 +146,7 @@ void UpdateBlock()
 
 		if (flag1)
 		{
-			if (GetKeyState('B') & 0x80 || JoystickPress(ButtonRT))
+			if (GetFlag())
 			{
 				flag2 = false;
 				

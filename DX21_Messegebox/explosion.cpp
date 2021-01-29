@@ -13,7 +13,7 @@
 #include"animation.h"
 #include"data_control.h"
 #include"controller.h"
-
+#include"player.h"
  /*----------------------------------------------------------------------------------------
 	ƒOƒ[ƒoƒ‹•Ï”
   ----------------------------------------------------------------------------------------*/
@@ -129,7 +129,7 @@ void UpdateExplosion(void)
 
 		if (flag1)
 		{
-			if (GetKeyState('B') & 0x80 || JoystickPress(ButtonRT))
+			if (GetFlag())
 			{
 				flag2 = false;
 
