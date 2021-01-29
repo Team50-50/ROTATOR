@@ -77,7 +77,7 @@ void InitPlayer()
 	g_TextureRed = Texture_SetTextureLoadFile("asset/red.tga");
 	g_TextureBlue = Texture_SetTextureLoadFile("asset/blue.tga");
 
-	Texture_Load();
+
 
 	//プレイヤーの初期位置の定義
 	g_Player.position = { 90.0f,776.0f };

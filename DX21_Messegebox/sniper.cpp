@@ -60,8 +60,6 @@ void InitSniper(int rocket_max)
 	g_TextureRocket = Texture_SetTextureLoadFile("asset/bullet.png");
 	g_TextureReRocket = Texture_SetTextureLoadFile("asset/bullet.png");
 
-	Texture_Load();
-
 	g_rmax = rocket_max;
 
 	g_LaserAngle = 0.0f;

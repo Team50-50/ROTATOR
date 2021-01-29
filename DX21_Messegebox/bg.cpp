@@ -40,7 +40,7 @@ void InitBG(void)
 	for (int i = 0; i < TextureCnt; i++)
 	{
 		g_BGTexture[i] = Texture_SetTextureLoadFile(TextureFileNamesBG[i]);
-		Texture_Load();
+
 	}
 
 }

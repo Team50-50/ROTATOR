@@ -74,13 +74,13 @@ static int sec = 0;
 void InitMap()
 {
 	g_TextureMapchip = Texture_SetTextureLoadFile("asset/mapchips.png");
-	Texture_Load();
+
 
 	g_Texturekey = Texture_SetTextureLoadFile("asset/key.png");
-	Texture_Load();
+
 
 	g_TextureGoal= Texture_SetTextureLoadFile("asset/exit6.png");
-	Texture_Load();
+
 
 	hit = false;
 	g_playerkey = 0;
