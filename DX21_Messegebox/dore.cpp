@@ -37,7 +37,6 @@ void InitDore()
 
 	// TEX‚Ì“Ç‚İ‚İ
 	g_DoreTexture = Texture_SetTextureLoadFile("asset/door1.png");
-	Texture_Load();
 	// ”à”z—ñ‚Ì‰Šú‰»
 	for (int i = 0; i < KEY_MAX; i++)
 	{
